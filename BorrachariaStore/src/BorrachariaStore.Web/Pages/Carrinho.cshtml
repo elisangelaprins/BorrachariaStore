@@ -1,0 +1,50 @@
+@page
+@model BorrachariaStore.Web.Pages.CarrinhoModel
+@{
+    ViewData["Title"] = "Carrinho de Compras";
+}
+
+<h1>Carrinho de Compras</h1>
+
+<!-- Aula 4: listagem de itens do carrinho -->
+<table>
+    <thead>
+        <tr>
+            <th>Foto</th>
+            <th>Produto</th>
+            <th>Valor Unitário</th>
+            <th>Quantidade</th>
+            <th>Total</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Itens)
+        {
+            <tr>
+                <td><img src="@item.UrlFoto" alt="@item.Nome" /></td>
+                <td>@item.Nome</td>
+                <td>@item.PrecoUnitario.ToString("C")</td>
+                <td>
+                    <form method="post" asp-page-handler="AtualizarQuantidade">
+                        <input type="hidden" name="produtoId" value="@item.ProdutoId" />
+                        <input type="number" name="quantidade" value="@item.Quantidade" min="0" />
+                        <button type="submit">Atualizar</button>
+                    </form>
+                </td>
+                <td>@item.Subtotal.ToString("C")</td>
+                <td>
+                    <form method="post" asp-page-handler="Remover">
+                        <input type="hidden" name="produtoId" value="@item.ProdutoId" />
+                        <button type="submit">Remover</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Aula 5: total em tempo real -->
+<h2>Total: @Model.Total.ToString("C")</h2>
+
+<a asp-page="/Checkout">Ir para o Checkout</a>

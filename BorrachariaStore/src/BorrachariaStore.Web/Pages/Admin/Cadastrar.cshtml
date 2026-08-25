@@ -1,0 +1,39 @@
+@page
+@model BorrachariaStore.Web.Pages.Admin.CadastrarModel
+@{
+    ViewData["Title"] = "Cadastrar Produto";
+}
+
+<h1>Cadastrar Produto</h1>
+
+<!-- Aula 6: formulário de cadastro (nome, aro, preço, link da foto) -->
+<form method="post">
+    <label>Nome</label>
+    <input asp-for="Produto.Nome" required />
+
+    <label>Marca</label>
+    <input asp-for="Produto.Marca" />
+
+    <label>Descrição</label>
+    <textarea asp-for="Produto.Descricao"></textarea>
+
+    <label>Categoria</label>
+    <input asp-for="Produto.Categoria" />
+
+    <label>Medida</label>
+    <input asp-for="Produto.Medida" />
+
+    <label>Aro</label>
+    <input asp-for="Produto.Aro" type="number" required />
+
+    <label>Preço</label>
+    <input asp-for="Produto.Preco" type="number" step="0.01" required />
+
+    <label>Link da foto</label>
+    <input asp-for="Produto.UrlFoto" />
+
+    <label>Estoque</label>
+    <input asp-for="Produto.Estoque" type="number" />
+
+    <button type="submit">Salvar</button>
+</form>

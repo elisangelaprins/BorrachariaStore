@@ -1,0 +1,57 @@
+[
+  {
+    "nome": "Pneu Aro 14 Pirelli Cinturato",
+    "marca": "Pirelli",
+    "descricao": "Pneu para carros de passeio, alta durabilidade.",
+    "categoria": "Passeio",
+    "medida": "175/70 R14",
+    "aro": 14,
+    "preco": 389.90,
+    "urlFoto": "/img/produtos/pirelli-cinturato.jpg",
+    "estoque": 20
+  },
+  {
+    "nome": "Pneu Aro 15 Michelin Energy XM2",
+    "marca": "Michelin",
+    "descricao": "Baixo consumo de combustível e ótima frenagem em piso molhado.",
+    "categoria": "Passeio",
+    "medida": "185/65 R15",
+    "aro": 15,
+    "preco": 459.90,
+    "urlFoto": "/img/produtos/michelin-energy-xm2.jpg",
+    "estoque": 15
+  },
+  {
+    "nome": "Pneu Aro 17 Goodyear Eagle Sport",
+    "marca": "Goodyear",
+    "descricao": "Alto desempenho para veículos esportivos.",
+    "categoria": "Esportivo",
+    "medida": "205/45 R17",
+    "aro": 17,
+    "preco": 699.90,
+    "urlFoto": "/img/produtos/goodyear-eagle-sport.jpg",
+    "estoque": 8
+  },
+  {
+    "nome": "Pneu Aro 16 Continental PowerContact",
+    "marca": "Continental",
+    "descricao": "Equilíbrio entre conforto e economia para uso urbano.",
+    "categoria": "Passeio",
+    "medida": "195/60 R16",
+    "aro": 16,
+    "preco": 419.90,
+    "urlFoto": "/img/produtos/continental-powercontact.jpg",
+    "estoque": 12
+  },
+  {
+    "nome": "Pneu Aro 15 Bridgestone Duravis",
+    "marca": "Bridgestone",
+    "descricao": "Reforçado para uso em picapes e utilitários.",
+    "categoria": "Utilitário",
+    "medida": "205/70 R15",
+    "aro": 15,
+    "preco": 549.90,
+    "urlFoto": "/img/produtos/bridgestone-duravis.jpg",
+    "estoque": 10
+  }
+]
