@@ -3,14 +3,13 @@
 Sistema de venda de produtos online (pneus e itens automotivos), desenvolvido em
 C# (.NET) / ASP.NET Core com Razor Pages e persistência em MongoDB.
 
-Disciplina: Planejamento de Projeto de Sistema Visual — Profa. Lian Hua Liu Iwersen
+Disciplina: Planejamento de Projeto de Sistema Visual — Profº. Lian Hua Liu Iwersen
 
 ## Estrutura de pastas
 
 ```
 BorrachariaStore/
 ├── BorrachariaStore.sln
-├── docs/                              # PDFs de planejamento e cartões do Trello
 ├── src/
 │   └── BorrachariaStore.Web/
 │       ├── BorrachariaStore.Web.csproj
