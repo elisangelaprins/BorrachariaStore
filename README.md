@@ -1,15 +1,41 @@
 # BorrachariaStore
 
-Sistema de venda de produtos online (pneus e itens automotivos), desenvolvido em
-C# (.NET) / ASP.NET Core com Razor Pages e persistência em MongoDB.
+Sistema visual de e-commerce automotivo (venda de pneus e serviços de borracharia), desenvolvido em C# (.NET 8) / ASP.NET Core com Razor Pages e persistência em banco de dados NoSQL (MongoDB).
 
-Disciplina: Planejamento de Projeto de Sistema Visual — Profº. Lian Hua Liu Iwersen
+**Disciplina:** Planejamento de Projeto de Sistema Visual — Profª. Lian Hua Liu Iwersen  
 
-## Estrutura de pastas
+---
 
+## 🎯 Proposta e Usuário-Alvo
+* **Problema:** Dificuldade de motoristas encontrarem rapidamente especificações exatas de pneus (aro, largura, perfil) e realizarem pedidos com agilidade, além da necessidade de borracharias gerenciarem estoque e produtos de forma centralizada.
+* **Público-Alvo:** Motoristas e proprietários de veículos automotivos (clientes) e gestores de borracharia/auto centers (administradores).
+
+---
+
+## ✨ Funcionalidades Principais (Escopo)
+* **Catálogo Dinâmico:** Listagem visual de produtos com busca por nome e filtros por aro e preço.
+* **Carrinho de Compras:** Adição/remoção de itens, controle de quantidade e cálculo automático de subtotal.
+* **Checkout Simulado:** Formulário com validação de dados de entrega e seleção de método de pagamento (Cartão, Pix, Boleto).
+* **Painel Administrativo (CRUD):** Área restrita para cadastro, listagem, edição e exclusão de pneus no MongoDB.
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+* **Linguagem:** C# (.NET 8)
+* **Framework:** ASP.NET Core Razor Pages
+* **Banco de Dados:** MongoDB (driver oficial `MongoDB.Driver`)
+* **Front-end:** HTML5, CSS3, JavaScript, Bootstrap
+
+---
+
+## 📁 Estrutura de Pastas
 ```
 BorrachariaStore/
-├── BorrachariaStore.sln
+├── .github/
+│   └── CODEOWNERS                     # Regras de aprovação de código
+├── .gitignore                         # Arquivos ignorados pelo Git (bin, obj, vs)
+├── BorrachariaStore.sln               # Solução .NET
+├── README.md                          # Documentação do projeto
 ├── src/
 │   └── BorrachariaStore.Web/
 │       ├── BorrachariaStore.Web.csproj
