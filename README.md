@@ -2,7 +2,7 @@
 
 Sistema visual de e-commerce automotivo (venda de pneus e serviços de borracharia), desenvolvido em C# (.NET 8) / ASP.NET Core com Razor Pages e persistência em banco de dados NoSQL (MongoDB).
 
-**Disciplina:** Planejamento de Projeto de Sistema Visual — Profª. Lian Hua Liu Iwersen  
+**Disciplina:** Planejamento de Projeto de Sistema Visual — Profº. Lian Hua Liu Iwersen  
 
 ---
 
