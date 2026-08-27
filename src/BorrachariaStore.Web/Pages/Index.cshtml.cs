@@ -24,19 +24,15 @@ public class IndexModel : PageModel
     [BindProperty(SupportsGet = true)]
     public string? Categoria { get; set; }
 
-    // Aula 3: buscar lista de produtos do MongoDB e aplicar filtros
     public async Task OnGetAsync()
     {
-        Produtos = await _produtoService.BuscarAsync(Termo, Categoria);
+        // TODO: Buscar lista de produtos com base nos filtros (Termo e Categoria)
+        throw new NotImplementedException();
     }
 
-    // Aula 4: adicionar ao carrinho
     public async Task<IActionResult> OnPostAdicionarAoCarrinhoAsync(string produtoId)
     {
-        var produto = await _produtoService.ObterPorIdAsync(produtoId);
-        if (produto is not null)
-            _carrinhoService.Adicionar(produto);
-
-        return RedirectToPage();
+        // TODO: Obter o produto por Id e adicionar ao carrinho, depois redirecionar
+        throw new NotImplementedException();
     }
 }

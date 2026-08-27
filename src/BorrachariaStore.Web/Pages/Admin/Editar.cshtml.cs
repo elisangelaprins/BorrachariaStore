@@ -19,21 +19,13 @@ public class EditarModel : PageModel
 
     public async Task<IActionResult> OnGetAsync(string id)
     {
-        var produto = await _produtoService.ObterPorIdAsync(id);
-        if (produto is null)
-            return RedirectToPage("/Admin/Index");
-
-        Produto = produto;
-        return Page();
+        // TODO: Buscar produto por Id e carregar na propriedade Produto (se não encontrar, redirecionar para /Admin/Index)
+        throw new NotImplementedException();
     }
 
-    // Aula 7: rotina de atualização (Update) no MongoDB
     public async Task<IActionResult> OnPostAsync()
     {
-        if (!ModelState.IsValid)
-            return Page();
-
-        await _produtoService.AtualizarAsync(Produto.Id!, Produto);
-        return RedirectToPage("/Admin/Index");
+        // TODO: Validar ModelState, atualizar Produto via ProdutoService e redirecionar para /Admin/Index
+        throw new NotImplementedException();
     }
 }

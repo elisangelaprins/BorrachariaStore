@@ -8,12 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Aula 3: instalar via "dotnet add package MongoDB.Driver" -->
+    <!-- Driver oficial do MongoDB -->
     <PackageReference Include="MongoDB.Driver" Version="2.28.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Mock Data (Aula 2) copiado para a pasta de saída -->
+    <!-- Copia o arquivo de mock data para a pasta de saída na compilação -->
     <None Update="Data\MockData\produtos.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

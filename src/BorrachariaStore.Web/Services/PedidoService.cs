@@ -4,7 +4,7 @@ using MongoDB.Driver;
 
 namespace BorrachariaStore.Web.Services;
 
-// Persistência dos pedidos gerados no Checkout simulado (Aula 5)
+// Persistência dos pedidos gerados no Checkout simulado
 public class PedidoService
 {
     private readonly IMongoCollection<Pedido> _pedidos;
@@ -16,9 +16,15 @@ public class PedidoService
         _pedidos = database.GetCollection<Pedido>(settings.Value.PedidosCollectionName);
     }
 
-    public async Task CriarAsync(Pedido pedido) =>
-        await _pedidos.InsertOneAsync(pedido);
+    public async Task CriarAsync(Pedido pedido)
+    {
+        // TODO: Implementar gravação do pedido no MongoDB
+        throw new NotImplementedException();
+    }
 
-    public async Task<List<Pedido>> ListarAsync() =>
-        await _pedidos.Find(_ => true).ToListAsync();
+    public async Task<List<Pedido>> ListarAsync()
+    {
+        // TODO: Implementar listagem de pedidos gravados
+        throw new NotImplementedException();
+    }
 }

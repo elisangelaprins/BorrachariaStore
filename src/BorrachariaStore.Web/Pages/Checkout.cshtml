@@ -6,30 +6,5 @@
 
 <h1>Checkout</h1>
 
-@if (Model.PedidoConfirmado)
-{
-    <!-- Aula 5: mensagem de confirmação de pedido realizado -->
-    <p>Pedido realizado com sucesso!</p>
-}
-else
-{
-    <form method="post">
-        <label>Nome completo</label>
-        <input asp-for="NomeComprador" required />
-
-        <label>Endereço de entrega</label>
-        <input asp-for="Endereco" required />
-
-        <label>Método de pagamento</label>
-        <select asp-for="MetodoPagamento" required>
-            <option value="">Selecione</option>
-            <option value="Cartao">Cartão</option>
-            <option value="Pix">Pix</option>
-            <option value="Boleto">Boleto</option>
-        </select>
-
-        <p>Total do pedido: @Model.Total.ToString("C")</p>
-
-        <button type="submit">Confirmar Pedido</button>
-    </form>
-}
+<!-- TODO: Se Model.PedidoConfirmado for verdadeiro, exibir mensagem de sucesso -->
+<!-- TODO: Caso contrário, exibir formulário com os campos: NomeComprador, Endereco, MetodoPagamento (Select com Cartão, Pix, Boleto), Total do pedido e botão de confirmar -->
