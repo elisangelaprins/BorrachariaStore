@@ -6,33 +6,6 @@
 
 <h1>Painel Administrativo</h1>
 
-<a asp-page="/Admin/Cadastrar">+ Cadastrar novo produto</a>
+<!-- TODO: Incluir link para cadastrar novo produto (/Admin/Cadastrar) -->
 
-<!-- Aula 7: listar todos os pneus cadastrados -->
-<table>
-    <thead>
-        <tr>
-            <th>Nome</th>
-            <th>Aro</th>
-            <th>Preço</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var produto in Model.Produtos)
-        {
-            <tr>
-                <td>@produto.Nome</td>
-                <td>@produto.Aro</td>
-                <td>@produto.Preco.ToString("C")</td>
-                <td>
-                    <a asp-page="/Admin/Editar" asp-route-id="@produto.Id">Editar</a>
-                    <form method="post" asp-page-handler="Remover" style="display:inline">
-                        <input type="hidden" name="id" value="@produto.Id" />
-                        <button type="submit">Excluir</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<!-- TODO: Criar tabela para listar todos os produtos (Model.Produtos) com: Nome, Aro, Preço, link para Editar (/Admin/Editar) e botão para Excluir via form POST -->

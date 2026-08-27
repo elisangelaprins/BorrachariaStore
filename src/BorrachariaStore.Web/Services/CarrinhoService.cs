@@ -2,8 +2,7 @@ using BorrachariaStore.Web.Models;
 
 namespace BorrachariaStore.Web.Services;
 
-// Regras de negócio do Carrinho de Compras (Aula 4) e cálculo do total (Aula 5)
-// Escopo: sessão em memória. Persistência real fica fora do escopo do projeto.
+// Regras de negócio do Carrinho de Compras e cálculo do total
 public class CarrinhoService
 {
     private readonly List<ItemCarrinho> _itens = new();
@@ -12,39 +11,31 @@ public class CarrinhoService
 
     public void Adicionar(Produto produto, int quantidade = 1)
     {
-        var existente = _itens.FirstOrDefault(i => i.ProdutoId == produto.Id);
-        if (existente is not null)
-        {
-            existente.Quantidade += quantidade;
-            return;
-        }
-
-        _itens.Add(new ItemCarrinho
-        {
-            ProdutoId = produto.Id ?? string.Empty,
-            Nome = produto.Nome,
-            UrlFoto = produto.UrlFoto,
-            PrecoUnitario = produto.Preco,
-            Quantidade = quantidade
-        });
+        // TODO: Implementar adição de produto ao carrinho ou incremento se já existir
+        throw new NotImplementedException();
     }
 
     public void AtualizarQuantidade(string produtoId, int quantidade)
     {
-        var item = _itens.FirstOrDefault(i => i.ProdutoId == produtoId);
-        if (item is null) return;
-
-        if (quantidade <= 0)
-            _itens.Remove(item);
-        else
-            item.Quantidade = quantidade;
+        // TODO: Implementar atualização da quantidade ou remoção se quantidade <= 0
+        throw new NotImplementedException();
     }
 
-    public void Remover(string produtoId) =>
-        _itens.RemoveAll(i => i.ProdutoId == produtoId);
+    public void Remover(string produtoId)
+    {
+        // TODO: Implementar remoção do item do carrinho
+        throw new NotImplementedException();
+    }
 
-    public decimal CalcularTotal() =>
-        _itens.Sum(i => i.Subtotal);
+    public decimal CalcularTotal()
+    {
+        // TODO: Implementar cálculo do total do carrinho (soma dos subtotais)
+        throw new NotImplementedException();
+    }
 
-    public void Limpar() => _itens.Clear();
+    public void Limpar()
+    {
+        // TODO: Implementar limpeza de todos os itens do carrinho
+        throw new NotImplementedException();
+    }
 }

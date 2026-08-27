@@ -18,13 +18,13 @@ public class IndexModel : PageModel
 
     public async Task OnGetAsync()
     {
-        Produtos = await _produtoService.ListarAsync();
+        // TODO: Carregar todos os produtos na lista Produtos via ProdutoService
+        throw new NotImplementedException();
     }
 
-    // Aula 7: rotina de remoção (Delete) no MongoDB
     public async Task<IActionResult> OnPostRemoverAsync(string id)
     {
-        await _produtoService.RemoverAsync(id);
-        return RedirectToPage();
+        // TODO: Remover produto por Id via ProdutoService e redirecionar para a página
+        throw new NotImplementedException();
     }
 }

@@ -6,29 +6,6 @@
 
 <h1>Catálogo de Pneus</h1>
 
-<!-- Aula 3: Filtros e Busca -->
-<form method="get">
-    <input type="text" name="termo" placeholder="Buscar por modelo/marca" value="@Model.Termo" />
-    <select name="categoria">
-        <option value="">Todas as categorias</option>
-        <!-- opções populadas dinamicamente -->
-    </select>
-    <button type="submit">Filtrar</button>
-</form>
+<!-- TODO: Criar formulário de busca/filtro (GET) com campo de texto e select de categoria -->
 
-<!-- Aula 3: Listagem em cards -->
-<div class="produto-grid">
-    @foreach (var produto in Model.Produtos)
-    {
-        <div class="produto-card">
-            <img src="@produto.UrlFoto" alt="@produto.Nome" />
-            <h3>@produto.Nome</h3>
-            <p>@produto.Descricao</p>
-            <p>@produto.Preco.ToString("C")</p>
-            <form method="post" asp-page-handler="AdicionarAoCarrinho">
-                <input type="hidden" name="produtoId" value="@produto.Id" />
-                <button type="submit">Adicionar ao Carrinho</button>
-            </form>
-        </div>
-    }
-</div>
+<!-- TODO: Criar exibição da lista de produtos (Model.Produtos) com imagem, nome, descrição, preço e botão/form para Adicionar ao Carrinho -->

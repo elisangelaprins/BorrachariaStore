@@ -16,22 +16,26 @@ public class CarrinhoModel : PageModel
 
     public IReadOnlyList<ItemCarrinho> Itens => _carrinhoService.Itens;
 
-    // Aula 5: cálculo do valor total
-    public decimal Total => _carrinhoService.CalcularTotal();
+    public decimal Total
+    {
+        get
+        {
+            // TODO: Retornar o cálculo do total do carrinho via serviço
+            throw new NotImplementedException();
+        }
+    }
 
     public void OnGet() { }
 
-    // Aula 4: controle de aumento/redução de quantidade
     public IActionResult OnPostAtualizarQuantidade(string produtoId, int quantidade)
     {
-        _carrinhoService.AtualizarQuantidade(produtoId, quantidade);
-        return RedirectToPage();
+        // TODO: Atualizar quantidade via serviço e redirecionar para a página
+        throw new NotImplementedException();
     }
 
-    // Aula 4: botão de exclusão de item
     public IActionResult OnPostRemover(string produtoId)
     {
-        _carrinhoService.Remover(produtoId);
-        return RedirectToPage();
+        // TODO: Remover item via serviço e redirecionar para a página
+        throw new NotImplementedException();
     }
 }

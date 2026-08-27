@@ -9,5 +9,12 @@ public class ItemCarrinho
     public decimal PrecoUnitario { get; set; }
     public int Quantidade { get; set; }
 
-    public decimal Subtotal => PrecoUnitario * Quantidade;
+    public decimal Subtotal
+    {
+        get
+        {
+            // TODO: Retornar o cálculo do subtotal do item (PrecoUnitario * Quantidade)
+            throw new NotImplementedException();
+        }
+    }
 }

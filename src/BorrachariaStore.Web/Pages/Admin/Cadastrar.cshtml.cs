@@ -19,13 +19,9 @@ public class CadastrarModel : PageModel
 
     public void OnGet() { }
 
-    // Aula 6: rotina de gravação (Insert) no MongoDB
     public async Task<IActionResult> OnPostAsync()
     {
-        if (!ModelState.IsValid)
-            return Page();
-
-        await _produtoService.CriarAsync(Produto);
-        return RedirectToPage("/Admin/Index");
+        // TODO: Validar ModelState, salvar Produto via ProdutoService e redirecionar para /Admin/Index
+        throw new NotImplementedException();
     }
 }

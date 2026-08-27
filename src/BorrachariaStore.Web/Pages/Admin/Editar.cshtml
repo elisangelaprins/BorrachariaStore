@@ -6,36 +6,4 @@
 
 <h1>Editar Produto</h1>
 
-<!-- Aula 7: carregar dados do item selecionado no formulário de edição -->
-<form method="post">
-    <input type="hidden" asp-for="Produto.Id" />
-
-    <label>Nome</label>
-    <input asp-for="Produto.Nome" required />
-
-    <label>Marca</label>
-    <input asp-for="Produto.Marca" />
-
-    <label>Descrição</label>
-    <textarea asp-for="Produto.Descricao"></textarea>
-
-    <label>Categoria</label>
-    <input asp-for="Produto.Categoria" />
-
-    <label>Medida</label>
-    <input asp-for="Produto.Medida" />
-
-    <label>Aro</label>
-    <input asp-for="Produto.Aro" type="number" required />
-
-    <label>Preço</label>
-    <input asp-for="Produto.Preco" type="number" step="0.01" required />
-
-    <label>Link da foto</label>
-    <input asp-for="Produto.UrlFoto" />
-
-    <label>Estoque</label>
-    <input asp-for="Produto.Estoque" type="number" />
-
-    <button type="submit">Salvar alterações</button>
-</form>
+<!-- TODO: Criar formulário (POST) para editar produto, com campo hidden para o Id, campos para editar dados do produto e botão Salvar alterações -->

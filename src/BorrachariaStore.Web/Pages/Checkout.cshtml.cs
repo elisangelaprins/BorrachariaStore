@@ -29,30 +29,22 @@ public class CheckoutModel : PageModel
     [Required]
     public string MetodoPagamento { get; set; } = string.Empty;
 
-    public decimal Total => _carrinhoService.CalcularTotal();
+    public decimal Total
+    {
+        get
+        {
+            // TODO: Retornar o cálculo do total do carrinho via serviço
+            throw new NotImplementedException();
+        }
+    }
+
     public bool PedidoConfirmado { get; set; }
 
     public void OnGet() { }
 
-    // Aula 5: validação de campos e criação do pedido (checkout simulado)
     public async Task<IActionResult> OnPostAsync()
     {
-        if (!ModelState.IsValid)
-            return Page();
-
-        var pedido = new Pedido
-        {
-            NomeComprador = NomeComprador,
-            Endereco = Endereco,
-            MetodoPagamento = MetodoPagamento,
-            Itens = _carrinhoService.Itens.ToList(),
-            ValorTotal = Total
-        };
-
-        await _pedidoService.CriarAsync(pedido);
-        _carrinhoService.Limpar();
-
-        PedidoConfirmado = true;
-        return Page();
+        // TODO: Validar ModelState, montar o Pedido, salvar via PedidoService, limpar o carrinho e setar PedidoConfirmado
+        throw new NotImplementedException();
     }
 }
