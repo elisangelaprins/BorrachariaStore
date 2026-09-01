@@ -26,13 +26,16 @@ public class IndexModel : PageModel
 
     public async Task OnGetAsync()
     {
-        // TODO: Buscar lista de produtos com base nos filtros (Termo e Categoria)
-        throw new NotImplementedException();
+        Produtos = await _produtoService.BuscarAsync(Termo, Categoria);
     }
 
     public async Task<IActionResult> OnPostAdicionarAoCarrinhoAsync(string produtoId)
     {
-        // TODO: Obter o produto por Id e adicionar ao carrinho, depois redirecionar
-        throw new NotImplementedException();
+        var produto = await _produtoService.ObterPorIdAsync(produtoId);
+        if (produto != null)
+        {
+            _carrinhoService.Adicionar(produto, 1);
+        }
+        return RedirectToPage("/Carrinho");
     }
 }
