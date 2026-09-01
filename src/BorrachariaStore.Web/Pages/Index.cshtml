@@ -1,11 +1,141 @@
 @page
 @model BorrachariaStore.Web.Pages.IndexModel
 @{
-    ViewData["Title"] = "Catálogo";
+    ViewData["Title"] = "Início";
 }
 
-<h1>Catálogo de Pneus</h1>
+<!-- HERO SECTION (DESTAQUE) -->
+<section class="hero">
+  <div class="hero-grid">
+    <div>
+      <span class="hero-eyebrow">Frete grátis acima de R$ 300</span>
+      <h1>O pneu certo para cada quilômetro rodado.</h1>
+      <p class="lead">Mais de 128 modelos das principais marcas, com garantia de fábrica e entrega para todo o Brasil.</p>
+      
+      <!-- BARRA DE BUSCA -->
+      <form method="get" style="display:flex; gap:12px; margin-bottom:24px; max-width:500px;">
+        <input type="text" name="termo" value="@Model.Termo" placeholder="Buscar por marca, modelo ou medida..." 
+               style="padding:12px 16px; border-radius:8px; border:1px solid #cbd5e1; flex:1; font-size:15px; outline:none;" />
+        <button type="submit" class="btn btn-primary">Buscar</button>
+      </form>
 
-<!-- TODO: Criar formulário de busca/filtro (GET) com campo de texto e select de categoria -->
+      <div class="hero-stats">
+        <div><b>@(Model.Produtos?.Count ?? 0)+</b><span>produtos disponíveis</span></div>
+        <div><b>4.8</b><span>avaliação média</span></div>
+        <div><b>7 dias</b><span>para troca fácil</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <span class="hero-tag">-15% OFF esta semana</span>
+      <div class="tire-ring"></div>
+    </div>
+  </div>
+</section>
 
-<!-- TODO: Criar exibição da lista de produtos (Model.Produtos) com imagem, nome, descrição, preço e botão/form para Adicionar ao Carrinho -->
+<!-- FILTRO POR ARO -->
+<section class="section">
+  <div class="section-head">
+    <div>
+      <h2>Buscar por medida (aro)</h2>
+      <p>Encontre o pneu certo para o seu veículo em um clique.</p>
+    </div>
+  </div>
+  <div class="aro-strip">
+    <a asp-page="/Index" asp-route-termo="13" class="aro-card"><div class="ring"></div><b>Aro 13</b><span>Ver opções</span></a>
+    <a asp-page="/Index" asp-route-termo="14" class="aro-card"><div class="ring"></div><b>Aro 14</b><span>Ver opções</span></a>
+    <a asp-page="/Index" asp-route-termo="15" class="aro-card"><div class="ring"></div><b>Aro 15</b><span>Ver opções</span></a>
+    <a asp-page="/Index" asp-route-termo="16" class="aro-card"><div class="ring"></div><b>Aro 16</b><span>Ver opções</span></a>
+    <a asp-page="/Index" asp-route-termo="17" class="aro-card"><div class="ring"></div><b>Aro 17</b><span>Ver opções</span></a>
+    <a asp-page="/Index" asp-route-termo="" class="aro-card"><div class="ring"></div><b>Todos</b><span>Ver catálogo</span></a>
+  </div>
+</section>
+
+<!-- CATÁLOGO DE PRODUTOS DINÂMICO -->
+<section class="section" style="padding-top:0;">
+  <div class="section-head">
+    <div>
+      <h2>Catálogo de Pneus</h2>
+      <p>Os melhores pneus direto dos fabricantes.</p>
+    </div>
+  </div>
+
+  <div class="prod-grid">
+    @if (Model.Produtos != null && Model.Produtos.Any())
+    {
+        @foreach (var pneu in Model.Produtos)
+        {
+            <div class="prod-card">
+              <div class="prod-thumb">
+                <span class="tag">@pneu.Marca</span>
+                <span class="aro-pill">Aro @pneu.Aro</span>
+                <div class="tire-icon"></div>
+              </div>
+              <div class="prod-info">
+                <h3>@pneu.Nome</h3>
+                <p class="desc">@pneu.Descricao — Medida: <strong>@pneu.Medida</strong></p>
+                <div class="prod-price-row">
+                  <span class="prod-price">R$ @pneu.Preco.ToString("N2")</span>
+                  <span class="prod-rating">★ 4.8</span>
+                </div>
+                <form method="post" asp-page-handler="AdicionarAoCarrinho" asp-route-produtoId="@pneu.Id">
+                    <button type="submit" class="prod-add" style="width:100%;">Adicionar ao Carrinho</button>
+                </form>
+              </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div style="grid-column: 1 / -1; padding: 40px; text-align: center; background: #fff; border-radius: 10px; border: 1px solid #e2e8f0;">
+            <p style="font-size: 16px; color: #64748b; margin: 0;">Nenhum produto encontrado com os filtros atuais.</p>
+            <a asp-page="/Index" style="display:inline-block; margin-top:10px; color:#2563eb; font-weight:600;">Limpar filtros</a>
+        </div>
+    }
+  </div>
+</section>
+
+<!-- BANNER PROMOCIONAL -->
+<section class="section" style="padding-top:0;">
+  <div class="promo">
+    <div>
+      <h3>Ganhe 10% de desconto na primeira compra</h3>
+      <p>Use o cupom <code>BORRACHA10</code> no carrinho. Válido para todo o catálogo.</p>
+    </div>
+    <a asp-page="/Index" class="btn btn-primary" style="background:#fff; color:#1d4ed8;">Ver ofertas</a>
+  </div>
+</section>
+
+<!-- BENEFÍCIOS -->
+<section class="section" style="padding-top:0;">
+  <div class="benefits">
+    <div class="benefit">
+      <div class="b-icon">🚚</div>
+      <div><h4>Frete grátis</h4><p>Em compras acima de R$ 300 para todo o Brasil.</p></div>
+    </div>
+    <div class="benefit">
+      <div class="b-icon">🛡️</div>
+      <div><h4>Garantia de fábrica</h4><p>12 meses de garantia em todos os produtos.</p></div>
+    </div>
+    <div class="benefit">
+      <div class="b-icon">🔄</div>
+      <div><h4>Troca fácil</h4><p>Até 7 dias para trocar caso não fique satisfeito.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- MARCAS PARCEIRAS -->
+<section class="section" style="padding-top:0;">
+  <div class="section-head">
+    <div>
+      <h2>Marcas parceiras</h2>
+      <p>Trabalhamos direto com os principais fabricantes.</p>
+    </div>
+  </div>
+  <div class="brand-row">
+    <a asp-page="/Index" asp-route-termo="Goodyear" class="brand-chip">Goodyear</a>
+    <a asp-page="/Index" asp-route-termo="Pirelli" class="brand-chip">Pirelli</a>
+    <a asp-page="/Index" asp-route-termo="Michelin" class="brand-chip">Michelin</a>
+    <a asp-page="/Index" asp-route-termo="Bridgestone" class="brand-chip">Bridgestone</a>
+    <a asp-page="/Index" asp-route-termo="Continental" class="brand-chip">Continental</a>
+  </div>
+</section>
