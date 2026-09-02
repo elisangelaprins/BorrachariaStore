@@ -30,8 +30,16 @@ public class ProdutoService
 
     public async Task<List<Produto>> BuscarAsync(string? termo, string? categoria)
     {
-        // TODO: Implementar busca com filtros por termo e categoria
-        throw new NotImplementedException();
+        try
+        {
+            var filtro = Builders<Produto>.Filter.Empty; //filtro que busca todos os registros
+            var listaDeProdutos = await _produtos.Find(filtro).ToListAsync(); //execura a busca no Mongo
+            return listaDeProdutos;
+        } catch (Exception)
+        {
+            return new List<Produto>(); // em caso de erro no banco
+        }
+
     }
 
     public async Task CriarAsync(Produto produto)
