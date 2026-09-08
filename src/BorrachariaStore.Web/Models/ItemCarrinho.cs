@@ -1,6 +1,5 @@
 namespace BorrachariaStore.Web.Models;
 
-// Item dentro do Carrinho de Compras (Aula 4)
 public class ItemCarrinho
 {
     public string ProdutoId { get; set; } = string.Empty;
@@ -13,8 +12,7 @@ public class ItemCarrinho
     {
         get
         {
-            // TODO: Retornar o cálculo do subtotal do item (PrecoUnitario * Quantidade)
-            throw new NotImplementedException();
+            return PrecoUnitario * Quantidade;
         }
     }
 }

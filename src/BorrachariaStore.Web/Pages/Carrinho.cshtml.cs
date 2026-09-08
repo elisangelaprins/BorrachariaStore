@@ -20,8 +20,7 @@ public class CarrinhoModel : PageModel
     {
         get
         {
-            // TODO: Retornar o cálculo do total do carrinho via serviço
-            throw new NotImplementedException();
+          return _carrinhoService.CalcularTotal();
         }
     }
 

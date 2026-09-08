@@ -11,8 +11,27 @@ public class CarrinhoService
 
     public void Adicionar(Produto produto, int quantidade = 1)
     {
-        // TODO: Implementar adição de produto ao carrinho ou incremento se já existir
-        throw new NotImplementedException();
+        if (produto == null || quantidade <= 0)
+        {
+            return;
+        }
+        var ItemCarrinho = _itens.FirstOrDefault(item => item.ProdutoId == produto.Id);
+
+        if (ItemCarrinho != null)
+        {
+            ItemCarrinho.Quantidade = ItemCarrinho.Quantidade + quantidade;
+        }
+        else
+        {
+            ItemCarrinho novoItem = new ItemCarrinho();
+            novoItem.ProdutoId = produto.Id;
+            novoItem.Nome = produto.Nome;
+            novoItem.UrlFoto = produto.UrlFoto;
+            novoItem.PrecoUnitario = produto.Preco;
+            novoItem.Quantidade = quantidade;
+
+            _itens.Add(novoItem);
+        }
     }
 
     public void AtualizarQuantidade(string produtoId, int quantidade)
@@ -29,8 +48,14 @@ public class CarrinhoService
 
     public decimal CalcularTotal()
     {
-        // TODO: Implementar cálculo do total do carrinho (soma dos subtotais)
-        throw new NotImplementedException();
+        decimal valorTotal = 0;
+
+        foreach (ItemCarrinho item in _itens)
+        {
+            valorTotal = valorTotal + item.Subtotal;
+        }
+
+        return valorTotal;
     }
 
     public void Limpar()
