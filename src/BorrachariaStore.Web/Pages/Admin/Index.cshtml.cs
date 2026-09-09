@@ -15,16 +15,48 @@ public class IndexModel : PageModel
     }
 
     public List<Produto> Produtos { get; set; } = new();
+    public string? MensagemErro { get; set; }
 
     public async Task OnGetAsync()
     {
-        // TODO: Carregar todos os produtos na lista Produtos via ProdutoService
-        throw new NotImplementedException();
+        try
+        {
+            var productList = await _produtoService.ListarAsync();
+            Produtos = productList ?? new List<Produto>();
+
+            if (Produtos.Count == 0)
+            {
+                ViewData["Aviso"] = "Nenhum produto cadastrado no momento.";
+            }
+        }
+        catch (Exception ex) 
+        {
+            Console.WriteLine($"[LOG ERRO] Admin Index OnGetAsync: {ex.Message}");
+            Produtos = new List<Produto>();
+            MensagemErro = "Falha ao carregar a lista de produtos. Tente novamente mais tarde.";
+        }
     }
+
 
     public async Task<IActionResult> OnPostRemoverAsync(string id)
     {
-        // TODO: Remover produto por Id via ProdutoService e redirecionar para a página
-        throw new NotImplementedException();
+        if (string.IsNullOrWhiteSpace(id))
+        {
+            return RedirectToPage();
+        }
+
+        try 
+        {
+            await _produtoService.RemoverAsync(id);
+            TempData["MensagemSucesso"] = "Produto excluído com sucesso!";
+            
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[LOG ERRO] Admin Index OnPostRemoverAsync: {ex.Message}");
+            TempData["MensagemErro"] = "Ocorreu um erro ao tentar excluir o produto.";
+        }
+
+        return RedirectToPage();
     }
 }

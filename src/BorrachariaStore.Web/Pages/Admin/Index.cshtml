@@ -3,9 +3,90 @@
 @{
     ViewData["Title"] = "Painel Administrativo";
 }
+<div style="display: flex; justify-content: space-between; align-items: center; margin: 30px 0 20px;">
+    <h2>Painel Administrativo</h2>
+    <a asp-page="/Admin/Cadastrar" class="btn btn-primary" style="text-decoration: none; padding: 10px 18px; border-radius: 8px;">
+        + Cadastrar Novo Pneu
+    </a>
+</div>
 
-<h1>Painel Administrativo</h1>
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div id="toastMsg" style="position: fixed; top: 24px; right: 24px; background: #16a34a; color: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 600; z-index: 9999;">
+        ✓ @TempData["MensagemSucesso"]
+    </div>
+    <script>
+        setTimeout(() => document.getElementById('toastMsg')?.remove(), 3500);
+    </script>
+}
 
-<!-- TODO: Incluir link para cadastrar novo produto (/Admin/Cadastrar) -->
+@if (!Model.Produtos.Any())
+{
+    <p style="background: #fff; padding: 24px; border-radius: 8px; border: 1px solid #e2e8f0; text-align: center; color: #64748b;">
+        Nenhum pneu cadastrado no momento.
+    </p>
+}
+else
+{
+    <table style="width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+        <thead>
+            <tr style="background: #0f172a; color: #fff; text-align: left;">
+                <th style="padding: 14px 16px;">Nome</th>
+                <th style="padding: 14px 16px;">Aro</th>
+                <th style="padding: 14px 16px;">Preço</th>
+                <th style="padding: 14px 16px; text-align: right;">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
 
-<!-- TODO: Criar tabela para listar todos os produtos (Model.Produtos) com: Nome, Aro, Preço, link para Editar (/Admin/Editar) e botão para Excluir via form POST -->
+                @foreach (var produto in Model.Produtos)
+        {
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 14px 16px; font-weight: 600;">@produto.Nome</td>
+                <td style="padding: 14px 16px;">Aro @produto.Aro</td>
+                <td style="padding: 14px 16px;">@produto.Preco.ToString("C")</td>
+                <td style="padding: 14px 16px; text-align: right;">
+                    <a asp-page="/Admin/Editar" asp-route-id="@produto.Id" class="btn" style="background: #e2e8f0; color: #0f172a; padding: 6px 14px; border-radius: 6px; margin-right: 8px;">
+                        Editar
+                    </a>
+                    <button type="button" onclick="abrirConfirmacao('@produto.Id', '@produto.Nome')" style="background: #fee2e2; color: #dc2626; padding: 6px 14px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600;">
+                        Excluir
+                    </button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+<!-- Modal de Confirmação -->
+<div id="modalExclusao" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 9999;">
+    <div style="background: #fff; padding: 24px; border-radius: 12px; width: 90%; max-width: 420px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+        <h3 style="margin-top: 0; color: #0f172a;">Confirmar Exclusão</h3>
+        <p style="color: #64748b;">Tem certeza que deseja excluir o pneu <b id="nomePneuModal" style="color: #0f172a;"></b>? Esta ação não poderá ser desfeita.</p>
+        
+        <form method="post" asp-page-handler="Remover" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+            <input type="hidden" id="idPneuModal" name="id" />
+            <button type="button" onclick="fecharConfirmacao()" style="padding: 10px 16px; border: 1px solid #cbd5e1; background: #fff; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                Cancelar
+            </button>
+            <button type="submit" style="padding: 10px 16px; background: #dc2626; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                Sim, Excluir
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function abrirConfirmacao(id, nome) {
+        document.getElementById('idPneuModal').value = id;
+        document.getElementById('nomePneuModal').innerText = nome;
+        document.getElementById('modalExclusao').style.display = 'flex';
+    }
+
+    function fecharConfirmacao() {
+        document.getElementById('modalExclusao').style.display = 'none';
+    }
+</script>
+
+
