@@ -3,6 +3,15 @@
 @{
     ViewData["Title"] = "Painel Administrativo";
 }
+
+<style>
+    .admin-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .admin-table th, .admin-table td { padding: 14px 16px; }
+    .admin-table th { background: #0f172a; color: #fff; text-align: left; }
+    .admin-table tr { border-bottom: 1px solid #e2e8f0; }
+    .btn-edit { background: #e2e8f0; color: #0f172a; padding: 6px 14px; border-radius: 6px; margin-right: 8px; text-decoration: none; font-weight: 600; display: inline-block; }
+    .btn-delete { background: #fee2e2; color: #dc2626; padding: 6px 14px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; }
+</style>
 <div style="display: flex; justify-content: space-between; align-items: center; margin: 30px 0 20px;">
     <h2>Painel Administrativo</h2>
     <a asp-page="/Admin/Cadastrar" class="btn btn-primary" style="text-decoration: none; padding: 10px 18px; border-radius: 8px;">
@@ -28,28 +37,27 @@
 }
 else
 {
-    <table style="width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+    <table class="admin-table">
         <thead>
-            <tr style="background: #0f172a; color: #fff; text-align: left;">
-                <th style="padding: 14px 16px;">Nome</th>
-                <th style="padding: 14px 16px;">Aro</th>
-                <th style="padding: 14px 16px;">Preço</th>
-                <th style="padding: 14px 16px; text-align: right;">Ações</th>
+            <tr>
+                <th>Nome</th>
+                <th>Aro</th>
+                <th>Preço</th>
+                <th style="text-align: right;">Ações</th>
             </tr>
         </thead>
         <tbody>
-
-                @foreach (var produto in Model.Produtos)
+        @foreach (var produto in Model.Produtos)
         {
-            <tr style="border-bottom: 1px solid #e2e8f0;">
-                <td style="padding: 14px 16px; font-weight: 600;">@produto.Nome</td>
-                <td style="padding: 14px 16px;">Aro @produto.Aro</td>
-                <td style="padding: 14px 16px;">@produto.Preco.ToString("C")</td>
-                <td style="padding: 14px 16px; text-align: right;">
-                    <a asp-page="/Admin/Editar" asp-route-id="@produto.Id" class="btn" style="background: #e2e8f0; color: #0f172a; padding: 6px 14px; border-radius: 6px; margin-right: 8px;">
+            <tr>
+                <td style="font-weight: 600;">@produto.Nome</td>
+                <td>Aro @produto.Aro</td>
+                <td>@produto.Preco.ToString("C")</td>
+                <td style="text-align: right;">
+                    <a asp-page="/Admin/Editar" asp-route-id="@produto.Id" class="btn-edit">
                         Editar
                     </a>
-                    <button type="button" onclick="abrirConfirmacao('@produto.Id', '@produto.Nome')" style="background: #fee2e2; color: #dc2626; padding: 6px 14px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600;">
+                    <button type="button" onclick="abrirConfirmacao('@produto.Id', '@produto.Nome')" class="btn-delete">
                         Excluir
                     </button>
                 </td>

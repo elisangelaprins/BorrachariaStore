@@ -37,7 +37,21 @@ public class EditarModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        // TODO: Validar ModelState, atualizar Produto via ProdutoService e redirecionar para /Admin/Index
-        throw new NotImplementedException();
+         if (!ModelState.IsValid || string.IsNullOrWhiteSpace(Produto.Id))
+        {
+            return Page();
+        }
+        try
+        {
+            await _produtoService.AtualizarAsync(Produto.Id, Produto);
+            TempData["MensagemSucesso"] = "Produto atualizado com sucesso!";
+            return RedirectToPage("/Admin/Index");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[LOG ERRO] Editar OnPostAsync: {ex.Message}");
+            ModelState.AddModelError(string.Empty, "Ocorreu um erro ao tentar atualizar o produto.");
+            return Page();
+        }
     }
 }
