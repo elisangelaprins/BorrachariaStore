@@ -338,6 +338,34 @@ nav.main-nav a:hover {
   border-radius: 5px;
 }
 
+.prod-thumb {
+  background: #eef2fb;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden; /* Garante que a foto não vaze para fora do card */
+}
+
+/* Garante que a tag de marca e o pill de aro fiquem visíveis sobre a foto */
+.prod-thumb .tag,
+.prod-thumb .aro-pill {
+  z-index: 2;
+}
+
+.prod-thumb img,
+.prod-img {
+  max-width: 100%;
+  max-height: 120px;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+}
+
+.prod-card:hover .prod-thumb img {
+  transform: scale(1.05);
+}
+
 .prod-thumb .aro-pill {
   position: absolute;
   top: 10px;
