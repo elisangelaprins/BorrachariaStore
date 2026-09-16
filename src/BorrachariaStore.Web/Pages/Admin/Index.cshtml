@@ -4,97 +4,264 @@
     ViewData["Title"] = "Painel Administrativo";
 }
 
-<style>
-    .admin-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-    .admin-table th, .admin-table td { padding: 14px 16px; }
-    .admin-table th { background: #0f172a; color: #fff; text-align: left; }
-    .admin-table tr { border-bottom: 1px solid #e2e8f0; }
-    .btn-edit { background: #e2e8f0; color: #0f172a; padding: 6px 14px; border-radius: 6px; margin-right: 8px; text-decoration: none; font-weight: 600; display: inline-block; }
-    .btn-delete { background: #fee2e2; color: #dc2626; padding: 6px 14px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; }
-</style>
-<div style="display: flex; justify-content: space-between; align-items: center; margin: 30px 0 20px;">
-    <h2>Painel Administrativo</h2>
-    <a asp-page="/Admin/Cadastrar" class="btn btn-primary" style="text-decoration: none; padding: 10px 18px; border-radius: 8px;">
-        + Cadastrar Novo Pneu
-    </a>
-</div>
+<!-- Link do CSS moderno exclusivo do Painel Administrativo -->
+<link rel="stylesheet" href="~/css/admin.css" />
 
-@if (TempData["MensagemSucesso"] != null)
-{
-    <div id="toastMsg" style="position: fixed; top: 24px; right: 24px; background: #16a34a; color: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 600; z-index: 9999;">
-        ✓ @TempData["MensagemSucesso"]
+<div class="admin-main">
+    <!-- CABEÇALHO DO PAINEL -->
+    <div class="page-head">
+        <div>
+            <h1>Gerenciador de Estoque</h1>
+            <p>Acompanhe o estoque em tempo real, edite preços ou remova produtos.</p>
+        </div>
+        <a asp-page="/Admin/Cadastrar" class="btn-primary-admin">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Novo produto
+        </a>
     </div>
-    <script>
-        setTimeout(() => document.getElementById('toastMsg')?.remove(), 3500);
-    </script>
-}
 
-@if (!Model.Produtos.Any())
-{
-    <p style="background: #fff; padding: 24px; border-radius: 8px; border: 1px solid #e2e8f0; text-align: center; color: #64748b;">
-        Nenhum pneu cadastrado no momento.
-    </p>
-}
-else
-{
-    <table class="admin-table">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Aro</th>
-                <th>Preço</th>
-                <th style="text-align: right;">Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var produto in Model.Produtos)
+    <!-- MENSAGENS DE NOTIFICAÇÃO (FEEDBACK AO USUÁRIO) -->
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div style="background: #dcfce7; border: 1px solid #86efac; color: #166534; padding: 14px 18px; border-radius: 8px; margin-bottom: 20px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            @TempData["MensagemSucesso"]
+        </div>
+    }
+    @if (TempData["MensagemErro"] != null || !string.IsNullOrEmpty(Model.MensagemErro))
+    {
+        <div style="background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; padding: 14px 18px; border-radius: 8px; margin-bottom: 20px; font-weight: 600;">
+            @(TempData["MensagemErro"] ?? Model.MensagemErro)
+        </div>
+    }
+
+    <!-- BARRA DE PESQUISA E FILTROS -->
+    <div class="toolbar">
+        <div class="search-box">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" placeholder="Buscar por produto, aro ou marca..." />
+        </div>
+        <select class="filter-select">
+            <option>Todos os aros</option>
+            <option>Aro 13</option>
+            <option>Aro 14</option>
+            <option>Aro 15</option>
+            <option>Aro 16</option>
+            <option>Aro 17</option>
+            <option>Aro 18</option>
+        </select>
+        <select class="filter-select">
+            <option>Todos os status</option>
+            <option>Ativo</option>
+            <option>Baixo estoque</option>
+            <option>Inativo</option>
+        </select>
+    </div>
+
+    <!-- TABELA DE PRODUTOS -->
+    <div class="table-wrap">
+        @if (!Model.Produtos.Any())
         {
-            <tr>
-                <td style="font-weight: 600;">@produto.Nome</td>
-                <td>Aro @produto.Aro</td>
-                <td>@produto.Preco.ToString("C")</td>
-                <td style="text-align: right;">
-                    <a asp-page="/Admin/Editar" asp-route-id="@produto.Id" class="btn-edit">
-                        Editar
-                    </a>
-                    <button type="button" onclick="abrirConfirmacao('@produto.Id', '@produto.Nome')" class="btn-delete">
-                        Excluir
-                    </button>
-                </td>
-            </tr>
+            <div style="padding: 40px; text-align: center; color: var(--gray-600);">
+                Nenhum produto cadastrado no momento.
+            </div>
         }
-        </tbody>
-    </table>
-}
+        else
+        {
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Estoque</th>
+                        <th>Status</th>
+                        <th style="text-align:right;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in Model.Produtos)
+                    {
+                        <tr>
+                            <td>
+                                <div class="prod-cell">
+                                    <div class="prod-thumb">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="9" />
+                                            <circle cx="12" cy="12" r="3.2" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="prod-name">@p.Nome</div>
+                                        <div class="prod-size">@(string.IsNullOrEmpty(p.Medida) ? $"Aro {p.Aro}" : p.Medida) • @p.Preco.ToString("C")</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="@(p.Estoque <= 5 ? "stock-low" : "")">@p.Estoque un</td>
+                            <td>
+                                <span class="status-dot @(p.Estoque > 0 ? "status-ativo" : "status-inativo")">
+                                    @(p.Estoque > 0 ? "Ativo" : "Inativo")
+                                </span>
+                            </td>
+                            <td>
+                                <div class="actions" style="justify-content:flex-end;">
+                                    <!-- Botão Editar: Abre o modal CSS sem JavaScript -->
+                                    <a href="#editar-@p.Id" class="icon-btn edit" title="Editar Produto">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                                            <path d="m15 5 4 4"/>
+                                        </svg>
+                                    </a>
+                                    <!-- Botão Excluir: Abre o modal de confirmação CSS sem JavaScript -->
+                                    <a href="#excluir-@p.Id" class="icon-btn delete" title="Excluir Produto">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M3 6h18"/>
+                                            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                                            <line x1="10" x2="10" y1="11" y2="17"/>
+                                            <line x1="14" x2="14" y1="11" y2="17"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
 
-<!-- Modal de Confirmação -->
-<div id="modalExclusao" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 9999;">
-    <div style="background: #fff; padding: 24px; border-radius: 12px; width: 90%; max-width: 420px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
-        <h3 style="margin-top: 0; color: #0f172a;">Confirmar Exclusão</h3>
-        <p style="color: #64748b;">Tem certeza que deseja excluir o pneu <b id="nomePneuModal" style="color: #0f172a;"></b>? Esta ação não poderá ser desfeita.</p>
-        
-        <form method="post" asp-page-handler="Remover" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-            <input type="hidden" id="idPneuModal" name="id" />
-            <button type="button" onclick="fecharConfirmacao()" style="padding: 10px 16px; border: 1px solid #cbd5e1; background: #fff; border-radius: 6px; cursor: pointer; font-weight: 600;">
-                Cancelar
-            </button>
-            <button type="submit" style="padding: 10px 16px; background: #dc2626; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
-                Sim, Excluir
-            </button>
-        </form>
+                        <!-- MODAL DE EDIÇÃO DO PRODUTO (100% HTML + CSS PURO) -->
+                        <div class="overlay" id="editar-@p.Id">
+                            <div class="modal">
+                                <div class="modal-head">
+                                    <div>
+                                        <h2>Editar produto</h2>
+                                        <p>@p.Nome</p>
+                                    </div>
+                                    <a href="#" class="modal-close" aria-label="Fechar">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="18" y1="6" x2="6" y2="18" />
+                                            <line x1="6" y1="6" x2="18" y2="18" />
+                                        </svg>
+                                    </a>
+                                </div>
+
+                                <form method="post" asp-page-handler="Editar" enctype="multipart/form-data">
+                                    <input type="hidden" name="Produto.Id" value="@p.Id" />
+                                    <input type="hidden" name="Produto.UrlFoto" value="@p.UrlFoto" />
+
+                                    <div class="modal-body">
+                                        <div class="row-2">
+                                            <div class="field">
+                                                <label>Nome do produto</label>
+                                                <input type="text" name="Produto.Nome" value="@p.Nome" required />
+                                            </div>
+                                            <div class="field">
+                                                <label>Marca</label>
+                                                <select name="Produto.Marca" required>
+                                                    <option value="@p.Marca">@p.Marca (Atual)</option>
+                                                    @foreach (var marca in Model.Produtos.Select(prod => prod.Marca).Where(m => !string.IsNullOrWhiteSpace(m) && m != p.Marca).Distinct().OrderBy(m => m))
+                                                    {
+                                                        <option value="@marca">@marca</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="row-3">
+                                            <div class="field">
+                                                <label>Medida</label>
+                                                <input type="text" name="Produto.Medida" value="@p.Medida" placeholder="Ex: 175/70 R14" required />
+                                            </div>
+                                            <div class="field">
+                                                <label>Aro</label>
+                                                <input type="number" name="Produto.Aro" value="@p.Aro" placeholder="14" required />
+                                            </div>
+                                            <div class="field">
+                                                <label>Categoria</label>
+                                                <select name="Produto.Categoria">
+                                                    @if (!string.IsNullOrWhiteSpace(p.Categoria))
+                                                    {
+                                                        <option value="@p.Categoria">@p.Categoria (Atual)</option>
+                                                    }
+                                                    <option value="Passeio">Passeio</option>
+                                                    <option value="SUV">SUV</option>
+                                                    <option value="Carga">Carga</option>
+                                                    <option value="Performance">Performance</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="row-2">
+                                            <div class="field">
+                                                <label>Preço (R$)</label>
+                                                <input type="number" step="0.01" name="Produto.Preco" value="@p.Preco.ToString(System.Globalization.CultureInfo.InvariantCulture)" required />
+                                            </div>
+                                            <div class="field">
+                                                <label>Estoque</label>
+                                                <input type="number" name="Produto.Estoque" value="@p.Estoque" required />
+                                            </div>
+                                        </div>
+
+                                        <div class="field">
+                                            <label>Descrição</label>
+                                            <textarea name="Produto.Descricao" maxlength="500">@p.Descricao</textarea>
+                                        </div>
+
+                                        <div class="field">
+                                            <label>Fotos do produto (Upload de 1 ou mais arquivos)</label>
+                                            <input type="file" name="uploadedImageFiles" accept="image/*" multiple />
+                                            @if (!string.IsNullOrWhiteSpace(p.UrlFoto))
+                                            {
+                                                <span style="font-size: 12px; color: var(--gray-600); margin-top: 4px; display: block;">
+                                                    Foto atual: <code>@p.UrlFoto</code>
+                                                </span>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <a href="#" class="btn-secondary">Cancelar</a>
+                                        <button type="submit" class="btn-primary-admin">Salvar alterações</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- MODAL DE CONFIRMAÇÃO DE EXCLUSÃO (100% HTML + CSS PURO) -->
+                        <div class="overlay" id="excluir-@p.Id">
+                            <div class="modal" style="max-width: 440px;">
+                                <div class="modal-head">
+                                    <div>
+                                        <h2>Confirmar Exclusão</h2>
+                                    </div>
+                                    <a href="#" class="modal-close" aria-label="Fechar">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="18" y1="6" x2="6" y2="18" />
+                                            <line x1="6" y1="6" x2="18" y2="18" />
+                                        </svg>
+                                    </a>
+                                </div>
+                                <div class="modal-body">
+                                    <p style="color: var(--gray-600); font-size: 14px; line-height: 1.5; margin: 0;">
+                                        Tem certeza que deseja excluir o pneu <strong style="color: var(--ink);">@p.Nome</strong>?
+                                        Esta ação não poderá ser desfeita.
+                                    </p>
+                                </div>
+                                <form method="post" asp-page-handler="Remover" class="modal-footer">
+                                    <input type="hidden" name="id" value="@p.Id" />
+                                    <a href="#" class="btn-secondary">Cancelar</a>
+                                    <button type="submit" style="background: var(--red); color: white; border: none; border-radius: 8px; padding: 11px 20px; font-weight: 600; cursor: pointer;">
+                                        Sim, Excluir
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                </tbody>
+            </table>
+        }
     </div>
 </div>
-
-<script>
-    function abrirConfirmacao(id, nome) {
-        document.getElementById('idPneuModal').value = id;
-        document.getElementById('nomePneuModal').innerText = nome;
-        document.getElementById('modalExclusao').style.display = 'flex';
-    }
-
-    function fecharConfirmacao() {
-        document.getElementById('modalExclusao').style.display = 'none';
-    }
-</script>
 
 

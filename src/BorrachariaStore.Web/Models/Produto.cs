@@ -35,6 +35,9 @@ public class Produto
     [BsonElement("urlFoto")]
     public string UrlFoto { get; set; } = string.Empty;
 
+    [BsonElement("fotos")]
+    public List<string> Fotos { get; set; } = new();
+
     [BsonElement("estoque")]
     public int Estoque { get; set; }
 }
