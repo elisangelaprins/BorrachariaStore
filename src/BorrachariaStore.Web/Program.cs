@@ -3,14 +3,13 @@ using BorrachariaStore.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Razor Pages (Aula 2)
 builder.Services.AddRazorPages();
 
-// Configuração do MongoDB (Aula 3)
+builder.Services.AddHttpClient();
+
 builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("MongoDbSettings"));
 
-// Serviços de domínio
 builder.Services.AddSingleton<ProdutoService>();
 builder.Services.AddSingleton<CarrinhoService>();
 builder.Services.AddSingleton<PedidoService>();
