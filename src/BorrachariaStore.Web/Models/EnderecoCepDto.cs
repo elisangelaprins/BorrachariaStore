@@ -1,9 +1,7 @@
 using System.Text.Json.Serialization;
-using ThirdParty.Json.LitJson;
-
 namespace BorrachariaStore.Web.Models;
 
-public class EnderecaoCepDto
+public class EnderecoCepDto
 {
     [JsonPropertyName("cep")]
     public string? Cep { get; set; }
@@ -11,8 +9,8 @@ public class EnderecaoCepDto
     [JsonPropertyName("logradouro")]
     public string? Logradouro { get; set; }
 
-    [JsonPropertyName("completo")]
-    public string? Completo { get; set; }
+    [JsonPropertyName("complemento")]
+    public string? Complemento { get; set; }
 
     [JsonPropertyName("bairro")]
     public string? Bairro { get; set; }
