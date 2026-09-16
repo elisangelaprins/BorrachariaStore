@@ -20,6 +20,7 @@
     </div>
 
     <form method="post">
+        <div asp-validation-summary="All" style="color: #dc2626; margin-bottom: 16px; font-weight: 600; background: #fee2e2; padding: 12px; border-radius: 8px;"></div>
         <!-- Campo oculto obrigatório para manter o ID do produto no MongoDB -->
         <input type="hidden" asp-for="Produto.Id" />
          <div class="form-group">
@@ -61,7 +62,7 @@
 
         <div class="form-group">
             <label asp-for="Produto.UrlFoto" class="form-label">URL da Foto</label>
-            <input asp-for="Produto.UrlFoto" type="url" class="form-input" placeholder="https://..." />
+            <input asp-for="Produto.UrlFoto" type="text" class="form-input" placeholder="/img/produtos/... ou https://..." />
         </div>
 
                 <div class="form-group">

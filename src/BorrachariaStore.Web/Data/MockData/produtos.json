@@ -7,7 +7,7 @@
     "medida": "175/70 R14",
     "aro": 14,
     "preco": 389.90,
-    "urlFoto": "/img/produtos/pirelli-cinturato.jpg",
+    "urlFoto": "/img/produtos/pirelli-cinturato.png",
     "estoque": 20
   },
   {
@@ -18,7 +18,7 @@
     "medida": "185/65 R15",
     "aro": 15,
     "preco": 459.90,
-    "urlFoto": "/img/produtos/michelin-energy-xm2.jpg",
+    "urlFoto": "/img/produtos/michelin-energy-xm2.png",
     "estoque": 15
   },
   {
@@ -29,7 +29,7 @@
     "medida": "205/45 R17",
     "aro": 17,
     "preco": 699.90,
-    "urlFoto": "/img/produtos/goodyear-eagle-sport.jpg",
+    "urlFoto": "",
     "estoque": 8
   },
   {
@@ -40,7 +40,7 @@
     "medida": "195/60 R16",
     "aro": 16,
     "preco": 419.90,
-    "urlFoto": "/img/produtos/continental-powercontact.jpg",
+    "urlFoto": "",
     "estoque": 12
   },
   {
@@ -51,7 +51,7 @@
     "medida": "205/70 R15",
     "aro": 15,
     "preco": 549.90,
-    "urlFoto": "/img/produtos/bridgestone-duravis.jpg",
+    "urlFoto": "",
     "estoque": 10
   }
 ]
