@@ -28,13 +28,46 @@ public class CarrinhoModel : PageModel
 
     public IActionResult OnPostAtualizarQuantidade(string produtoId, int quantidade)
     {
-        // TODO: Atualizar quantidade via serviço e redirecionar para a página
-        throw new NotImplementedException();
+        if (string.IsNullOrWhiteSpace(produtoId))
+        {
+            return RedirectToPage();
+        }
+
+        try
+        {
+            if (quantidade < 1)
+            {
+                _carrinhoService.Remover(produtoId);
+            }
+            else
+            {
+                _carrinhoService.AtualizarQuantidade(produtoId, quantidade);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[LOG ERRO] Carrinho OnPostAtualizarQuantidade: {ex.Message}");
+        }
+
+        return RedirectToPage();
     }
 
     public IActionResult OnPostRemover(string produtoId)
     {
-        // TODO: Remover item via serviço e redirecionar para a página
-        throw new NotImplementedException();
+        if (string.IsNullOrWhiteSpace(produtoId))
+        {
+            return RedirectToPage();
+        }
+
+        try
+        {
+            _carrinhoService.Remover(produtoId);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[LOG ERRO] Carrinho OnPostRemover: {ex.Message}");
+        }
+
+        return RedirectToPage();
     }
 }

@@ -47,10 +47,33 @@
           </div>
 
           <div class="cart-item-details">
-            <span class="cart-item-title">@item.Nome</span>
+            <div class="cart-item-header">
+              <span class="cart-item-title">@item.Nome</span>
+              <form method="post" asp-page-handler="Remover">
+                <input type="hidden" name="produtoId" value="@item.ProdutoId" />
+                <button type="submit" class="cart-btn-remover" title="Remover item">&times;</button>
+              </form>
+            </div>
+
             <span class="cart-item-subtitle">Preço Unitário: R$ @item.PrecoUnitario.ToString("N2")</span>
+
             <div class="cart-item-bottom">
-              <span class="cart-item-qty-badge">Qtd: <strong>@item.Quantidade</strong></span>
+              <div class="cart-qty-controls">
+                <form method="post" asp-page-handler="AtualizarQuantidade">
+                  <input type="hidden" name="produtoId" value="@item.ProdutoId" />
+                  <input type="hidden" name="quantidade" value="@(item.Quantidade - 1)" />
+                  <button type="submit" class="cart-btn-qty" title="Diminuir">-</button>
+                </form>
+
+                <span class="cart-item-qty-badge">Qtd: <strong>@item.Quantidade</strong></span>
+
+                <form method="post" asp-page-handler="AtualizarQuantidade">
+                  <input type="hidden" name="produtoId" value="@item.ProdutoId" />
+                  <input type="hidden" name="quantidade" value="@(item.Quantidade + 1)" />
+                  <button type="submit" class="cart-btn-qty" title="Aumentar">+</button>
+                </form>
+              </div>
+
               <span class="cart-item-price">R$ @item.Subtotal.ToString("N2")</span>
             </div>
           </div>

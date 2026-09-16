@@ -36,14 +36,32 @@ public class CarrinhoService
 
     public void AtualizarQuantidade(string produtoId, int quantidade)
     {
-        // TODO: Implementar atualização da quantidade ou remoção se quantidade <= 0
-        throw new NotImplementedException();
+     var ItemCarrinho = _itens.FirstOrDefault(item => item.ProdutoId == produtoId);
+      
+      if (ItemCarrinho == null)
+        {
+            return;
+        }
+
+        if (quantidade <= 0)
+        {
+            _itens.Remove(ItemCarrinho);
+        }
+        else
+        {
+            ItemCarrinho.Quantidade = quantidade;
+        }
     }
 
     public void Remover(string produtoId)
     {
-        // TODO: Implementar remoção do item do carrinho
-        throw new NotImplementedException();
+        var ItemCarrinho = _itens.FirstOrDefault(item => item.ProdutoId == produtoId);
+
+        if (ItemCarrinho != null)
+        {
+            _itens.Remove(ItemCarrinho);
+        }
+        
     }
 
     public decimal CalcularTotal()
