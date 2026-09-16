@@ -61,10 +61,25 @@ public class IndexModel : PageModel
         return RedirectToPage();
     }
 
-    public async Task<IActionResult> OnPostEditarAsync(Produto produto, List<IFormFile>? uploadedImageFiles)
+    public async Task<IActionResult> OnPostEditarAsync(Produto produto, List<IFormFile>? uploadedImageFiles, List<string>? fotosParaRemover)
     {
         if (produto != null && !string.IsNullOrWhiteSpace(produto.Id))
         {
+            // Busca o produto original para não perder fotos antigas caso não envie novas
+            var existingProduct = await _produtoService.ObterPorIdAsync(produto.Id);
+            if (existingProduct != null)
+            {
+                produto.Fotos = existingProduct.Fotos ?? new List<string>();
+                produto.UrlFoto = existingProduct.UrlFoto;
+            }
+
+            // Remove somente as fotos que o usuário marcou para exclusão
+            if (fotosParaRemover != null && fotosParaRemover.Count > 0)
+            {
+                produto.Fotos.RemoveAll(f => fotosParaRemover.Contains(f));
+                produto.UrlFoto = produto.Fotos.FirstOrDefault() ?? string.Empty;
+            }
+
             if (uploadedImageFiles != null && uploadedImageFiles.Count > 0)
             {
                 string targetFolder = Path.Combine(_webHostEnvironment.WebRootPath, "img", "produtos");
@@ -77,7 +92,8 @@ public class IndexModel : PageModel
                 {
                     if (file.Length > 0)
                     {
-                        string uniqueFileName = Guid.NewGuid().ToString("N")[..8] + "_" + Path.GetFileName(file.FileName);
+                        string safeFileName = Path.GetFileName(file.FileName).Replace(" ", "_");
+                        string uniqueFileName = Guid.NewGuid().ToString("N")[..8] + "_" + safeFileName;
                         string destinationFilePath = Path.Combine(targetFolder, uniqueFileName);
 
                         using (var fileStream = new FileStream(destinationFilePath, FileMode.Create))
@@ -90,10 +106,16 @@ public class IndexModel : PageModel
                     }
                 }
 
+                produto.Fotos = produto.Fotos.Distinct().ToList();
+
                 if (produto.Fotos.Count > 0)
                 {
-                    produto.UrlFoto = produto.Fotos[0]; // A primeira foto é a capa principal
+                    produto.UrlFoto = produto.Fotos[0];
                 }
+            }
+            else
+            {
+                produto.Fotos = produto.Fotos.Distinct().ToList();
             }
 
             string rawPriceString = Request.Form["Produto.Preco"].ToString();

@@ -174,3 +174,69 @@ body {
   .table-wrap { overflow-x: auto; }
   .admin-table { min-width: 640px; }
 }
+
+.prod-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+/* Galeria de fotos no modal */
+.gallery-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.gallery-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  width: 64px;
+}
+.gallery-thumb {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  border-radius: 4px;
+  background: var(--white);
+}
+.gallery-del-label {
+  font-size: 11px;
+  color: var(--red);
+  cursor: pointer;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.gallery-del-label input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+  cursor: pointer;
+}
+
+/* Informações do campo e contador puro */
+.field-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.field-header label {
+  margin: 0;
+}
+.char-info {
+  font-size: 11.5px;
+  color: var(--gray-600);
+  font-weight: 500;
+}
