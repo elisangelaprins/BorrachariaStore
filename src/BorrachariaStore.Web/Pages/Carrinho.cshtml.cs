@@ -28,13 +28,20 @@ public class CarrinhoModel : PageModel
 
     public IActionResult OnPostAtualizarQuantidade(string produtoId, int quantidade)
     {
-        // TODO: Atualizar quantidade via serviço e redirecionar para a página
-        throw new NotImplementedException();
+        if (quantidade < 1)
+        {
+            _carrinhoService.Remover(produtoId);
+        }
+        else
+        {
+            _carrinhoService.AtualizarQuantidade(produtoId, quantidade);
+        }
+        return RedirectToPage();
     }
 
     public IActionResult OnPostRemover(string produtoId)
     {
-        // TODO: Remover item via serviço e redirecionar para a página
-        throw new NotImplementedException();
+        _carrinhoService.Remover(produtoId);
+        return RedirectToPage();
     }
 }
