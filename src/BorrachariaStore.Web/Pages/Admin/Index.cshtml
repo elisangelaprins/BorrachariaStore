@@ -5,7 +5,7 @@
 }
 
 <!-- Link do CSS moderno exclusivo do Painel Administrativo -->
-<link rel="stylesheet" href="~/css/admin.css" />
+<link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
 
 <div class="admin-main">
     <!-- CABEÇALHO DO PAINEL -->
@@ -90,10 +90,17 @@
                             <td>
                                 <div class="prod-cell">
                                     <div class="prod-thumb">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <circle cx="12" cy="12" r="9" />
-                                            <circle cx="12" cy="12" r="3.2" />
-                                        </svg>
+                                        @if (!string.IsNullOrWhiteSpace(p.UrlFoto))
+                                        {
+                                            <img src="@p.UrlFoto" alt="@p.Nome" class="prod-thumb-img" />
+                                        }
+                                        else
+                                        {
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="12" cy="12" r="9" />
+                                                <circle cx="12" cy="12" r="3.2" />
+                                            </svg>
+                                        }
                                     </div>
                                     <div>
                                         <div class="prod-name">@p.Nome</div>
@@ -159,11 +166,21 @@
                                             <div class="field">
                                                 <label>Marca</label>
                                                 <select name="Produto.Marca" required>
-                                                    <option value="@p.Marca">@p.Marca (Atual)</option>
-                                                    @foreach (var marca in Model.Produtos.Select(prod => prod.Marca).Where(m => !string.IsNullOrWhiteSpace(m) && m != p.Marca).Distinct().OrderBy(m => m))
+                                                    @if (!string.IsNullOrWhiteSpace(p.Marca))
                                                     {
-                                                        <option value="@marca">@marca</option>
+                                                        <option value="@p.Marca">@p.Marca (Atual)</option>
                                                     }
+                                                    else
+                                                    {
+                                                        <option value="">Selecione uma marca...</option>
+                                                    }
+                                                    <option value="Pirelli">Pirelli</option>
+                                                    <option value="Michelin">Michelin</option>
+                                                    <option value="Goodyear">Goodyear</option>
+                                                    <option value="Continental">Continental</option>
+                                                    <option value="Bridgestone">Bridgestone</option>
+                                                    <option value="Firestone">Firestone</option>
+                                                    <option value="Dunlop">Dunlop</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -184,10 +201,15 @@
                                                     {
                                                         <option value="@p.Categoria">@p.Categoria (Atual)</option>
                                                     }
+                                                    else
+                                                    {
+                                                        <option value="">Selecione uma categoria...</option>
+                                                    }
                                                     <option value="Passeio">Passeio</option>
                                                     <option value="SUV">SUV</option>
                                                     <option value="Carga">Carga</option>
                                                     <option value="Performance">Performance</option>
+                                                    <option value="Off-Road">Off-Road</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -204,18 +226,35 @@
                                         </div>
 
                                         <div class="field">
-                                            <label>Descrição</label>
-                                            <textarea name="Produto.Descricao" maxlength="500">@p.Descricao</textarea>
+                                            <div class="field-header">
+                                                <label>Descrição</label>
+                                                <span class="char-info">Máx. 500 caracteres (restantes: @(500 - (p.Descricao?.Length ?? 0)))</span>
+                                            </div>
+                                            <textarea name="Produto.Descricao" maxlength="500" placeholder="Digite a descrição do produto...">@p.Descricao</textarea>
                                         </div>
 
                                         <div class="field">
                                             <label>Fotos do produto (Upload de 1 ou mais arquivos)</label>
                                             <input type="file" name="uploadedImageFiles" accept="image/*" multiple />
-                                            @if (!string.IsNullOrWhiteSpace(p.UrlFoto))
+                                            @{
+                                                var fotosExibicao = (p.Fotos != null && p.Fotos.Count > 0)
+                                                    ? p.Fotos
+                                                    : (!string.IsNullOrWhiteSpace(p.UrlFoto) ? new List<string> { p.UrlFoto } : new List<string>());
+                                            }
+                                            @if (fotosExibicao.Count > 0)
                                             {
-                                                <span style="font-size: 12px; color: var(--gray-600); margin-top: 4px; display: block;">
-                                                    Foto atual: <code>@p.UrlFoto</code>
-                                                </span>
+                                                <div class="gallery-list">
+                                                    @foreach (var foto in fotosExibicao)
+                                                    {
+                                                        <div class="gallery-item">
+                                                            <img src="@foto" alt="Foto" class="gallery-thumb" />
+                                                            <label class="gallery-del-label">
+                                                                <input type="checkbox" name="fotosParaRemover" value="@foto" />
+                                                                Excluir
+                                                            </label>
+                                                        </div>
+                                                    }
+                                                </div>
                                             }
                                         </div>
                                     </div>
