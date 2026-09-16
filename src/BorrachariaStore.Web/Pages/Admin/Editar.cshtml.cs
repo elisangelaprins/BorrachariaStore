@@ -17,15 +17,41 @@ public class EditarModel : PageModel
     [BindProperty]
     public Produto Produto { get; set; } = new();
 
-    public async Task<IActionResult> OnGetAsync(string id)
+        public async Task<IActionResult> OnGetAsync(string id)
     {
-        // TODO: Buscar produto por Id e carregar na propriedade Produto (se não encontrar, redirecionar para /Admin/Index)
-        throw new NotImplementedException();
+        if (string.IsNullOrWhiteSpace(id))
+        {
+            return RedirectToPage("/Admin/Index");
+        }
+
+        var product = await _produtoService.ObterPorIdAsync(id);
+
+        if (product == null)
+        {
+            return RedirectToPage("/Admin/Index");
+        }
+
+        Produto = product;
+        return Page();
     }
 
     public async Task<IActionResult> OnPostAsync()
     {
-        // TODO: Validar ModelState, atualizar Produto via ProdutoService e redirecionar para /Admin/Index
-        throw new NotImplementedException();
+         if (!ModelState.IsValid || string.IsNullOrWhiteSpace(Produto.Id))
+        {
+            return Page();
+        }
+        try
+        {
+            await _produtoService.AtualizarAsync(Produto.Id, Produto);
+            TempData["MensagemSucesso"] = "Produto atualizado com sucesso!";
+            return RedirectToPage("/Admin/Index");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[LOG ERRO] Editar OnPostAsync: {ex.Message}");
+            ModelState.AddModelError(string.Empty, "Ocorreu um erro ao tentar atualizar o produto.");
+            return Page();
+        }
     }
 }

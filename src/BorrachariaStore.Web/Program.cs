@@ -23,6 +23,17 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+var defaultCulture = new System.Globalization.CultureInfo("pt-BR");
+defaultCulture.NumberFormat.NumberDecimalSeparator = ",";
+defaultCulture.NumberFormat.CurrencyDecimalSeparator = ",";
+var localizationOptions = new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture(defaultCulture),
+    SupportedCultures = new List<System.Globalization.CultureInfo> { defaultCulture },
+    SupportedUICultures = new List<System.Globalization.CultureInfo> { defaultCulture }
+};
+app.UseRequestLocalization(localizationOptions);
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
