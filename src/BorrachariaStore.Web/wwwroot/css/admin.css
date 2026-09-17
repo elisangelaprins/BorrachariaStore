@@ -186,43 +186,90 @@ body {
 .gallery-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 12px;
   margin-top: 8px;
 }
 .gallery-item {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   padding: 6px;
-  background: var(--gray-50);
+  background: var(--white);
   border: 1px solid var(--gray-200);
-  border-radius: 6px;
+  border-radius: 10px;
+  width: 76px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+.gallery-thumb-box {
   width: 64px;
+  height: 64px;
+  border-radius: 6px;
+  background: #f8fafc;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #f1f5f9;
 }
 .gallery-thumb {
-  width: 48px;
-  height: 48px;
-  object-fit: contain;
-  border-radius: 4px;
-  background: var(--white);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-.gallery-del-label {
-  font-size: 11px;
-  color: var(--red);
-  cursor: pointer;
-  display: inline-flex;
-  flex-direction: row;
+.gallery-thumb-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
   align-items: center;
-  gap: 4px;
-  margin: 0;
-  font-weight: 500;
-  white-space: nowrap;
+  justify-content: center;
+  color: #94a3b8;
+  background: #f1f5f9;
 }
-.gallery-del-label input[type="checkbox"] {
-  width: auto;
+.field label.gallery-trash-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 26px;
+  padding: 0;
   margin: 0;
+  margin-bottom: 0;
+  color: #ef4444;
+  background: #fff;
+  border: 1px solid #fee2e2;
   cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+  line-height: 0;
+}
+.gallery-trash-btn svg {
+  width: 13px;
+  height: 13px;
+  display: block;
+  margin: 0;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+.gallery-trash-btn:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #dc2626;
+  transform: translateY(-1px);
+}
+.gallery-trash-btn input[type="checkbox"] {
+  display: none;
+}
+.gallery-trash-btn:has(input[type="checkbox"]:checked) {
+  background: #ef4444;
+  border-color: #dc2626;
+  color: #ffffff;
+}
+.gallery-item:has(input[type="checkbox"]:checked) {
+  opacity: 0.45;
+  border-color: #ef4444;
+  background: #fef2f2;
 }
 
 /* Informações do campo e contador puro */
