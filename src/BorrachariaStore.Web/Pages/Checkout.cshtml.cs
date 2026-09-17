@@ -11,40 +11,67 @@ public class CheckoutModel : PageModel
     private readonly CarrinhoService _carrinhoService;
     private readonly PedidoService _pedidoService;
 
-    public CheckoutModel(CarrinhoService carrinhoService, PedidoService pedidoService)
+    private readonly ViaCepService _viaCepService;
+
+    public CheckoutModel(CarrinhoService carrinhoService, PedidoService pedidoService, ViaCepService viaCepService)
     {
         _carrinhoService = carrinhoService;
         _pedidoService = pedidoService;
+        _viaCepService = viaCepService;
     }
 
     [BindProperty]
-    [Required]
+    [Required(ErrorMessage = "O nome do comprador é obrigatório")]
     public string NomeComprador { get; set; } = string.Empty;
 
     [BindProperty]
-    [Required]
+    public string? Cep { get; set; }
+
+    [BindProperty]
+    [Required(ErrorMessage = "O endereço é obrigatório")]
     public string Endereco { get; set; } = string.Empty;
 
     [BindProperty]
-    [Required]
+    [Required(ErrorMessage = "Selecione a forma de pagamento")]
     public string MetodoPagamento { get; set; } = string.Empty;
 
-    public decimal Total
-    {
-        get
-        {
-            // TODO: Retornar o cálculo do total do carrinho via serviço
-            throw new NotImplementedException();
-        }
-    }
+    public string? MensagemErroCep { get; set; }
+
+    public decimal Total => _carrinhoService.CalcularTotal();
 
     public bool PedidoConfirmado { get; set; }
 
     public void OnGet() { }
 
+    public async Task<IActionResult> OnPostBuscarCepAsync()
+    {
+        if (string.IsNullOrWhiteSpace(Cep))
+        {
+            MensagemErroCep = "Por favor, digite um CEP válido.";
+            return Page();
+        }
+
+        var addressData = await _viaCepService.BuscarEnderecoPorCepAsync(Cep);
+
+        if (addressData != null)
+        {
+            Endereco = $"{addressData.Logradouro}, {addressData.Bairro}, {addressData.Localidade} - {addressData.Uf}";
+            MensagemErroCep = null;
+
+        }
+        else
+        {
+            MensagemErroCep = "CEP não encontrado ou inválido.";
+        }
+
+        return Page();
+    }
     public async Task<IActionResult> OnPostAsync()
     {
-        // TODO: Validar ModelState, montar o Pedido, salvar via PedidoService, limpar o carrinho e setar PedidoConfirmado
-        throw new NotImplementedException();
+        if (!ModelState.IsValid)
+        {
+            return Page();
+        }
+        return Page();
     }
 }

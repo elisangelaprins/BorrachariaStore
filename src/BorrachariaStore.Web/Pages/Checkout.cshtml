@@ -1,10 +1,232 @@
 @page
 @model BorrachariaStore.Web.Pages.CheckoutModel
 @{
-    ViewData["Title"] = "Checkout";
+    ViewData["Title"] = "Finalizar Pedido";
 }
 
-<h1>Checkout</h1>
+<link rel="stylesheet" href="~/css/checkout.css" asp-append-version="true" />
 
-<!-- TODO: Se Model.PedidoConfirmado for verdadeiro, exibir mensagem de sucesso -->
-<!-- TODO: Caso contrário, exibir formulário com os campos: NomeComprador, Endereco, MetodoPagamento (Select com Cartão, Pix, Boleto), Total do pedido e botão de confirmar -->
+<div class="checkout-page">
+    <!-- BREADCRUMB -->
+    <div class="checkout-breadcrumb">
+        <a asp-page="/Carrinho">Carrinho</a>
+        <span>&rsaquo;</span>
+        <span class="active">Entrega</span>
+        <span>&rsaquo;</span>
+        <span>Pagamento</span>
+    </div>
+
+    <h1 class="checkout-title">Finalizar pedido</h1>
+
+    <div class="checkout-layout">
+        <!-- COLUNA ESQUERDA: FORMULÁRIO -->
+        <div class="checkout-main-form">
+            <!-- SEÇÃO 1: DADOS DE ENTREGA -->
+            <div class="checkout-card">
+                <div class="checkout-card-header">
+                    <span class="checkout-step-number">1</span>
+                    <h2 class="checkout-step-title">Dados de entrega</h2>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.MensagemErroCep))
+                {
+                    <div style="background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; padding: 12px 16px; border-radius: 8px; margin-bottom: 18px; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        @Model.MensagemErroCep
+                    </div>
+                }
+
+                <form method="post" id="formCheckout">
+                    <div class="form-group">
+                        <label class="form-label">Nome completo</label>
+                        <input type="text" asp-for="NomeComprador" class="form-control-input" placeholder="Ex: João da Silva Souza" required />
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label class="form-label">CPF</label>
+                            <!-- Quando adicionar 'public string? Cpf { get; set; }' no Checkout.cshtml.cs, troque name por asp-for="Cpf" -->
+                            <input type="text" name="Cpf" class="form-control-input" placeholder="123.456.789-00" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Telefone</label>
+                            <!-- Quando adicionar 'public string? Telefone { get; set; }' no Checkout.cshtml.cs, troque name por asp-for="Telefone" -->
+                            <input type="text" name="Telefone" class="form-control-input" placeholder="(11) 98765-4321" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">E-mail</label>
+                        <!-- Quando adicionar 'public string? Email { get; set; }' no Checkout.cshtml.cs, troque name por asp-for="Email" -->
+                        <input type="email" name="Email" class="form-control-input" placeholder="seuemail@email.com" />
+                    </div>
+
+                    <div class="form-grid-3">
+                        <div class="form-group">
+                            <label class="form-label">CEP</label>
+                            <div class="cep-input-group">
+                                <input type="text" asp-for="Cep" class="form-control-input" placeholder="00000-000" />
+                                <button type="submit" asp-page-handler="BuscarCep" class="btn-buscar-cep" title="Consultar CEP no ViaCEP">
+                                    Buscar
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Cidade</label>
+                            <!-- Quando adicionar 'public string? Cidade { get; set; }' no Checkout.cshtml.cs, troque name por asp-for="Cidade" -->
+                            <input type="text" name="Cidade" class="form-control-input" placeholder="Cidade" readonly />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Estado</label>
+                            <!-- Quando adicionar 'public string? Estado { get; set; }' no Checkout.cshtml.cs, troque name por asp-for="Estado" -->
+                            <input type="text" name="Estado" class="form-control-input" placeholder="UF" readonly />
+                        </div>
+                    </div>
+
+                    <div class="form-grid-3">
+                        <div class="form-group">
+                            <label class="form-label">Endereço</label>
+                            <input type="text" asp-for="Endereco" class="form-control-input" placeholder="Rua / Avenida" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Número</label>
+                            <!-- Quando adicionar 'public string? Numero { get; set; }' no Checkout.cshtml.cs, troque name por asp-for="Numero" -->
+                            <input type="text" name="Numero" class="form-control-input" placeholder="123" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Complemento</label>
+                            <!-- Quando adicionar 'public string? Complemento { get; set; }' no Checkout.cshtml.cs, troque name por asp-for="Complemento" -->
+                            <input type="text" name="Complemento" class="form-control-input" placeholder="Apto, Bloco" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- SEÇÃO 2: FORMA DE PAGAMENTO -->
+            <div class="checkout-card">
+                <div class="checkout-card-header">
+                    <span class="checkout-step-number">2</span>
+                    <h2 class="checkout-step-title">Forma de pagamento</h2>
+                </div>
+
+                <div class="payment-grid">
+                    <!-- Cartão de Crédito -->
+                    <label class="payment-card-option active">
+                        <input type="radio" asp-for="MetodoPagamento" value="Cartão de crédito" checked />
+                        <div class="payment-icon-head">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect width="20" height="14" x="2" y="5" rx="2" />
+                                <line x1="2" x2="22" y1="10" y2="10" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="payment-opt-title">Cartão de crédito</div>
+                            <div class="payment-opt-sub">Em até 12x sem juros</div>
+                        </div>
+                    </label>
+
+                    <!-- PIX -->
+                    <label class="payment-card-option">
+                        <input type="radio" asp-for="MetodoPagamento" value="PIX" />
+                        <div class="payment-icon-head">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect width="5" height="5" x="3" y="3" rx="1" />
+                                <rect width="5" height="5" x="16" y="3" rx="1" />
+                                <rect width="5" height="5" x="3" y="16" rx="1" />
+                                <path d="M21 16h-3a2 2 0 0 0-2 2v3" />
+                                <path d="M21 21v.01" />
+                                <path d="M12 7v3a2 2 0 0 1-2 2H7" />
+                                <path d="M3 12h.01" />
+                                <path d="M12 3h.01" />
+                                <path d="M12 16v.01" />
+                                <path d="M16 12h1" />
+                                <path d="M21 12v.01" />
+                                <path d="M12 21v-1" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="payment-opt-title">PIX</div>
+                            <div class="payment-opt-sub">Aprovação imediata</div>
+                        </div>
+                    </label>
+
+                    <!-- Boleto -->
+                    <label class="payment-card-option">
+                        <input type="radio" asp-for="MetodoPagamento" value="Boleto" />
+                        <div class="payment-icon-head">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 5v14" /><path d="M7 5v14" /><path d="M11 5v14" /><path d="M15 5v14" /><path d="M18 5v14" /><path d="M20 5v14" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="payment-opt-title">Boleto</div>
+                            <div class="payment-opt-sub">Vence em 3 dias úteis</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLUNA DIREITA: RESUMO DO PEDIDO -->
+        <aside class="checkout-sidebar">
+            <div class="summary-box">
+                <h3 class="summary-title">Resumo do pedido</h3>
+
+                @*
+                <!-- QUANDO ADICIONAR 'public IReadOnlyList<ItemCarrinho> Itens => _carrinhoService.Itens;' NO .CS, DESCOMENTE ESTE BLOCO: -->
+                @if (Model.Itens != null && Model.Itens.Any())
+                {
+                    <div class="summary-item-list">
+                        @foreach (var item in Model.Itens)
+                        {
+                            <div class="summary-item">
+                                <div class="summary-item-left">
+                                    <div class="summary-item-thumb">
+                                        <img src="@(item.UrlFoto.StartsWith("/") ? item.UrlFoto : "/" + item.UrlFoto)" alt="@item.Nome" />
+                                    </div>
+                                    <div>
+                                        <div class="summary-item-name">@item.Nome</div>
+                                        <div class="summary-item-meta">Qtd: @item.Quantidade</div>
+                                    </div>
+                                </div>
+                                <div class="summary-item-price">R$ @item.Subtotal.ToString("N2")</div>
+                            </div>
+                        }
+                    </div>
+                }
+                *@
+
+                <div class="summary-divider"></div>
+
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>R$ @Model.Total.ToString("N2")</span>
+                </div>
+
+                <div class="summary-row">
+                    <span>Frete</span>
+                    <span style="color: #16a34a; font-weight: 700;">Grátis</span>
+                </div>
+
+                <div class="summary-total-row">
+                    <span class="summary-total-label">Total</span>
+                    <span class="summary-total-value">R$ @Model.Total.ToString("N2")</span>
+                </div>
+
+                <!-- Botão de Finalizar Pedido -->
+                <button type="submit" form="formCheckout" class="btn-submit-order">
+                    Finalizar compra
+                </button>
+
+                <div class="security-badge">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <span>Pagamento 100% seguro e criptografado</span>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
