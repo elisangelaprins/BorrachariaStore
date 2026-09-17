@@ -1,3 +1,4 @@
+@inject BorrachariaStore.Web.Services.CarrinhoService CarrinhoService
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -27,6 +28,10 @@
                     <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
                     <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
                 </svg>
+                @if (CarrinhoService.Itens.Any())
+                {
+                    <span class="cart-badge">@CarrinhoService.Itens.Sum(i => i.Quantidade)</span>
+                }
             </a>
         </div>
     </header>
@@ -76,7 +81,7 @@
         </div>
     </footer>
 
-    <script src="~/js/site.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

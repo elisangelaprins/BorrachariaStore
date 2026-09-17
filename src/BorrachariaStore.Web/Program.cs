@@ -42,4 +42,27 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
+app.MapPost("/api/carrinho/adicionar", async (string produtoId, ProdutoService produtoService, CarrinhoService carrinhoService) =>
+{
+    if (string.IsNullOrWhiteSpace(produtoId))
+    {
+        return Results.BadRequest(new { success = false, message = "ID do produto inválido." });
+    }
+
+    var produto = await produtoService.ObterPorIdAsync(produtoId);
+    if (produto == null)
+    {
+        return Results.NotFound(new { success = false, message = "Produto não encontrado." });
+    }
+
+    carrinhoService.Adicionar(produto, 1);
+
+    return Results.Ok(new
+    {
+        success = true,
+        totalItens = carrinhoService.Itens.Sum(i => i.Quantidade),
+        nomeProduto = produto.Nome
+    });
+});
+
 app.Run();
