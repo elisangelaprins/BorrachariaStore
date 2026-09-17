@@ -21,7 +21,16 @@ public class CadastrarModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        // TODO: Validar ModelState, salvar Produto via ProdutoService e redirecionar para /Admin/Index
-        throw new NotImplementedException();
+        // TODO: Validar ModelState
+        if (!ModelState.IsValid)
+        {
+            return Page();
+        }
+
+        // TODO: Salvar o produto no MongoDB via ProdutoService:
+        // await _produtoService.CriarAsync(Produto);
+        // return RedirectToPage("/Admin/Index");
+
+        return Page();
     }
 }

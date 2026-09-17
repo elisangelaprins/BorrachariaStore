@@ -4,6 +4,101 @@
     ViewData["Title"] = "Cadastrar Produto";
 }
 
-<h1>Cadastrar Produto</h1>
+<link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
 
-<!-- TODO: Criar formulário (POST) para cadastrar produto com os campos: Nome, Marca, Descrição, Categoria, Medida, Aro, Preço, Link da foto, Estoque e botão Salvar -->
+<div class="admin-main" style="max-width: 740px; margin: 32px auto;">
+    <div class="modal" style="display: block; position: static; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid var(--border);">
+        <div class="modal-head">
+            <div>
+                <h2>Cadastrar produto</h2>
+                <p>Preencha os dados para adicionar um novo pneu ao catálogo.</p>
+            </div>
+            <a asp-page="/Admin/Index" class="modal-close" aria-label="Voltar">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </a>
+        </div>
+
+        <form method="post" enctype="multipart/form-data">
+            <div class="modal-body">
+                <div class="row-2">
+                    <div class="field">
+                        <label>Nome do produto</label>
+                        <input type="text" asp-for="Produto.Nome" placeholder="Ex: Goodyear EfficientGrip Performance" required />
+                    </div>
+                    <div class="field">
+                        <label>Marca</label>
+                        <select asp-for="Produto.Marca" required>
+                            <option value="">Selecione uma marca...</option>
+                            <option value="Pirelli">Pirelli</option>
+                            <option value="Michelin">Michelin</option>
+                            <option value="Goodyear">Goodyear</option>
+                            <option value="Continental">Continental</option>
+                            <option value="Bridgestone">Bridgestone</option>
+                            <option value="Firestone">Firestone</option>
+                            <option value="Dunlop">Dunlop</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row-3">
+                    <div class="field">
+                        <label>Medida</label>
+                        <input type="text" asp-for="Produto.Medida" placeholder="Ex: 205/55 R16" required />
+                    </div>
+                    <div class="field">
+                        <label>Aro</label>
+                        <input type="number" asp-for="Produto.Aro" placeholder="16" required />
+                    </div>
+                    <div class="field">
+                        <label>Categoria</label>
+                        <select asp-for="Produto.Categoria">
+                            <option value="">Selecione...</option>
+                            <option value="Passeio">Passeio</option>
+                            <option value="SUV">SUV</option>
+                            <option value="Carga">Carga</option>
+                            <option value="Performance">Performance</option>
+                            <option value="Off-Road">Off-Road</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row-2">
+                    <div class="field">
+                        <label>Preço (R$)</label>
+                        <input type="number" step="0.01" asp-for="Produto.Preco" placeholder="389,90" required />
+                    </div>
+                    <div class="field">
+                        <label>Estoque</label>
+                        <input type="number" asp-for="Produto.Estoque" placeholder="10" required />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Descrição</label>
+                    <textarea asp-for="Produto.Descricao" maxlength="500" placeholder="Pneu de alta performance com excelente aderência em piso molhado..."></textarea>
+                    <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
+                        <span class="char-info">Máx. 500 caracteres</span>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Imagem do produto</label>
+                    <input type="text" asp-for="Produto.UrlFoto" placeholder="https://exemplo.com/foto.jpg ou /images/pneu.jpg" style="margin-bottom: 8px;" />
+                    <input type="file" name="uploadedImageFiles" accept="image/*" multiple />
+                    <small style="color: var(--muted); font-size: 12px; margin-top: 4px; display: block;">
+                        Insira a URL direta da imagem ou selecione arquivos PNG/JPG.
+                    </small>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <a asp-page="/Admin/Index" class="btn-secondary">Cancelar</a>
+                <!-- TODO: O backend da gravação será implementado no OnPostAsync -->
+                <button type="submit" class="btn-primary-admin">Cadastrar produto</button>
+            </div>
+        </form>
+    </div>
+</div>
