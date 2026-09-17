@@ -13,6 +13,7 @@ builder.Services.Configure<MongoDbSettings>(
 builder.Services.AddSingleton<ProdutoService>();
 builder.Services.AddSingleton<CarrinhoService>();
 builder.Services.AddSingleton<PedidoService>();
+builder.Services.AddSingleton<ViaCepService>();
 
 var app = builder.Build();
 
