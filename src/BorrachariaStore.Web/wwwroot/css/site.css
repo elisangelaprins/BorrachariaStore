@@ -603,3 +603,67 @@ footer {
     grid-template-columns: 1fr 1fr;
   }
 }
+
+/* Notificação Flutuante de Sucesso (Toast) */
+.toast-success-banner {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 99999;
+  background: #0f172a;
+  border: 1px solid #334155;
+  color: #ffffff;
+  padding: 14px 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  animation: toastSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes toastSlideUp {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.toast-message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #f8fafc;
+}
+
+.toast-message svg {
+  color: #4ade80;
+  flex-shrink: 0;
+}
+
+.toast-btn {
+  background: var(--blue);
+  color: #ffffff;
+  padding: 7px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.toast-btn:hover {
+  background: var(--blue-dark);
+  color: #ffffff;
+  transform: translateY(-1px);
+}

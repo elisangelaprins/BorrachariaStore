@@ -35,7 +35,19 @@ public class IndexModel : PageModel
         if (produto != null)
         {
             _carrinhoService.Adicionar(produto, 1);
+            TempData["MensagemSucesso"] = $"\"{produto.Nome}\" foi adicionado ao seu carrinho!";
         }
-        return RedirectToPage("/Carrinho");
+
+        if (Request.Headers["X-Requested-With"] == "XMLHttpRequest" || Request.Headers.Accept.ToString().Contains("application/json"))
+        {
+            return new JsonResult(new
+            {
+                success = produto != null,
+                totalItens = _carrinhoService.Itens.Sum(i => i.Quantidade),
+                nomeProduto = produto?.Nome ?? ""
+            });
+        }
+
+        return RedirectToPage("/Index");
     }
 }
