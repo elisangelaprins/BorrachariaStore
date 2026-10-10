@@ -20,7 +20,7 @@ public class Produto
     public string Descricao { get; set; } = string.Empty;
 
     [BsonElement("categoria")]
-    public string Categoria { get; set; } = string.Empty;
+    public string? Categoria { get; set; } = string.Empty;
 
     // Ex.: "175/70 R14"
     [BsonElement("medida")]
@@ -33,7 +33,7 @@ public class Produto
     public decimal Preco { get; set; }
 
     [BsonElement("urlFoto")]
-    public string UrlFoto { get; set; } = string.Empty;
+    public string? UrlFoto { get; set; } = string.Empty;
 
     [BsonElement("fotos")]
     public List<string> Fotos { get; set; } = new();
