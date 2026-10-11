@@ -1,3 +1,4 @@
+/* ===== 1. VARIÁVEIS GLOBAIS E RESET ===== */
 :root {
   --navy: #0b1220;
   --blue: #2563eb;
@@ -26,6 +27,7 @@ a {
   color: inherit;
 }
 
+/* ===== 2. TOP BAR & MARQUEE ===== */
 .top-bar {
   background: #2563eb;
   color: #ffffff;
@@ -61,6 +63,7 @@ a {
   100% { transform: translateX(-50%); }
 }
 
+/* ===== 3. HEADER & BARRA DE BUSCA ===== */
 header {
   background: var(--navy);
   color: #fff;
@@ -119,6 +122,7 @@ header {
   pointer-events: none;
 }
 
+/* ===== 4. SUB-MENU DE NAVEGAÇÃO ===== */
 .sub-nav {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   background: var(--navy);
@@ -245,6 +249,7 @@ nav.main-nav a:hover {
   stroke-width: 2;
 }
 
+/* ===== 5. HERO / BANNERS ===== */
 .hero-carousel-section {
   max-width: 1104px;
   margin: 20px auto 0;
@@ -368,20 +373,25 @@ nav.main-nav a:hover {
 }
 
 .hero-btn {
-  width: 153px;
+  width: auto;
+  min-width: 153px;
   height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background: #2563eb;
   color: #ffffff;
+  border: none;
   border-radius: 12px;
+  font-family: inherit;
   font-weight: 700;
   font-size: 14px;
   text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  padding: 0 24px;
   transition: background 0.2s ease;
   box-sizing: border-box;
-  padding: 0;
 }
 
 .hero-btn:hover {
@@ -689,6 +699,7 @@ nav.main-nav a:hover {
   }
 }
 
+/* ===== 6. CARDS DA VITRINE ===== */
 .destaques-section {
   max-width: 1104px;
   margin: 52px auto 32px;
@@ -786,6 +797,7 @@ nav.main-nav a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 .destaque-badge-oferta,
@@ -863,6 +875,12 @@ nav.main-nav a:hover {
   color: #0f172a;
   margin: 0 0 4px;
   line-height: 1.35;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.destaque-title:hover {
+  color: #2563eb;
 }
 
 .destaque-measure,
@@ -1056,7 +1074,20 @@ nav.main-nav a:hover {
   font-weight: 700;
 }
 
-/* RODAPÉ (FOOTER) */
+.promo .btn-promo {
+  background: #ffffff;
+  color: #1d4ed8;
+  font-weight: 700;
+  border: none;
+  white-space: nowrap;
+}
+
+.promo .btn-promo:hover {
+  background: #f8fafc;
+  color: #1e40af;
+}
+
+/* ===== 7. RODAPÉ (FOOTER) ===== */
 footer {
   background: var(--navy);
   color: #94a3b8;
@@ -1110,10 +1141,45 @@ footer {
   border-radius: 4px;
 }
 
+.footer-logo {
+  height: 62px;
+  width: auto;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.footer-about {
+  font-size: 13px;
+  max-width: 290px;
+  line-height: 1.6;
+  color: #94a3b8;
+  margin: 0;
+}
+
 .footer-contact-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.footer-contact-list strong {
+  color: #f8fafc;
+  display: block;
+}
+
+.footer-contact-list span {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.footer-contact-list a {
+  color: #60a5fa;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.footer-contact-list a:hover {
+  color: #93c5fd;
 }
 
 .footer-pay-grid {
@@ -1188,7 +1254,7 @@ footer {
   }
 }
 
-/* Notificação Flutuante de Sucesso (Toast) */
+/* ===== 8. NOTIFICAÇÕES & FEEDBACK (TOASTS) ===== */
 .toast-success-banner {
   position: fixed;
   bottom: 24px;
@@ -1250,4 +1316,97 @@ footer {
   background: var(--blue-dark);
   color: #ffffff;
   transform: translateY(-1px);
+}
+
+/* ===== 9. ESTADOS DE ERRO E BUSCA VAZIA ===== */
+.toast-error-banner {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.toast-error-banner svg {
+  flex-shrink: 0;
+}
+
+.catalogo-error-box {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  padding: 36px 24px;
+  text-align: center;
+  grid-column: 1 / -1;
+}
+
+.catalogo-error-box svg {
+  margin-bottom: 10px;
+}
+
+.catalogo-error-box .error-title {
+  color: #991b1b;
+  font-weight: 700;
+  font-size: 16px;
+  margin: 0 0 6px;
+}
+
+.catalogo-error-box .error-desc {
+  color: #7f1d1d;
+  font-size: 14px;
+  margin: 0 0 16px;
+}
+
+.catalogo-error-box .btn-error-retry {
+  background: #dc2626;
+  border: 1px solid #dc2626;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.catalogo-error-box .btn-error-retry:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
+  color: #fff;
+}
+
+.empty-filter-box {
+  grid-column: 1 / -1;
+  padding: 40px;
+  text-align: center;
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.empty-filter-box p {
+  font-size: 16px;
+  color: #64748b;
+  margin: 0;
+}
+
+.empty-filter-box a {
+  display: inline-block;
+  margin-top: 10px;
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.empty-filter-box a:hover {
+  text-decoration: underline;
 }

@@ -369,3 +369,13 @@
   color: #16a34a;
   margin-top: 12px;
 }
+
+.summary-free-shipping {
+  color: #16a34a;
+  font-weight: 700;
+}
+
+.summary-shipping-value {
+  font-weight: 600;
+  color: #0f172a;
+}

@@ -26,7 +26,7 @@ public class CarrinhoService
         else
         {
             ItemCarrinho novoItem = new ItemCarrinho();
-            novoItem.ProdutoId = produto.Id;
+            novoItem.ProdutoId = produto.Id!;
             novoItem.Nome = produto.Nome;
             novoItem.UrlFoto = produto.UrlFoto;
             novoItem.PrecoUnitario = produto.Preco;
@@ -65,6 +65,26 @@ public class CarrinhoService
         }
     }
 
+    public Cupom? CupomAplicado { get; private set; }
+
+    public void AplicarCupom(Cupom cupom)
+    {
+        CupomAplicado = cupom;
+    }
+
+    public void RemoverCupom()
+    {
+        CupomAplicado = null;
+    }
+
+    public decimal CalcularDesconto()
+    {
+        if (CupomAplicado == null || _itens.Count == 0) return 0m;
+        var subtotal = CalcularSubtotal();
+        if (CupomAplicado.ValorMinimoPedido.HasValue && subtotal < CupomAplicado.ValorMinimoPedido.Value) return 0m;
+        return Math.Round(subtotal * (CupomAplicado.PorcentagemDesconto / 100m), 2);
+    }
+
     public decimal CalcularSubtotal()
     {
         decimal subtotal = 0;
@@ -87,11 +107,16 @@ public class CarrinhoService
 
     public decimal CalcularTotal()
     {
-        return CalcularSubtotal() + CalcularFrete();
+        var subtotal = CalcularSubtotal();
+        var frete = CalcularFrete();
+        var desconto = CalcularDesconto();
+        var total = subtotal - desconto + frete;
+        return total > 0m ? total : 0m;
     }
 
     public void Limpar()
     {
+        CupomAplicado = null;
         _itens.Clear();
     }
 }
