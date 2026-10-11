@@ -17,11 +17,16 @@ public class CadastrarModel : PageModel
     [BindProperty]
     public Produto Produto { get; set; } = new();
 
+    [BindProperty]
+    public decimal PrecoNormal { get; set; }
+
+    [BindProperty]
+    public decimal? PrecoPromocional { get; set; }
+
     public void OnGet() { }
 
     public async Task<IActionResult> OnPostAsync()
     {
-        // TODO: Validar ModelState
         if (!ModelState.IsValid)
         {
             return Page();

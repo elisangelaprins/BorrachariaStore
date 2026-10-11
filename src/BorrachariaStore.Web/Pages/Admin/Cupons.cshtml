@@ -1,0 +1,190 @@
+@page
+@model BorrachariaStore.Web.Pages.Admin.CuponsModel
+@{
+    ViewData["Title"] = "Cupons de Desconto — Admin";
+}
+
+<link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+
+<div class="admin-main">
+    <div class="page-head">
+        <div>
+            <h1>Cupons de Desconto</h1>
+            <p>Cadastre e gerencie cupons promocionais para o carrinho e checkout.</p>
+        </div>
+        <div>
+            <a asp-page="/Admin/Index" class="btn-primary-admin btn-admin-navy">
+                ← Voltar ao Estoque
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="admin-alert-success">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            @TempData["MensagemSucesso"]
+        </div>
+    }
+    @if (TempData["MensagemErro"] != null)
+    {
+        <div class="admin-alert-error">
+            @TempData["MensagemErro"]
+        </div>
+    }
+
+    <div class="table-wrap card-padded">
+        <h3>Novo Cupom de Desconto</h3>
+        <form method="post" asp-page-handler="Criar" class="coupon-create-form">
+            <div class="coupon-field">
+                <label>Código do Cupom</label>
+                <input type="text" asp-for="Codigo" placeholder="Ex: PNEU10, VERAO15" class="admin-input-upper" required />
+            </div>
+            <div class="coupon-field">
+                <label>Desconto (%)</label>
+                <input type="number" asp-for="PorcentagemDesconto" min="1" max="100" placeholder="10" required />
+            </div>
+            <div class="coupon-field">
+                <label>Pedido Mínimo (R$) (Opcional)</label>
+                <input type="number" asp-for="ValorMinimoPedido" step="0.01" min="0" placeholder="0,00" />
+            </div>
+            <div class="coupon-field">
+                <label>Validade (Opcional)</label>
+                <input type="date" asp-for="Validade" />
+            </div>
+            <div>
+                <button type="submit" class="btn-primary-admin btn-submit-coupon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Cadastrar Cupom
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-wrap">
+        @if (!Model.Cupons.Any())
+        {
+            <div class="admin-empty-state">
+                Nenhum cupom cadastrado até o momento. Utilize o formulário acima para criar o primeiro cupom.
+            </div>
+        }
+        else
+        {
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Desconto</th>
+                        <th>Pedido Mínimo</th>
+                        <th>Validade</th>
+                        <th>Status</th>
+                        <th>Criado em</th>
+                        <th class="th-right">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var c in Model.Cupons)
+                    {
+                        <tr>
+                            <td>
+                                <span class="admin-badge-code">
+                                    @c.Codigo
+                                </span>
+                            </td>
+                            <td>
+                                <strong class="admin-badge-discount">@c.PorcentagemDesconto% OFF</strong>
+                            </td>
+                            <td>
+                                @(c.ValorMinimoPedido.HasValue && c.ValorMinimoPedido.Value > 0 ? $"R$ {c.ValorMinimoPedido.Value:N2}" : "Sem valor mínimo")
+                            </td>
+                            <td>
+                                @(c.Validade.HasValue ? c.Validade.Value.ToLocalTime().ToString("dd/MM/yyyy") : "Sem validade")
+                            </td>
+                            <td>
+                                <span class="status-dot @(c.Ativo ? "status-ativo" : "status-inativo")">
+                                    @(c.Ativo ? "Ativo" : "Inativo")
+                                </span>
+                            </td>
+                            <td class="admin-text-muted">
+                                @c.CriadoEm.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                            </td>
+                            <td>
+                                <div class="actions actions-right">
+                                    <a href="#editar-@c.Id" class="icon-btn edit" title="Editar cupom">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                                            <path d="m15 5 4 4"/>
+                                        </svg>
+                                    </a>
+
+                                    <form method="post" asp-page-handler="AlternarStatus" class="form-inline">
+                                        <input type="hidden" name="id" value="@c.Id" />
+                                        <input type="hidden" name="ativo" value="@(!c.Ativo ? "true" : "false")" />
+                                        <button type="submit" class="icon-btn btn-toggle-status @(c.Ativo ? "active" : "inactive")" title="@(c.Ativo ? "Desativar cupom" : "Ativar cupom")">
+                                            @(c.Ativo ? "Desativar" : "Ativar")
+                                        </button>
+                                    </form>
+
+                                    <form method="post" asp-page-handler="Excluir" onsubmit="return confirm('Tem certeza que deseja excluir o cupom @c.Codigo?');" class="form-inline">
+                                        <input type="hidden" name="id" value="@c.Id" />
+                                        <button type="submit" class="icon-btn delete" title="Excluir cupom">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="3 6 5 6 21 6"/>
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <div class="overlay" id="editar-@c.Id">
+                            <div class="modal modal-md">
+                                <div class="modal-head">
+                                    <div>
+                                        <h2>Editar cupom</h2>
+                                        <p>@c.Codigo</p>
+                                    </div>
+                                    <a href="#" class="modal-close" aria-label="Fechar">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="18" y1="6" x2="6" y2="18" />
+                                            <line x1="6" y1="6" x2="18" y2="18" />
+                                        </svg>
+                                    </a>
+                                </div>
+
+                                <form method="post" asp-page-handler="Editar">
+                                    <input type="hidden" name="editId" value="@c.Id" />
+                                    <div class="modal-body">
+                                        <div class="field">
+                                            <label>Código do Cupom</label>
+                                            <input type="text" name="editCodigo" value="@c.Codigo" required class="admin-input-upper" />
+                                        </div>
+                                        <div class="row-2">
+                                            <div class="field">
+                                                <label>Desconto (%)</label>
+                                                <input type="number" name="editPorcentagemDesconto" min="1" max="100" value="@c.PorcentagemDesconto" required />
+                                            </div>
+                                            <div class="field">
+                                                <label>Pedido Mínimo (R$)</label>
+                                                <input type="number" step="0.01" min="0" name="editValorMinimoPedido" value="@(c.ValorMinimoPedido?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "")" placeholder="0,00" />
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <label>Validade (Opcional)</label>
+                                            <input type="date" name="editValidade" value="@(c.Validade?.ToLocalTime().ToString("yyyy-MM-dd") ?? "")" />
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="#" class="btn-secondary">Cancelar</a>
+                                        <button type="submit" class="btn-primary-admin">Salvar alterações</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

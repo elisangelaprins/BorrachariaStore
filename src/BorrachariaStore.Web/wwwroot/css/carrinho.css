@@ -182,6 +182,26 @@
   gap: 12px;
 }
 
+.cart-header-icon {
+  stroke: #0f172a;
+  width: 22px;
+  height: 22px;
+}
+
+.cart-msg-success {
+  font-size: 12px;
+  color: #16a34a;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.cart-msg-error {
+  font-size: 12px;
+  color: #dc2626;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
 .coupon-box {
   display: flex;
   background: #f8fafc;
@@ -191,6 +211,38 @@
   margin-bottom: 6px;
 }
 
+.coupon-box.coupon-applied {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 8px 12px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.coupon-applied-text {
+  font-size: 13px;
+  color: #166534;
+  font-weight: 700;
+}
+
+.coupon-remove-form {
+  margin: 0;
+}
+
+.coupon-remove-btn {
+  background: transparent;
+  border: none;
+  color: #dc2626;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.coupon-remove-btn:hover {
+  text-decoration: underline;
+}
+
 .coupon-input {
   border: none;
   background: transparent;
@@ -198,6 +250,7 @@
   padding: 8px 10px;
   flex: 1;
   font-size: 14px;
+  text-transform: uppercase;
 }
 
 .coupon-btn {
@@ -221,9 +274,24 @@
   color: var(--muted);
 }
 
+.summary-line-row.summary-discount {
+  color: #16a34a;
+  font-weight: 700;
+}
+
+.shipping-cost {
+  font-weight: 700;
+  color: #0f172a;
+}
+
 .free-shipping {
   color: #16a34a;
   font-weight: 700;
+}
+
+.empty-cart-card {
+  margin: 40px auto;
+  text-align: center;
 }
 
 .summary-total-row {

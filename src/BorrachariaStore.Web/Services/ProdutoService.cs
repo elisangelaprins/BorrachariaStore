@@ -87,7 +87,7 @@ public class ProdutoService
 
     public async Task CriarAsync(Produto produto)
     {
-        throw new NotImplementedException();
+        await _produtos.InsertOneAsync(produto);
     }
 
     public async Task AtualizarAsync(string id, Produto produtoAtualizado)

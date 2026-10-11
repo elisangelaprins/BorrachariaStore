@@ -7,6 +7,7 @@
     <title>@ViewData["Title"] — BorrachariaStore</title>
     <link rel="icon" type="image/png" href="~/images/logo/logo-icon.png" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/detalhes-produto.css" asp-append-version="true" />
 </head>
 <body>
     @if (!Context.Request.Path.Value?.StartsWith("/Admin", StringComparison.OrdinalIgnoreCase) ?? true)
@@ -24,12 +25,14 @@
             </div>
         </div>
     }
+    @if (ViewData["HideHeader"] as bool? != true)
+    {
     <header>
         <div class="header-container">
             <a asp-page="/Index" class="logo">
                 <img src="~/images/logo/logo-full.png" alt="PNEU Store" class="logo-img" />
             </a>
-            <form method="get" asp-page="/Index" class="header-search">
+            <form method="get" asp-page="/Catalogo" class="header-search">
                 <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
                 </svg>
@@ -50,13 +53,13 @@
         </div>
         <nav class="sub-nav">
             <div class="sub-nav-container">
-                <a asp-page="/Index" class="sub-nav-link active">Início</a>
-                <a asp-page="/Index" class="sub-nav-link">Todos os pneus</a>
-                <a href="#ofertas" class="sub-nav-link text-primary">Ofertas</a>
-                <a href="#sobre" class="sub-nav-link">Atendimento</a>
+                <a asp-page="/Index" class="sub-nav-link @(Context.Request.Path == "/" || Context.Request.Path == "/Index" ? "active" : "")">Início</a>
+                <a asp-page="/Catalogo" class="sub-nav-link @(Context.Request.Path.Value?.StartsWith("/Catalogo", StringComparison.OrdinalIgnoreCase) == true && Context.Request.Query["apenasOfertas"] != "true" ? "active" : "")">Todos os pneus</a>
+                <a asp-page="/Catalogo" asp-route-apenasOfertas="true" class="sub-nav-link text-primary @(Context.Request.Query["apenasOfertas"] == "true" ? "active" : "")">Ofertas</a>
             </div>
         </nav>
     </header>
+    }
 
     <main role="main">
         @RenderBody()
@@ -65,8 +68,8 @@
     <footer class="footer">
         <div class="footer-grid">
             <div>
-                <img src="~/images/logo/logo-full.png" alt="PNEU Store" style="height: 62px; width: auto; margin-bottom: 16px; display: block;" />
-                <p style="font-size: 13px; max-width: 290px; line-height: 1.6; color: #94a3b8; margin: 0;">
+                <img src="~/images/logo/logo-full.png" alt="PNEU Store" class="footer-logo" />
+                <p class="footer-about">
                     Pneus originais com garantia de fábrica, entrega rápida para todo o Brasil e pagamento facilitado.
                 </p>
             </div>
@@ -74,25 +77,23 @@
                 <h5>Atendimento</h5>
                 <ul class="footer-contact-list">
                     <li>
-                        <strong style="color: #f8fafc; display: block;">(11) 98765-4321</strong>
-                        <span style="font-size: 12px; color: #64748b;">Seg. a Sex. 08h às 18h</span>
+                        <strong>(11) 98765-4321</strong>
+                        <span>Seg. a Sex. 08h às 18h</span>
                     </li>
                     <li>
-                        <span style="font-size: 12px; color: #64748b;">Sábados das 08h às 13h</span>
+                        <span>Sábados das 08h às 13h</span>
                     </li>
                     <li>
-                        <a href="mailto:contato@borrachariastore.com.br" style="color: #60a5fa;">contato@borrachariastore.com.br</a>
+                        <a href="mailto:contato@borrachariastore.com.br">contato@borrachariastore.com.br</a>
                     </li>
                 </ul>
             </div>
             <div>
                 <h5>Institucional</h5>
                 <ul>
-                    <li><a asp-page="/Index">Catálogo de pneus</a></li>
-                    <li><a href="#ofertas">Ofertas da semana</a></li>
+                    <li><a asp-page="/Catalogo">Catálogo de pneus</a></li>
+                    <li><a asp-page="/Catalogo" asp-route-apenasOfertas="true">Ofertas da semana</a></li>
                     <li><a asp-page="/Carrinho">Meu carrinho</a></li>
-                    <li><span style="color: #64748b; font-size: 13px;">Política de devolução</span></li>
-                    <li><span style="color: #64748b; font-size: 13px;">Termos de garantia</span></li>
                 </ul>
             </div>
             <div>
@@ -125,6 +126,11 @@
             </div>
         </div>
     </footer>
+
+    @if (!Context.Request.Path.Value?.StartsWith("/Admin", StringComparison.OrdinalIgnoreCase) ?? true)
+    {
+        <partial name="_DetalhesProduto" />
+    }
 
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

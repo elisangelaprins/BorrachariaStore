@@ -2,22 +2,25 @@ using BorrachariaStore.Web.Models;
 using BorrachariaStore.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
 
 namespace BorrachariaStore.Web.Pages.Admin;
 
 public class EditarModel : PageModel
 {
     private readonly ProdutoService _produtoService;
+    private readonly ILogger<EditarModel> _logger;
 
-    public EditarModel(ProdutoService produtoService)
+    public EditarModel(ProdutoService produtoService, ILogger<EditarModel> logger)
     {
         _produtoService = produtoService;
+        _logger = logger;
     }
 
     [BindProperty]
     public Produto Produto { get; set; } = new();
 
-        public async Task<IActionResult> OnGetAsync(string id)
+    public async Task<IActionResult> OnGetAsync(string id)
     {
         if (string.IsNullOrWhiteSpace(id))
         {
@@ -37,7 +40,7 @@ public class EditarModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-         if (!ModelState.IsValid || string.IsNullOrWhiteSpace(Produto.Id))
+        if (!ModelState.IsValid || string.IsNullOrWhiteSpace(Produto.Id))
         {
             return Page();
         }
@@ -49,7 +52,7 @@ public class EditarModel : PageModel
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[LOG ERRO] Editar OnPostAsync: {ex.Message}");
+            _logger.LogError(ex, "Erro ao tentar atualizar o produto {ProdutoId} no painel administrativo.", Produto.Id);
             ModelState.AddModelError(string.Empty, "Ocorreu um erro ao tentar atualizar o produto.");
             return Page();
         }

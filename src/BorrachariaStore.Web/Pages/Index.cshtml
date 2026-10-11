@@ -37,9 +37,11 @@
             <span class="hero-price-label">no Pix</span>
           </div>
           <p class="hero-installments">ou 10x de R$ 46,74 sem juros</p>
-          <a asp-page="/Index" asp-route-termo="Pirelli" class="btn btn-primary hero-btn">Comprar agora</a>
+          <form method="post" asp-page-handler="ComprarAgora" asp-route-termo="Pirelli Cinturato P7">
+            <button type="submit" class="btn btn-primary hero-btn">Comprar agora</button>
+          </form>
         </div>
-        <a asp-page="/Index" asp-route-termo="Pirelli" class="hero-slide-media">
+        <a asp-page="/Catalogo" asp-route-termo="Pirelli Cinturato P7" class="hero-slide-media">
           <img src="~/images/hero/hero-tire.png" alt="Pirelli Cinturato P7" />
           <span class="hero-media-badge">Pirelli Cinturato P7</span>
         </a>
@@ -56,9 +58,11 @@
             <span class="hero-price-label">no Pix</span>
           </div>
           <p class="hero-installments">ou 10x de R$ 61,20 sem juros</p>
-          <a asp-page="/Index" asp-route-termo="Michelin" class="btn btn-primary hero-btn">Comprar agora</a>
+          <form method="post" asp-page-handler="ComprarAgora" asp-route-termo="Michelin Primacy 4">
+            <button type="submit" class="btn btn-primary hero-btn">Comprar agora</button>
+          </form>
         </div>
-        <a asp-page="/Index" asp-route-termo="Michelin" class="hero-slide-media">
+        <a asp-page="/Catalogo" asp-route-termo="Michelin Primacy 4" class="hero-slide-media">
           <img src="~/images/hero/tire-michelin.png" alt="Michelin Primacy 4" />
           <span class="hero-media-badge">Michelin Primacy 4</span>
         </a>
@@ -75,9 +79,11 @@
             <span class="hero-price-label">no Pix</span>
           </div>
           <p class="hero-installments">ou 10x de R$ 38,99 sem juros</p>
-          <a asp-page="/Index" asp-route-termo="Goodyear" class="btn btn-primary hero-btn">Comprar agora</a>
+          <form method="post" asp-page-handler="ComprarAgora" asp-route-termo="Goodyear EfficientGrip">
+            <button type="submit" class="btn btn-primary hero-btn">Comprar agora</button>
+          </form>
         </div>
-        <a asp-page="/Index" asp-route-termo="Goodyear" class="hero-slide-media">
+        <a asp-page="/Catalogo" asp-route-termo="Goodyear EfficientGrip" class="hero-slide-media">
           <img src="~/images/hero/tire-goodyear.png" alt="Goodyear EfficientGrip" />
           <span class="hero-media-badge">Goodyear EfficientGrip</span>
         </a>
@@ -101,10 +107,10 @@
       <h2>Compre pelo aro</h2>
       <p>Atalhos para as medidas mais procuradas.</p>
     </div>
-    <a asp-page="/Index" class="aro-link">Ver todos os aros →</a>
+    <a asp-page="/Catalogo" class="aro-link">Ver todos os aros →</a>
   </div>
   <div class="aro-grid">
-    <a asp-page="/Index" asp-route-termo="13" class="aro-card">
+    <a asp-page="/Catalogo" asp-route-categoria="Aro 13" class="aro-card">
       <svg class="aro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="9" />
         <circle cx="12" cy="12" r="3" />
@@ -116,7 +122,7 @@
       <span class="aro-label">Aro</span>
       <strong class="aro-num">13</strong>
     </a>
-    <a asp-page="/Index" asp-route-termo="14" class="aro-card">
+    <a asp-page="/Catalogo" asp-route-categoria="Aro 14" class="aro-card">
       <svg class="aro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="9" />
         <circle cx="12" cy="12" r="3" />
@@ -128,7 +134,7 @@
       <span class="aro-label">Aro</span>
       <strong class="aro-num">14</strong>
     </a>
-    <a asp-page="/Index" asp-route-termo="15" class="aro-card">
+    <a asp-page="/Catalogo" asp-route-categoria="Aro 15" class="aro-card">
       <svg class="aro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="9" />
         <circle cx="12" cy="12" r="3" />
@@ -140,7 +146,7 @@
       <span class="aro-label">Aro</span>
       <strong class="aro-num">15</strong>
     </a>
-    <a asp-page="/Index" asp-route-termo="16" class="aro-card">
+    <a asp-page="/Catalogo" asp-route-categoria="Aro 16" class="aro-card">
       <svg class="aro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="9" />
         <circle cx="12" cy="12" r="3" />
@@ -152,7 +158,7 @@
       <span class="aro-label">Aro</span>
       <strong class="aro-num">16</strong>
     </a>
-    <a asp-page="/Index" asp-route-termo="17" class="aro-card">
+    <a asp-page="/Catalogo" asp-route-categoria="Aro 17" class="aro-card">
       <svg class="aro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="9" />
         <circle cx="12" cy="12" r="3" />
@@ -164,7 +170,7 @@
       <span class="aro-label">Aro</span>
       <strong class="aro-num">17</strong>
     </a>
-    <a asp-page="/Index" asp-route-termo="18" class="aro-card">
+    <a asp-page="/Catalogo" asp-route-categoria="Aro 18" class="aro-card">
       <svg class="aro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="9" />
         <circle cx="12" cy="12" r="3" />
@@ -200,22 +206,22 @@
     }
     else
     {
-      <a asp-page="/Index" class="destaques-link">Ver todos →</a>
+      <a asp-page="/Catalogo" asp-route-apenasOfertas="true" class="destaques-link">Ver todos →</a>
     }
   </div>
 
   <div class="destaques-grid">
     @if (!string.IsNullOrEmpty(Model.ErroCarregamento))
     {
-      <div style="grid-column: 1 / -1; padding: 36px 24px; text-align: center; background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px;">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" style="margin-bottom: 10px;">
+      <div class="catalogo-error-box">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2">
           <circle cx="12" cy="12" r="10" />
           <line x1="12" y1="8" x2="12" y2="12" />
           <line x1="12" y1="16" x2="12.01" y2="16" />
         </svg>
-        <p style="color: #991b1b; font-weight: 700; font-size: 16px; margin: 0 0 6px;">Catálogo temporariamente indisponível</p>
-        <p style="color: #7f1d1d; font-size: 14px; margin: 0 0 16px;">@Model.ErroCarregamento</p>
-        <a asp-page="/Index" class="btn btn-primary" style="background: #dc2626; border-color: #dc2626; display: inline-flex; align-items: center; gap: 8px;">
+        <p class="error-title">Catálogo temporariamente indisponível</p>
+        <p class="error-desc">@Model.ErroCarregamento</p>
+        <a asp-page="/Index" class="btn-error-retry">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
           </svg>
@@ -225,17 +231,55 @@
     }
     else if (Model.Produtos != null && Model.Produtos.Any())
     {
-      var listaExibicao = string.IsNullOrWhiteSpace(Model.Termo) ? Model.Produtos.Take(4) : Model.Produtos;
-      var idx = 0;
+      var listaOfertas = Model.Produtos.Where(p => p.EmPromocao || (p.PrecoOriginal.HasValue && p.PrecoOriginal.Value > p.Preco)).Take(4).ToList();
+      var listaExibicao = string.IsNullOrWhiteSpace(Model.Termo) ? (listaOfertas.Any() ? listaOfertas : Model.Produtos.Take(4)) : Model.Produtos;
       @foreach (var pneu in listaExibicao)
       {
-        <article class="destaque-card" id="p-@pneu.Id">
-          <div class="destaque-thumb">
-            @if (idx == 0)
+        var emOferta = pneu.EmPromocao || (pneu.PrecoOriginal.HasValue && pneu.PrecoOriginal.Value > pneu.Preco);
+        string? badgePromo = null;
+        if (emOferta)
+        {
+          if (pneu.PorcentagemDesconto.HasValue && pneu.PorcentagemDesconto.Value > 0)
+          {
+            badgePromo = $"-{pneu.PorcentagemDesconto.Value}% OFF";
+          }
+          else if (pneu.PrecoOriginal.HasValue && pneu.PrecoOriginal.Value > pneu.Preco)
+          {
+            var pct = (int)Math.Round((1m - (pneu.Preco / pneu.PrecoOriginal.Value)) * 100m);
+            badgePromo = pct > 0 ? $"-{pct}% OFF" : "OFERTA";
+          }
+          else
+          {
+            badgePromo = "OFERTA";
+          }
+        }
+        var fotosJson = (pneu.Fotos != null && pneu.Fotos.Any())
+          ? System.Text.Json.JsonSerializer.Serialize(pneu.Fotos)
+          : (!string.IsNullOrWhiteSpace(pneu.UrlFoto) ? System.Text.Json.JsonSerializer.Serialize(new List<string> { pneu.UrlFoto }) : "[]");
+
+        <article class="destaque-card" id="p-@pneu.Id"
+                 data-id="@pneu.Id"
+                 data-marca="@pneu.Marca"
+                 data-nome="@pneu.Nome"
+                 data-descricao="@pneu.Descricao"
+                 data-aro="@pneu.Aro"
+                 data-medida="@pneu.Medida"
+                 data-categoria="@pneu.Categoria"
+                 data-estoque="@pneu.Estoque"
+                 data-preco="@pneu.Preco.ToString("N2", System.Globalization.CultureInfo.GetCultureInfo("pt-BR"))"
+                 data-preco-original="@(pneu.PrecoOriginal.HasValue && pneu.PrecoOriginal > pneu.Preco ? pneu.PrecoOriginal.Value.ToString("N2", System.Globalization.CultureInfo.GetCultureInfo("pt-BR")) : "")"
+                 data-url-foto="@(!string.IsNullOrWhiteSpace(pneu.UrlFoto) ? pneu.UrlFoto : "/images/logo/logo-icon.png")"
+                 data-fotos='@fotosJson'
+                 data-badge-promo="@badgePromo">
+          <div class="destaque-thumb" onclick="abrirDetalhes(this)" style="cursor: pointer;">
+            @if (!string.IsNullOrEmpty(badgePromo))
             {
-              <span class="destaque-badge-oferta">OFERTA</span>
+              <span class="destaque-badge-oferta">@badgePromo</span>
             }
-            <span class="destaque-badge-aro">Aro @pneu.Aro</span>
+            else
+            {
+              <span class="destaque-badge-aro">Aro @pneu.Aro</span>
+            }
             @if (!string.IsNullOrWhiteSpace(pneu.UrlFoto))
             {
               <img src="@pneu.UrlFoto" alt="@pneu.Marca @pneu.Nome" class="destaque-img" onerror="this.onerror=null; this.src='/images/logo/logo-icon.png'; this.classList.add('destaque-img-fallback');" />
@@ -247,13 +291,16 @@
           </div>
           <div class="destaque-body">
             <p class="destaque-brand">@pneu.Marca</p>
-            <h3 class="destaque-title">@pneu.Nome</h3>
+            <h3 class="destaque-title" onclick="abrirDetalhes(this)" style="cursor: pointer;">@pneu.Nome</h3>
             <p class="destaque-measure">@pneu.Medida</p>
             <div class="destaque-footer">
-              <p class="destaque-old-price">de R$ @((pneu.Preco * 1.15m).ToString("N2"))</p>
+              @if (pneu.PrecoOriginal.HasValue && pneu.PrecoOriginal.Value > pneu.Preco && pneu.PrecoOriginal.Value > 0)
+              {
+                <p class="destaque-old-price">de R$ @pneu.PrecoOriginal.Value.ToString("N2")</p>
+              }
               <div class="destaque-price-row">
                 <strong class="destaque-price">R$ @pneu.Preco.ToString("N2")</strong>
-                <span class="destaque-rating">★ 4,8</span>
+                <span class="destaque-rating">★ @((pneu.Avaliacao ?? 4.8).ToString("F1", System.Globalization.CultureInfo.InvariantCulture))</span>
               </div>
             </div>
             <form method="post" asp-page-handler="AdicionarAoCarrinho" asp-route-produtoId="@pneu.Id" class="destaque-form">
@@ -263,19 +310,18 @@
                   <circle cx="20" cy="21" r="1" />
                   <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
                 </svg>
-                Comprar
+                Adicionar
               </button>
             </form>
           </div>
         </article>
-        idx++;
       }
     }
     else
     {
-      <div style="grid-column: 1 / -1; padding: 40px; text-align: center; background: #fff; border-radius: 10px; border: 1px solid #e2e8f0;">
-        <p style="font-size: 16px; color: #64748b; margin: 0;">Nenhum produto encontrado com os filtros atuais.</p>
-        <a asp-page="/Index" style="display:inline-block; margin-top:10px; color:#2563eb; font-weight:600;">Ver todos os pneus</a>
+      <div class="empty-filter-box">
+        <p>Nenhum produto encontrado com os filtros atuais.</p>
+        <a asp-page="/Index">Ver todos os pneus</a>
       </div>
     }
   </div>
@@ -287,7 +333,7 @@
       <h3>Ganhe 10% de desconto na primeira compra</h3>
       <p>Use o cupom <code>PNEU10</code> no carrinho. Válido para todo o catálogo.</p>
     </div>
-    <a asp-page="/Index" class="btn btn-primary" style="background:#fff; color:#1d4ed8;">Ver ofertas</a>
+    <a asp-page="/Catalogo" asp-route-apenasOfertas="true" class="btn btn-primary btn-promo">Ver ofertas</a>
   </div>
 </section>
 
@@ -345,19 +391,19 @@
     </div>
   </div>
   <div class="brand-row">
-    <a asp-page="/Index" asp-route-termo="Goodyear" class="brand-chip" title="Pneus Goodyear">
+    <a asp-page="/Catalogo" asp-route-marcas="Goodyear" class="brand-chip" title="Pneus Goodyear">
       <img src="~/images/marcas/goodyear.svg" alt="Goodyear" class="brand-logo-img" />
     </a>
-    <a asp-page="/Index" asp-route-termo="Pirelli" class="brand-chip" title="Pneus Pirelli">
+    <a asp-page="/Catalogo" asp-route-marcas="Pirelli" class="brand-chip" title="Pneus Pirelli">
       <img src="~/images/marcas/pirelli.svg" alt="Pirelli" class="brand-logo-img" />
     </a>
-    <a asp-page="/Index" asp-route-termo="Michelin" class="brand-chip" title="Pneus Michelin">
+    <a asp-page="/Catalogo" asp-route-marcas="Michelin" class="brand-chip" title="Pneus Michelin">
       <img src="~/images/marcas/michelin.svg" alt="Michelin" class="brand-logo-img" />
     </a>
-    <a asp-page="/Index" asp-route-termo="Bridgestone" class="brand-chip" title="Pneus Bridgestone">
+    <a asp-page="/Catalogo" asp-route-marcas="Bridgestone" class="brand-chip" title="Pneus Bridgestone">
       <img src="~/images/marcas/bridgestone.svg" alt="Bridgestone" class="brand-logo-img" />
     </a>
-    <a asp-page="/Index" asp-route-termo="Continental" class="brand-chip" title="Pneus Continental">
+    <a asp-page="/Catalogo" asp-route-marcas="Continental" class="brand-chip" title="Pneus Continental">
       <img src="~/images/marcas/continental.svg" alt="Continental" class="brand-logo-img" />
     </a>
   </div>

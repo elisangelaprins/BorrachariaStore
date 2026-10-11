@@ -71,4 +71,29 @@ public class IndexModel : PageModel
 
         return RedirectToPage("/Index");
     }
+
+    public async Task<IActionResult> OnPostComprarAgoraAsync(string termo)
+    {
+        try
+        {
+            var produtos = await _produtoService.BuscarAsync(termo, null);
+            var produto = produtos.FirstOrDefault();
+            if (produto != null)
+            {
+                _carrinhoService.Adicionar(produto, 1);
+                TempData["MensagemSucesso"] = $"\"{produto.Nome}\" foi adicionado ao seu carrinho!";
+            }
+            else
+            {
+                TempData["MensagemErro"] = "Produto temporariamente indisponível.";
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Falha ao comprar agora o produto {Termo}.", termo);
+            TempData["MensagemErro"] = "Não foi possível adicionar o produto ao carrinho no momento. Tente novamente em instantes.";
+        }
+
+        return RedirectToPage("/Carrinho");
+    }
 }

@@ -2,23 +2,37 @@
 @model BorrachariaStore.Web.Pages.Admin.CadastrarModel
 @{
     ViewData["Title"] = "Cadastrar Produto";
+    ViewData["HideHeader"] = true;
 }
 
 <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
 
-<div class="admin-main" style="max-width: 740px; margin: 32px auto;">
-    <div class="modal" style="display: block; position: static; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid var(--border);">
-        <div class="modal-head">
+<div class="admin-main card-cadastrar-wrap">
+    <div class="cadastrar-top-nav">
+        <a asp-page="/Admin/Index" class="btn-secondary cadastrar-btn-voltar">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Voltar ao Estoque
+        </a>
+        <span class="cadastrar-breadcrumb">
+            Painel Administrativo
+        </span>
+    </div>
+
+    <div class="modal card-cadastrar">
+        <div class="cadastrar-header">
             <div>
-                <h2>Cadastrar produto</h2>
-                <p>Preencha os dados para adicionar um novo pneu ao catálogo.</p>
+                <div>
+                    <span class="cadastrar-badge">Novo Item</span>
+                </div>
+                <h1 class="cadastrar-title">Cadastrar produto</h1>
+                <p class="cadastrar-subtitle">Preencha os dados e ofertas para adicionar o pneu ao estoque.</p>
             </div>
-            <a asp-page="/Admin/Index" class="modal-close" aria-label="Voltar">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-            </a>
+            <div class="cadastrar-logo-box">
+                <img src="~/images/logo/logo-full.png" alt="PNEU Store" class="cadastrar-logo-img" />
+            </div>
         </div>
 
         <form method="post" enctype="multipart/form-data">
@@ -65,10 +79,14 @@
                     </div>
                 </div>
 
-                <div class="row-2">
+                <div class="row-3">
                     <div class="field">
-                        <label>Preço (R$)</label>
-                        <input type="number" step="0.01" asp-for="Produto.Preco" placeholder="389,90" required />
+                        <label>Preço Normal (R$)</label>
+                        <input type="number" step="0.01" min="0.01" asp-for="PrecoNormal" placeholder="389,90" required />
+                    </div>
+                    <div class="field">
+                        <label>Preço Promocional (R$)</label>
+                        <input type="number" step="0.01" min="0.01" asp-for="PrecoPromocional" placeholder="Opcional" />
                     </div>
                     <div class="field">
                         <label>Estoque</label>
