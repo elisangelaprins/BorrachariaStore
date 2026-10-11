@@ -7,6 +7,7 @@ namespace BorrachariaStore.Web.Pages.Admin;
 
 public class CadastrarModel : PageModel
 {
+    private readonly HashSet<string> allowedExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { ".jpg", ".jpeg", ".png", ".gif" };
     private readonly ProdutoService _produtoService;
     private readonly IWebHostEnvironment _webHostEnvironment;
 
@@ -18,7 +19,7 @@ public class CadastrarModel : PageModel
 
     [BindProperty]
     
-    public Produto produto { get; set; } = new();
+    public Produto Produto { get; set; } = new();
 
     public void OnGet() { }
 
@@ -35,7 +36,8 @@ public class CadastrarModel : PageModel
             }
 
             foreach (var file in uploadedImageFiles) {
-                if (file.Length > 0) {
+                var fileExtension = Path.GetExtension(file.FileName);
+                if (file.Length > 0 && allowedExtensions.Contains(fileExtension)) {
                     string safeFileName = Path.GetFileName(file.FileName).Replace(" ", "_") ;
                     string uniqueFileName = Guid.NewGuid().ToString("N")[..8] + "_" + safeFileName;
                     string destinationFilePath = Path.Combine(targetFolder, uniqueFileName);
@@ -45,18 +47,18 @@ public class CadastrarModel : PageModel
                     }
 
                     string photoPath = $"/img/produtos/{uniqueFileName}";
-                    produto.Fotos.Add(photoPath);
+                    Produto.Fotos.Add(photoPath);
                 }
             }
 
-            produto.Fotos = produto.Fotos.Distinct().ToList();
+            Produto.Fotos = Produto.Fotos.Distinct().ToList();
 
-            if (produto.Fotos.Count > 0) {
-                produto.UrlFoto = produto.Fotos[0];
+            if (Produto.Fotos.Count > 0 && string.IsNullOrEmpty(Produto.UrlFoto)) {
+                Produto.UrlFoto = Produto.Fotos[0];
             }
         }
 
-        await _produtoService.CriarAsync(produto);
+        await _produtoService.CriarAsync(Produto);
         return RedirectToPage("/Admin/Index");
     }
 }

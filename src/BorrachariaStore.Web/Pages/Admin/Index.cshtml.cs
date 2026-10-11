@@ -77,7 +77,11 @@ public class IndexModel : PageModel
             if (fotosParaRemover != null && fotosParaRemover.Count > 0)
             {
                 produto.Fotos.RemoveAll(f => fotosParaRemover.Contains(f));
-                produto.UrlFoto = produto.Fotos.FirstOrDefault() ?? string.Empty;
+                
+                if (fotosParaRemover.Contains(produto.UrlFoto))
+                {
+                    produto.UrlFoto = produto.Fotos.FirstOrDefault() ?? string.Empty;
+                }
             }
 
             if (uploadedImageFiles != null && uploadedImageFiles.Count > 0)

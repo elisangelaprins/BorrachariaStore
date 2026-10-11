@@ -26,11 +26,11 @@
                 <div class="row-2">
                     <div class="field">
                         <label>Nome do produto</label>
-                        <input type="text" asp-for="produto.Nome" placeholder="Ex: Goodyear EfficientGrip Performance" required />
+                        <input type="text" asp-for="Produto.Nome" placeholder="Ex: Goodyear EfficientGrip Performance" required />
                     </div>
                     <div class="field">
                         <label>Marca</label>
-                        <select asp-for="produto.Marca" required>
+                        <select asp-for="Produto.Marca" required>
                             <option value="">Selecione uma marca...</option>
                             <option value="Pirelli">Pirelli</option>
                             <option value="Michelin">Michelin</option>
@@ -46,15 +46,15 @@
                 <div class="row-3">
                     <div class="field">
                         <label>Medida</label>
-                        <input type="text" asp-for="produto.Medida" placeholder="Ex: 205/55 R16" required />
+                        <input type="text" asp-for="Produto.Medida" placeholder="Ex: 205/55 R16" required />
                     </div>
                     <div class="field">
                         <label>Aro</label>
-                        <input type="number" asp-for="produto.Aro" placeholder="16" required />
+                        <input type="number" asp-for="Produto.Aro" placeholder="16" required />
                     </div>
                     <div class="field">
                         <label>Categoria</label>
-                        <select asp-for="produto.Categoria">
+                        <select asp-for="Produto.Categoria">
                             <option value="">Selecione...</option>
                             <option value="Passeio">Passeio</option>
                             <option value="SUV">SUV</option>
@@ -68,17 +68,17 @@
                 <div class="row-2">
                     <div class="field">
                         <label>Preço (R$)</label>
-                        <input type="number" step="0.01" asp-for="produto.Preco" placeholder="389,90" required />
+                        <input type="number" step="0.01" asp-for="Produto.Preco" placeholder="389,90" required />
                     </div>
                     <div class="field">
                         <label>Estoque</label>
-                        <input type="number" asp-for="produto.Estoque" placeholder="10" required />
+                        <input type="number" asp-for="Produto.Estoque" placeholder="10" required />
                     </div>
                 </div>
 
                 <div class="field">
                     <label>Descrição</label>
-                    <textarea asp-for="produto.Descricao" maxlength="500" placeholder="Pneu de alta performance com excelente aderência em piso molhado..."></textarea>
+                    <textarea asp-for="Produto.Descricao" maxlength="500" placeholder="Pneu de alta performance com excelente aderência em piso molhado..."></textarea>
                     <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
                         <span class="char-info">Máx. 500 caracteres</span>
                     </div>
@@ -86,10 +86,9 @@
 
                 <div class="field">
                     <label>Imagem do produto</label>
-                    <input type="text" asp-for="produto.UrlFoto" placeholder="https://exemplo.com/foto.jpg ou /images/pneu.jpg" style="margin-bottom: 8px;" />
                     <input type="file" name="uploadedImageFiles" accept="image/*" multiple />
                     <small style="color: var(--muted); font-size: 12px; margin-top: 4px; display: block;">
-                        Insira a URL direta da imagem ou selecione arquivos PNG/JPG.
+                        Selecione arquivos PNG/JPG/JPEG/GIF.
                     </small>
                 </div>
             </div>
