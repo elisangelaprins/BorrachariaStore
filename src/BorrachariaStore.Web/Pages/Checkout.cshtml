@@ -204,12 +204,19 @@
 
                 <div class="summary-row">
                     <span>Subtotal</span>
-                    <span>R$ @Model.Total.ToString("N2")</span>
+                    <span>R$ @Model.Subtotal.ToString("N2")</span>
                 </div>
 
                 <div class="summary-row">
                     <span>Frete</span>
-                    <span style="color: #16a34a; font-weight: 700;">Grátis</span>
+                    @if (Model.Frete == 0)
+                    {
+                        <span style="color: #16a34a; font-weight: 700;">Grátis</span>
+                    }
+                    else
+                    {
+                        <span style="font-weight: 600; color: #0f172a;">R$ @Model.Frete.ToString("N2")</span>
+                    }
                 </div>
 
                 <div class="summary-total-row">
@@ -217,7 +224,6 @@
                     <span class="summary-total-value">R$ @Model.Total.ToString("N2")</span>
                 </div>
 
-                <!-- Botão de Finalizar Pedido -->
                 <button type="submit" form="formCheckout" class="btn-submit-order">
                     Finalizar compra
                 </button>

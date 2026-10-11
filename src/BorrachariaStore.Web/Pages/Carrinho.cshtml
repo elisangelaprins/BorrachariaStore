@@ -32,16 +32,14 @@
       {
         <div class="cart-item-row">
           <div class="cart-item-thumb">
-            @if (!string.IsNullOrEmpty(item.UrlFoto))
+            @if (!string.IsNullOrWhiteSpace(item.UrlFoto))
             {
               <img src="@(item.UrlFoto.StartsWith("/") ? item.UrlFoto : "/" + item.UrlFoto)" alt="@item.Nome"
-                   onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
-
-              <div class="cart-tire-icon" style="display:none;"></div>
+                   onerror="this.onerror=null; this.src='/images/logo/logo-icon.png'; this.classList.add('cart-thumb-fallback');" />
             }
             else
             {
-              <div class="cart-tire-icon"></div>
+              <img src="/images/logo/logo-icon.png" alt="@item.Nome" class="cart-thumb-fallback" />
             }
           </div>
 
@@ -89,7 +87,6 @@
       }
     </div>
 
-    <!-- RESUMO FIXO NO RODAPÉ -->
     <div class="cart-drawer-footer">
       <div class="coupon-box">
         <input type="text" placeholder="Cupom de desconto" class="coupon-input" />
@@ -98,12 +95,19 @@
 
       <div class="summary-line-row">
         <span>Subtotal (@Model.Itens.Sum(i => i.Quantidade) itens)</span>
-        <span>R$ @Model.Total.ToString("N2")</span>
+        <span>R$ @Model.Subtotal.ToString("N2")</span>
       </div>
 
       <div class="summary-line-row">
         <span>Frete</span>
-        <span class="free-shipping">Grátis</span>
+        @if (Model.Frete == 0)
+        {
+          <span class="free-shipping">Grátis</span>
+        }
+        else
+        {
+          <span style="font-weight: 700; color: #0f172a;">R$ @Model.Frete.ToString("N2")</span>
+        }
       </div>
 
       <div class="summary-total-row">

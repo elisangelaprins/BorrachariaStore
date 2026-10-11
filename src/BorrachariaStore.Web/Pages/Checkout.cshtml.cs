@@ -37,6 +37,10 @@ public class CheckoutModel : PageModel
 
     public string? MensagemErroCep { get; set; }
 
+    public decimal Subtotal => _carrinhoService.CalcularSubtotal();
+
+    public decimal Frete => _carrinhoService.CalcularFrete();
+
     public decimal Total => _carrinhoService.CalcularTotal();
 
     public bool PedidoConfirmado { get; set; }

@@ -23,149 +23,312 @@
   </div>
 }
 
-<!-- HERO SECTION (DESTAQUE) -->
-<section class="hero">
-  <div class="hero-grid">
-    <div>
-      <span class="hero-eyebrow">Frete grátis acima de R$ 300</span>
-      <h1>O pneu certo para cada quilômetro rodado.</h1>
-      <p class="lead">Mais de 128 modelos das principais marcas, com garantia de fábrica e entrega para todo o Brasil.
-      </p>
+<section class="hero-carousel-section">
+  <div class="hero-carousel-container">
+    <div class="hero-carousel">
+      <div class="hero-slide active">
+        <div class="hero-slide-content">
+          <span class="hero-badge">15% OFF</span>
+          <p class="hero-subtitle">PIRELLI · 205/55 R16</p>
+          <h1 class="hero-title">Semana do pneu Pirelli</h1>
+          <p class="hero-old-price">de R$ 549,90</p>
+          <div class="hero-price-row">
+            <strong class="hero-price">R$ 467,41</strong>
+            <span class="hero-price-label">no Pix</span>
+          </div>
+          <p class="hero-installments">ou 10x de R$ 46,74 sem juros</p>
+          <a asp-page="/Index" asp-route-termo="Pirelli" class="btn btn-primary hero-btn">Comprar agora</a>
+        </div>
+        <a asp-page="/Index" asp-route-termo="Pirelli" class="hero-slide-media">
+          <img src="~/images/hero/hero-tire.png" alt="Pirelli Cinturato P7" />
+          <span class="hero-media-badge">Pirelli Cinturato P7</span>
+        </a>
+      </div>
 
-      <!-- BARRA DE BUSCA -->
-      <form method="get" style="display:flex; gap:12px; margin-bottom:24px; max-width:500px;">
-        <input type="text" name="termo" value="@Model.Termo" placeholder="Buscar por marca, modelo ou medida..."
-               style="padding:12px 16px; border-radius:8px; border:1px solid #cbd5e1; flex:1; font-size:15px; outline:none;" />
-        <button type="submit" class="btn btn-primary">Buscar</button>
-      </form>
+      <div class="hero-slide">
+        <div class="hero-slide-content">
+          <span class="hero-badge">PREÇO ESPECIAL</span>
+          <p class="hero-subtitle">MICHELIN · 205/55 R16</p>
+          <h1 class="hero-title">Michelin para viajar tranquilo</h1>
+          <p class="hero-old-price">de R$ 679,90</p>
+          <div class="hero-price-row">
+            <strong class="hero-price">R$ 612,00</strong>
+            <span class="hero-price-label">no Pix</span>
+          </div>
+          <p class="hero-installments">ou 10x de R$ 61,20 sem juros</p>
+          <a asp-page="/Index" asp-route-termo="Michelin" class="btn btn-primary hero-btn">Comprar agora</a>
+        </div>
+        <a asp-page="/Index" asp-route-termo="Michelin" class="hero-slide-media">
+          <img src="~/images/hero/tire-michelin.png" alt="Michelin Primacy 4" />
+          <span class="hero-media-badge">Michelin Primacy 4</span>
+        </a>
+      </div>
 
-      <div class="hero-stats">
-        <div><b>@(Model.Produtos?.Count ?? 0)+</b><span>produtos disponíveis</span></div>
-        <div><b>4.8</b><span>avaliação média</span></div>
-        <div><b>7 dias</b><span>para troca fácil</span></div>
+      <div class="hero-slide">
+        <div class="hero-slide-content">
+          <span class="hero-badge">OFERTA</span>
+          <p class="hero-subtitle">GOODYEAR · 195/55 R15</p>
+          <h1 class="hero-title">Goodyear com frete grátis</h1>
+          <p class="hero-old-price">de R$ 458,90</p>
+          <div class="hero-price-row">
+            <strong class="hero-price">R$ 389,90</strong>
+            <span class="hero-price-label">no Pix</span>
+          </div>
+          <p class="hero-installments">ou 10x de R$ 38,99 sem juros</p>
+          <a asp-page="/Index" asp-route-termo="Goodyear" class="btn btn-primary hero-btn">Comprar agora</a>
+        </div>
+        <a asp-page="/Index" asp-route-termo="Goodyear" class="hero-slide-media">
+          <img src="~/images/hero/tire-goodyear.png" alt="Goodyear EfficientGrip" />
+          <span class="hero-media-badge">Goodyear EfficientGrip</span>
+        </a>
       </div>
     </div>
-    <div class="hero-visual">
-      <span class="hero-tag">-15% OFF esta semana</span>
-      <div class="tire-ring"></div>
+
+    <button type="button" class="carousel-arrow prev" id="heroPrevBtn" aria-label="Anterior">‹</button>
+    <button type="button" class="carousel-arrow next" id="heroNextBtn" aria-label="Próximo">›</button>
+
+    <div class="carousel-dots">
+      <button type="button" class="dot active" data-index="0"></button>
+      <button type="button" class="dot" data-index="1"></button>
+      <button type="button" class="dot" data-index="2"></button>
     </div>
   </div>
 </section>
 
-<!-- FILTRO POR ARO -->
-<section class="section">
-  <div class="section-head">
+<section class="aro-section">
+  <div class="aro-head">
     <div>
-      <h2>Buscar por medida (aro)</h2>
-      <p>Encontre o pneu certo para o seu veículo em um clique.</p>
+      <h2>Compre pelo aro</h2>
+      <p>Atalhos para as medidas mais procuradas.</p>
     </div>
+    <a asp-page="/Index" class="aro-link">Ver todos os aros →</a>
   </div>
-  <div class="aro-strip">
+  <div class="aro-grid">
     <a asp-page="/Index" asp-route-termo="13" class="aro-card">
-      <div class="ring"></div><b>Aro 13</b><span>Ver opções</span>
+      <svg class="aro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9" />
+        <circle cx="12" cy="12" r="3" />
+        <line x1="12" y1="3" x2="12" y2="9" />
+        <line x1="12" y1="15" x2="12" y2="21" />
+        <line x1="3" y1="12" x2="9" y2="12" />
+        <line x1="15" y1="12" x2="21" y2="12" />
+      </svg>
+      <span class="aro-label">Aro</span>
+      <strong class="aro-num">13</strong>
     </a>
     <a asp-page="/Index" asp-route-termo="14" class="aro-card">
-      <div class="ring"></div><b>Aro 14</b><span>Ver opções</span>
+      <svg class="aro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9" />
+        <circle cx="12" cy="12" r="3" />
+        <line x1="12" y1="3" x2="12" y2="9" />
+        <line x1="12" y1="15" x2="12" y2="21" />
+        <line x1="3" y1="12" x2="9" y2="12" />
+        <line x1="15" y1="12" x2="21" y2="12" />
+      </svg>
+      <span class="aro-label">Aro</span>
+      <strong class="aro-num">14</strong>
     </a>
     <a asp-page="/Index" asp-route-termo="15" class="aro-card">
-      <div class="ring"></div><b>Aro 15</b><span>Ver opções</span>
+      <svg class="aro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9" />
+        <circle cx="12" cy="12" r="3" />
+        <line x1="12" y1="3" x2="12" y2="9" />
+        <line x1="12" y1="15" x2="12" y2="21" />
+        <line x1="3" y1="12" x2="9" y2="12" />
+        <line x1="15" y1="12" x2="21" y2="12" />
+      </svg>
+      <span class="aro-label">Aro</span>
+      <strong class="aro-num">15</strong>
     </a>
     <a asp-page="/Index" asp-route-termo="16" class="aro-card">
-      <div class="ring"></div><b>Aro 16</b><span>Ver opções</span>
+      <svg class="aro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9" />
+        <circle cx="12" cy="12" r="3" />
+        <line x1="12" y1="3" x2="12" y2="9" />
+        <line x1="12" y1="15" x2="12" y2="21" />
+        <line x1="3" y1="12" x2="9" y2="12" />
+        <line x1="15" y1="12" x2="21" y2="12" />
+      </svg>
+      <span class="aro-label">Aro</span>
+      <strong class="aro-num">16</strong>
     </a>
     <a asp-page="/Index" asp-route-termo="17" class="aro-card">
-      <div class="ring"></div><b>Aro 17</b><span>Ver opções</span>
+      <svg class="aro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9" />
+        <circle cx="12" cy="12" r="3" />
+        <line x1="12" y1="3" x2="12" y2="9" />
+        <line x1="12" y1="15" x2="12" y2="21" />
+        <line x1="3" y1="12" x2="9" y2="12" />
+        <line x1="15" y1="12" x2="21" y2="12" />
+      </svg>
+      <span class="aro-label">Aro</span>
+      <strong class="aro-num">17</strong>
     </a>
-    <a asp-page="/Index" asp-route-termo="" class="aro-card">
-      <div class="ring"></div><b>Todos</b><span>Ver catálogo</span>
+    <a asp-page="/Index" asp-route-termo="18" class="aro-card">
+      <svg class="aro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9" />
+        <circle cx="12" cy="12" r="3" />
+        <line x1="12" y1="3" x2="12" y2="9" />
+        <line x1="12" y1="15" x2="12" y2="21" />
+        <line x1="3" y1="12" x2="9" y2="12" />
+        <line x1="15" y1="12" x2="21" y2="12" />
+      </svg>
+      <span class="aro-label">Aro</span>
+      <strong class="aro-num">18</strong>
     </a>
   </div>
 </section>
 
-<!-- CATÁLOGO DE PRODUTOS DINÂMICO -->
-<section class="section" style="padding-top:0;">
-  <div class="section-head">
+
+<section id="ofertas" class="destaques-section">
+  <div class="destaques-head">
     <div>
-      <h2>Catálogo de Pneus</h2>
-      <p>Os melhores pneus direto dos fabricantes.</p>
+      @if (!string.IsNullOrWhiteSpace(Model.Termo))
+      {
+        <h2>Resultados da busca</h2>
+        <p>Exibindo pneus encontrados para "@Model.Termo".</p>
+      }
+      else
+      {
+        <h2>Pneus em destaque</h2>
+        <p>Seleção com os melhores preços da semana.</p>
+      }
     </div>
+    @if (!string.IsNullOrWhiteSpace(Model.Termo))
+    {
+      <a asp-page="/Index" class="destaques-link">Limpar busca</a>
+    }
+    else
+    {
+      <a asp-page="/Index" class="destaques-link">Ver todos →</a>
+    }
   </div>
 
-  <div class="prod-grid">
-    @if (Model.Produtos != null && Model.Produtos.Any())
+  <div class="destaques-grid">
+    @if (!string.IsNullOrEmpty(Model.ErroCarregamento))
     {
-      @foreach (var pneu in Model.Produtos)
+      <div style="grid-column: 1 / -1; padding: 36px 24px; text-align: center; background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px;">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" style="margin-bottom: 10px;">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+        <p style="color: #991b1b; font-weight: 700; font-size: 16px; margin: 0 0 6px;">Catálogo temporariamente indisponível</p>
+        <p style="color: #7f1d1d; font-size: 14px; margin: 0 0 16px;">@Model.ErroCarregamento</p>
+        <a asp-page="/Index" class="btn btn-primary" style="background: #dc2626; border-color: #dc2626; display: inline-flex; align-items: center; gap: 8px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+          </svg>
+          Tentar novamente
+        </a>
+      </div>
+    }
+    else if (Model.Produtos != null && Model.Produtos.Any())
+    {
+      var listaExibicao = string.IsNullOrWhiteSpace(Model.Termo) ? Model.Produtos.Take(4) : Model.Produtos;
+      var idx = 0;
+      @foreach (var pneu in listaExibicao)
       {
-        <div class="prod-card" id="p-@pneu.Id">
-          <div class="prod-thumb">
-            <span class="tag">@pneu.Marca</span>
-            <span class="aro-pill">Aro @pneu.Aro</span>
+        <article class="destaque-card" id="p-@pneu.Id">
+          <div class="destaque-thumb">
+            @if (idx == 0)
+            {
+              <span class="destaque-badge-oferta">OFERTA</span>
+            }
+            <span class="destaque-badge-aro">Aro @pneu.Aro</span>
             @if (!string.IsNullOrWhiteSpace(pneu.UrlFoto))
             {
-              <img src="@pneu.UrlFoto" alt="@pneu.Nome" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
-              <div class="tire-icon" style="display:none;"></div>
+              <img src="@pneu.UrlFoto" alt="@pneu.Marca @pneu.Nome" class="destaque-img" onerror="this.onerror=null; this.src='/images/logo/logo-icon.png'; this.classList.add('destaque-img-fallback');" />
             }
             else
             {
-              <div class="tire-icon"></div>
+              <img src="/images/logo/logo-icon.png" alt="@pneu.Marca @pneu.Nome" class="destaque-img destaque-img-fallback" />
             }
           </div>
-          <div class="prod-info">
-            <h3>@pneu.Nome</h3>
-            <p class="desc">@pneu.Descricao — Medida: <strong>@pneu.Medida</strong></p>
-            <div class="prod-price-row">
-              <span class="prod-price">R$ @pneu.Preco.ToString("N2")</span>
-              <span class="prod-rating">★ 4.8</span>
+          <div class="destaque-body">
+            <p class="destaque-brand">@pneu.Marca</p>
+            <h3 class="destaque-title">@pneu.Nome</h3>
+            <p class="destaque-measure">@pneu.Medida</p>
+            <div class="destaque-footer">
+              <p class="destaque-old-price">de R$ @((pneu.Preco * 1.15m).ToString("N2"))</p>
+              <div class="destaque-price-row">
+                <strong class="destaque-price">R$ @pneu.Preco.ToString("N2")</strong>
+                <span class="destaque-rating">★ 4,8</span>
+              </div>
             </div>
-            <form method="post" asp-page-handler="AdicionarAoCarrinho" asp-route-produtoId="@pneu.Id">
-              <button type="submit" class="prod-add" style="width:100%;">Adicionar ao Carrinho</button>
+            <form method="post" asp-page-handler="AdicionarAoCarrinho" asp-route-produtoId="@pneu.Id" class="destaque-form">
+              <button type="submit" class="destaque-add-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
+                  <circle cx="9" cy="21" r="1" />
+                  <circle cx="20" cy="21" r="1" />
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                </svg>
+                Comprar
+              </button>
             </form>
           </div>
-        </div>
+        </article>
+        idx++;
       }
     }
     else
     {
-      <div
-        style="grid-column: 1 / -1; padding: 40px; text-align: center; background: #fff; border-radius: 10px; border: 1px solid #e2e8f0;">
+      <div style="grid-column: 1 / -1; padding: 40px; text-align: center; background: #fff; border-radius: 10px; border: 1px solid #e2e8f0;">
         <p style="font-size: 16px; color: #64748b; margin: 0;">Nenhum produto encontrado com os filtros atuais.</p>
-        <a asp-page="/Index" style="display:inline-block; margin-top:10px; color:#2563eb; font-weight:600;">Limpar
-          filtros</a>
+        <a asp-page="/Index" style="display:inline-block; margin-top:10px; color:#2563eb; font-weight:600;">Ver todos os pneus</a>
       </div>
     }
   </div>
 </section>
 
-<!-- BANNER PROMOCIONAL -->
-<section class="section" style="padding-top:0;">
+<section class="section">
   <div class="promo">
     <div>
       <h3>Ganhe 10% de desconto na primeira compra</h3>
-      <p>Use o cupom <code>BORRACHA10</code> no carrinho. Válido para todo o catálogo.</p>
+      <p>Use o cupom <code>PNEU10</code> no carrinho. Válido para todo o catálogo.</p>
     </div>
     <a asp-page="/Index" class="btn btn-primary" style="background:#fff; color:#1d4ed8;">Ver ofertas</a>
   </div>
 </section>
 
-<!-- BENEFÍCIOS -->
-<section class="section" style="padding-top:0;">
+<section class="section">
   <div class="benefits">
     <div class="benefit">
-      <div class="b-icon">🚚</div>
+      <div class="b-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2" />
+          <path d="M15 18H9" />
+          <path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14" />
+          <circle cx="17" cy="18" r="2" />
+          <circle cx="7" cy="18" r="2" />
+        </svg>
+      </div>
       <div>
         <h4>Frete grátis</h4>
-        <p>Em compras acima de R$ 300 para todo o Brasil.</p>
+        <p>Em compras acima de R$ 800 para todo o Brasil.</p>
       </div>
     </div>
     <div class="benefit">
-      <div class="b-icon">🛡️</div>
+      <div class="b-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+          <path d="m9 12 2 2 4-4" />
+        </svg>
+      </div>
       <div>
         <h4>Garantia de fábrica</h4>
         <p>12 meses de garantia em todos os produtos.</p>
       </div>
     </div>
     <div class="benefit">
-      <div class="b-icon">🔄</div>
+      <div class="b-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+          <path d="M21 3v5h-5" />
+          <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+          <path d="M8 16H3v5" />
+        </svg>
+      </div>
       <div>
         <h4>Troca fácil</h4>
         <p>Até 7 dias para trocar caso não fique satisfeito.</p>
@@ -174,8 +337,7 @@
   </div>
 </section>
 
-<!-- MARCAS PARCEIRAS -->
-<section class="section" style="padding-top:0;">
+<section class="section">
   <div class="section-head">
     <div>
       <h2>Marcas parceiras</h2>
@@ -183,10 +345,20 @@
     </div>
   </div>
   <div class="brand-row">
-    <a asp-page="/Index" asp-route-termo="Goodyear" class="brand-chip">Goodyear</a>
-    <a asp-page="/Index" asp-route-termo="Pirelli" class="brand-chip">Pirelli</a>
-    <a asp-page="/Index" asp-route-termo="Michelin" class="brand-chip">Michelin</a>
-    <a asp-page="/Index" asp-route-termo="Bridgestone" class="brand-chip">Bridgestone</a>
-    <a asp-page="/Index" asp-route-termo="Continental" class="brand-chip">Continental</a>
+    <a asp-page="/Index" asp-route-termo="Goodyear" class="brand-chip" title="Pneus Goodyear">
+      <img src="~/images/marcas/goodyear.svg" alt="Goodyear" class="brand-logo-img" />
+    </a>
+    <a asp-page="/Index" asp-route-termo="Pirelli" class="brand-chip" title="Pneus Pirelli">
+      <img src="~/images/marcas/pirelli.svg" alt="Pirelli" class="brand-logo-img" />
+    </a>
+    <a asp-page="/Index" asp-route-termo="Michelin" class="brand-chip" title="Pneus Michelin">
+      <img src="~/images/marcas/michelin.svg" alt="Michelin" class="brand-logo-img" />
+    </a>
+    <a asp-page="/Index" asp-route-termo="Bridgestone" class="brand-chip" title="Pneus Bridgestone">
+      <img src="~/images/marcas/bridgestone.svg" alt="Bridgestone" class="brand-logo-img" />
+    </a>
+    <a asp-page="/Index" asp-route-termo="Continental" class="brand-chip" title="Pneus Continental">
+      <img src="~/images/marcas/continental.svg" alt="Continental" class="brand-logo-img" />
+    </a>
   </div>
 </section>

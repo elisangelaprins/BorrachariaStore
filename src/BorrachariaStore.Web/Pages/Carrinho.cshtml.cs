@@ -16,13 +16,11 @@ public class CarrinhoModel : PageModel
 
     public IReadOnlyList<ItemCarrinho> Itens => _carrinhoService.Itens;
 
-    public decimal Total
-    {
-        get
-        {
-          return _carrinhoService.CalcularTotal();
-        }
-    }
+    public decimal Subtotal => _carrinhoService.CalcularSubtotal();
+
+    public decimal Frete => _carrinhoService.CalcularFrete();
+
+    public decimal Total => _carrinhoService.CalcularTotal();
 
     public void OnGet() { }
 
