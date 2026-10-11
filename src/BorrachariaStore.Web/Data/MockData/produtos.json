@@ -7,7 +7,7 @@
     "medida": "175/70 R14",
     "aro": 14,
     "preco": 389.90,
-    "urlFoto": "/img/produtos/pirelli-cinturato.png",
+    "urlFoto": "/images/produtos/pirelli-cinturato.png",
     "estoque": 20
   },
   {
@@ -18,7 +18,7 @@
     "medida": "185/65 R15",
     "aro": 15,
     "preco": 459.90,
-    "urlFoto": "/img/produtos/michelin-energy-xm2.png",
+    "urlFoto": "/images/produtos/michelin-energy-xm2.png",
     "estoque": 15
   },
   {

@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const formsAdicionar = document.querySelectorAll('form[action*="handler=AdicionarAoCarrinho"]');
 
-    formsAdicionar.forEach(form => {
+        formsAdicionar.forEach(form => {
         form.addEventListener("submit", async function (e) {
             e.preventDefault();
 
@@ -36,6 +36,37 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
+
+    const slides = document.querySelectorAll(".hero-slide");
+    const dots = document.querySelectorAll(".carousel-dots .dot");
+    const prevBtn = document.getElementById("heroPrevBtn");
+    const nextBtn = document.getElementById("heroNextBtn");
+    let currentIndex = 0;
+    let autoInterval;
+
+    function showSlide(index) {
+        if (slides.length === 0) return;
+        currentIndex = (index + slides.length) % slides.length;
+        slides.forEach((slide, i) => slide.classList.toggle("active", i === currentIndex));
+        dots.forEach((dot, i) => dot.classList.toggle("active", i === currentIndex));
+        const container = document.querySelector(".hero-carousel");
+        if (container) container.style.transform = `translateX(-${currentIndex * 100}%)`;
+    }
+
+    function startAutoPlay() {
+        stopAutoPlay();
+        autoInterval = setInterval(() => showSlide(currentIndex + 1), 4500);
+    }
+
+    function stopAutoPlay() {
+        if (autoInterval) clearInterval(autoInterval);
+    }
+
+    if (prevBtn) prevBtn.addEventListener("click", () => { showSlide(currentIndex - 1); startAutoPlay(); });
+    if (nextBtn) nextBtn.addEventListener("click", () => { showSlide(currentIndex + 1); startAutoPlay(); });
+    dots.forEach((dot, i) => dot.addEventListener("click", () => { showSlide(i); startAutoPlay(); }));
+
+    if (slides.length > 0) startAutoPlay();
 });
 
 function atualizarContadorCarrinho(total) {
