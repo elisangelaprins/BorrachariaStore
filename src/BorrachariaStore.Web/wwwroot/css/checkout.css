@@ -379,3 +379,10 @@
   font-weight: 600;
   color: #0f172a;
 }
+
+.checkout-field-error {
+  display: block;
+  color: #dc2626;
+  font-size: 13px;
+  margin-top: 4px;
+}
