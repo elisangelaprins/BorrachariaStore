@@ -11,23 +11,41 @@
     <div class="checkout-breadcrumb">
         <a asp-page="/Carrinho">Carrinho</a>
         <span>&rsaquo;</span>
-        <span class="active">Entrega</span>
-        <span>&rsaquo;</span>
-        <span>Pagamento</span>
+        <span class="@(Model.PedidoConfirmado ? "" : "active")">Entrega &amp; Pagamento</span>
+        @if (Model.PedidoConfirmado)
+        {
+            <span>&rsaquo;</span>
+            <span class="active">Confirmação</span>
+        }
     </div>
 
     <h1 class="checkout-title">Finalizar pedido</h1>
 
-    <div class="checkout-layout">
-        @if (Model.PedidoConfirmado)
-        {
+    @if (Model.PedidoConfirmado)
+    {
+        <div class="checkout-success-container">
             <div class="toast-success-banner">
-                Pedido realizado com sucesso! Número: @Model.NumeroPedido
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                <div>
+                    <h3 class="success-banner-title">Pedido realizado com sucesso!</h3>
+                    <p class="success-banner-desc">Número do pedido: <strong>@Model.NumeroPedido</strong></p>
+                </div>
             </div>
-        }
-        <!-- COLUNA ESQUERDA: FORMULÁRIO -->
-        <form method="post" asp-page="/Checkout" id="formCheckout" class="checkout-main-form">
-            <div asp-validation-summary="ModelOnly" class="checkout-field-error"></div>
+
+            <div class="checkout-success-actions">
+                <a asp-page="/Index" class="btn-success-home">Continuar comprando</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="checkout-layout">
+            <!-- COLUNA ESQUERDA: FORMULÁRIO -->
+            <form method="post" asp-page="/Checkout" id="formCheckout" class="checkout-main-form">
+                <div asp-validation-summary="ModelOnly" class="checkout-field-error"></div>
             <!-- SEÇÃO 1: DADOS DE ENTREGA -->
             <div class="checkout-card">
                 <div class="checkout-card-header">
@@ -85,12 +103,12 @@
 
                     <div class="form-group">
                         <label class="form-label">Cidade</label>
-                        <input type="text" asp-for="Cidade" class="form-control-input" placeholder="Cidade" readonly />
+                        <input type="text" asp-for="Cidade" class="form-control-input" placeholder="Cidade" />
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Estado</label>
-                        <input type="text" asp-for="Estado" class="form-control-input" placeholder="UF" readonly />
+                        <input type="text" asp-for="Estado" class="form-control-input" placeholder="UF" />
                     </div>
                 </div>
 
@@ -253,4 +271,5 @@
             </div>
         </aside>
     </div>
+    }
 </div>
