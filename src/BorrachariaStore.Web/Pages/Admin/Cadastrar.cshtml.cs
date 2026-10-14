@@ -38,7 +38,7 @@ public class CadastrarModel : PageModel
         }
 
         if (uploadedImageFiles != null && uploadedImageFiles.Count > 0) {
-            string targetFolder = Path.Combine(_webHostEnvironment.WebRootPath, "img", "produtos");
+            string targetFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "produtos");
             if (!Directory.Exists(targetFolder)) {
                 Directory.CreateDirectory(targetFolder);
             }
@@ -54,7 +54,7 @@ public class CadastrarModel : PageModel
                         await file.CopyToAsync(fileStream);
                     }
 
-                    string photoPath = $"/img/produtos/{uniqueFileName}";
+                    string photoPath = $"/images/produtos/{uniqueFileName}";
                     Produto.Fotos.Add(photoPath);
                 }
             }
