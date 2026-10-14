@@ -38,7 +38,7 @@ public class CadastrarModel : PageModel
         }
 
         if (uploadedImageFiles != null && uploadedImageFiles.Count > 0) {
-            string targetFolder = Path.Combine(_webHostEnvironment.WebRootPath, "img", "produtos");
+            string targetFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "produtos");
             if (!Directory.Exists(targetFolder)) {
                 Directory.CreateDirectory(targetFolder);
             }
@@ -54,7 +54,7 @@ public class CadastrarModel : PageModel
                         await file.CopyToAsync(fileStream);
                     }
 
-                    string photoPath = $"/img/produtos/{uniqueFileName}";
+                    string photoPath = $"/images/produtos/{uniqueFileName}";
                     Produto.Fotos.Add(photoPath);
                 }
             }
@@ -85,9 +85,13 @@ public class CadastrarModel : PageModel
         if (PrecoPromocional.HasValue && PrecoPromocional.Value > 0 && PrecoPromocional.Value < PrecoNormal) {
             Produto.Preco = PrecoPromocional.Value;
             Produto.PrecoOriginal = PrecoNormal;
+            Produto.EmPromocao = true;
+            Produto.PorcentagemDesconto = (int)Math.Round((1m - (PrecoPromocional.Value / PrecoNormal)) * 100m);
         } else {
             Produto.Preco = PrecoNormal;
             Produto.PrecoOriginal = null;
+            Produto.EmPromocao = false;
+            Produto.PorcentagemDesconto = null;
         }
 
         try
