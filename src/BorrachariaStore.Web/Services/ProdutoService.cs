@@ -12,7 +12,9 @@ public class ProdutoService
 
     public ProdutoService(IOptions<MongoDbSettings> settings, ILogger<ProdutoService> logger)
     {
-        var client = new MongoClient(settings.Value.ConnectionString);
+        var mongoSettings = MongoClientSettings.FromConnectionString(settings.Value.ConnectionString);
+        mongoSettings.ServerSelectionTimeout = TimeSpan.FromSeconds(4);
+        var client = new MongoClient(mongoSettings);
         var database = client.GetDatabase(settings.Value.DatabaseName);
         _produtos = database.GetCollection<Produto>(settings.Value.ProdutosCollectionName);
         _logger = logger;
@@ -23,13 +25,12 @@ public class ProdutoService
         try
         {
             var filter = Builders<Produto>.Filter.Empty;
-            var products = await _produtos.Find(filter).ToListAsync();
-            return products;
+            return await _produtos.Find(filter).ToListAsync();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[LOG ERRO] ListarAsync: {ex.Message}");
-            return new List<Produto>();
+            _logger.LogError(ex, "Erro ao listar produtos no MongoDB.");
+            throw;
         }
     }
 
@@ -43,14 +44,12 @@ public class ProdutoService
         try
         {
             var filter = Builders<Produto>.Filter.Eq(p => p.Id, id);
-            var product = await _produtos.Find(filter).FirstOrDefaultAsync();
-
-            return product;
+            return await _produtos.Find(filter).FirstOrDefaultAsync();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[LOG ERRO] ObterPorIdAsync: {ex.Message}");
-            return null;
+            _logger.LogError(ex, "Erro ao obter produto por ID {ProdutoId} no MongoDB.", id);
+            throw;
         }
     }
 
@@ -88,12 +87,12 @@ public class ProdutoService
             }
 
             var products = await _produtos.Find(filter).ToListAsync();
-            return products;
+            return await _produtos.Find(filter).ToListAsync();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[LOG ERRO] BuscarAsync: {ex.Message}");
-            return new List<Produto>();
+            _logger.LogError(ex, "Erro ao buscar produtos no MongoDB com termo '{Termo}' e categoria '{Categoria}'.", termo, categoria);
+            throw;
         }
     }
 
@@ -108,7 +107,6 @@ public class ProdutoService
             _logger.LogError(ex, "Erro ao inserir o produto {ProdutoId}", produto.Id);
             throw;
         }
-
     }
 
     public async Task AtualizarAsync(string id, Produto produtoAtualizado)
@@ -121,13 +119,13 @@ public class ProdutoService
         try
         {
             produtoAtualizado.Id = id;
-
             var filter = Builders<Produto>.Filter.Eq(p => p.Id, id);
-            var result = await _produtos.ReplaceOneAsync(filter, produtoAtualizado);
+            await _produtos.ReplaceOneAsync(filter, produtoAtualizado);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[LOG ERRO] AtualizarAsync: {ex.Message}");
+            _logger.LogError(ex, "Erro ao atualizar produto {ProdutoId} no MongoDB.", id);
+            throw;
         }
     }
 
@@ -141,12 +139,12 @@ public class ProdutoService
         try
         {
             var filter = Builders<Produto>.Filter.Eq(p => p.Id, id);
-            var result = await _produtos.DeleteOneAsync(filter);
-
+            await _produtos.DeleteOneAsync(filter);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[LOG ERRO] RemoverAsync: {ex.Message}");
+            _logger.LogError(ex, "Erro ao remover produto {ProdutoId} no MongoDB.", id);
+            throw;
         }
     }
 }

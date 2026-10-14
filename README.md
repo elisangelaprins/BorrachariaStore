@@ -13,10 +13,18 @@ Sistema visual de e-commerce automotivo (venda de pneus e serviços de borrachar
 ---
 
 ## ✨ Funcionalidades Principais (Escopo)
-* **Catálogo Dinâmico:** Listagem visual de produtos com busca por nome e filtros por aro e preço.
-* **Carrinho de Compras:** Adição/remoção de itens, controle de quantidade e cálculo automático de subtotal.
+* **Catálogo & Vitrine Dinâmica:** Listagem de produtos com busca em tempo real, filtros por aro, categoria, ordenação e página dedicada (`/Catalogo`).
+* **Regras de Promoção & Ofertas:** Produtos com preço promocional, porcentagem de desconto (`-X% OFF`), preço original riscado e filtro de ofertas da semana.
+* **Drawer de Detalhes Rápidos:** Modal lateral deslizante com especificações técnicas, medidas e galeria de fotos sem sair da página.
+* **Carrinho de Compras & Cupons:** Controle de itens/quantidades, adição assíncrona via API (sem reload da página) com contador em tempo real no cabeçalho, cálculo de frete e aplicação de cupons de desconto.
 * **Checkout Simulado:** Formulário com validação de dados de entrega e seleção de método de pagamento (Cartão, Pix, Boleto).
-* **Painel Administrativo (CRUD):** Área restrita para cadastro, listagem, edição e exclusão de pneus no MongoDB.
+* **Consulta de CEP (ViaCEP):** Preenchimento automático de endereço de entrega no checkout com resiliência e tratamento de timeout.
+* **Autenticação (Login):** Proteção de acesso às áreas administrativas.
+* **Tratamento Amigável de Erros:** Página customizada (`/Error`) para falhas inesperadas com atalhos de navegação.
+* **Painel Administrativo Completo:**
+  * **Estoque (CRUD):** Cadastro, listagem em tempo real, edição e exclusão de pneus no MongoDB.
+  * **Upload de Imagens:** Suporte a upload de múltiplos arquivos de fotos locais (`IFormFile`) com armazenamento no servidor.
+  * **Cupons:** Criação e ativação/desativação de cupons promocionais com regras de valor mínimo.
 
 ---
 
@@ -24,7 +32,7 @@ Sistema visual de e-commerce automotivo (venda de pneus e serviços de borrachar
 * **Linguagem:** C# (.NET 8)
 * **Framework:** ASP.NET Core Razor Pages
 * **Banco de Dados:** MongoDB (driver oficial `MongoDB.Driver`)
-* **Front-end:** HTML5, CSS3, JavaScript, Bootstrap
+* **Front-end:** HTML5, CSS3 (Customizado / Vanilla), JavaScript
 
 ---
 
@@ -42,46 +50,52 @@ BorrachariaStore/
 │       ├── Program.cs
 │       ├── appsettings.json           # ConnectionString do MongoDB
 │       ├── Models/
-│       │   ├── Produto.cs
+│       │   ├── Produto.cs             # Modelo com suporte a preços promocionais
+│       │   ├── Cupom.cs               # Modelo de cupom de desconto
 │       │   ├── ItemCarrinho.cs
 │       │   ├── Pedido.cs
+│       │   ├── EnderecoCepDto.cs      # Modelo de retorno da API de CEP
 │       │   └── MongoDbSettings.cs
 │       ├── Services/
-│       │   ├── ProdutoService.cs      # Catálogo + CRUD admin (Aulas 3, 6, 7)
-│       │   ├── CarrinhoService.cs     # Regras do carrinho (Aulas 4, 5)
-│       │   └── PedidoService.cs       # Checkout (Aula 5)
+│       │   ├── ProdutoService.cs      # Catálogo e operações de CRUD no MongoDB
+│       │   ├── CarrinhoService.cs     # Gerenciamento de itens, totais e cupons
+│       │   ├── PedidoService.cs       # Checkout e registro de pedidos
+│       │   ├── CupomService.cs        # Validação e persistência de cupons
+│       │   └── ViaCepService.cs        # Integração com a API do ViaCEP
 │       ├── Data/MockData/
-│       │   └── produtos.json          # Massa de dados inicial (Aula 2)
+│       │   └── produtos.json          # Massa de dados inicial (Seed com promoções)
 │       ├── Pages/
-│       │   ├── Index.cshtml(.cs)      # Catálogo
-│       │   ├── Carrinho.cshtml(.cs)
-│       │   ├── Checkout.cshtml(.cs)
-│       │   ├── Shared/_Layout.cshtml
+│       │   ├── Index.cshtml(.cs)      # Página inicial (Home) com destaques
+│       │   ├── Catalogo.cshtml(.cs)   # Catálogo completo com filtros avançados
+│       │   ├── Carrinho.cshtml(.cs)   # Gestão de itens e aplicação de cupom
+│       │   ├── Checkout.cshtml(.cs)   # Formulário de entrega e pagamento
+│       │   ├── Login.cshtml(.cs)      # Acesso restrito ao Painel Admin
+│       │   ├── Error.cshtml(.cs)      # Página customizada de tratamento de erro
+│       │   ├── Shared/
+│       │   │   ├── _Layout.cshtml     # Layout mestre
+│       │   │   └── _DetalhesProduto.cshtml # Modal lateral de detalhes do produto
 │       │   └── Admin/
-│       │       ├── Index.cshtml(.cs)      # Listagem (Aula 7)
-│       │       ├── Cadastrar.cshtml(.cs)  # Insert (Aula 6)
-│       │       └── Editar.cshtml(.cs)     # Update/Delete (Aula 7)
+│       │       ├── Index.cshtml(.cs)      # Painel de estoque (listagem e exclusão)
+│       │       ├── Cadastrar.cshtml(.cs)  # Cadastro de novo produto
+│       │       ├── Editar.cshtml(.cs)     # Edição de produto existente
+│       │       └── Cupons.cshtml(.cs)     # Gestão e criação de cupons
 │       └── wwwroot/
-│           ├── css/site.css
-│           ├── js/site.js
-│           └── img/
+│           ├── css/
+│           │   ├── site.css           # Estilos principais da loja
+│           │   ├── catalogo.css       # Estilos da página de catálogo e filtros
+│           │   ├── detalhes-produto.css # Estilos do drawer de detalhes rápidos
+│           │   ├── admin.css          # Estilos do painel administrativo
+│           │   ├── carrinho.css       # Estilos do carrinho
+│           │   ├── checkout.css       # Estilos do checkout
+│           │   └── login.css          # Estilos do login
+│           ├── js/
+│           │   └── site.js            # Scripts, modais e interações
+│           └── images/                # Imagens (logos, marcas, produtos e hero)
 ```
 
-## Mapeamento com o cronograma (9 aulas)
+---
 
-| Aula | Data  | Onde mexer |
-|------|-------|------------|
-| 1 | 25/08 | Planejamento (este repositório) |
-| 2 | 01/09 | Criar solução no Visual Studio a partir da pasta `src/`, ajustar `Data/MockData/produtos.json` |
-| 3 | 15/09 | Configurar `MongoDbSettings` em `appsettings.json`, ativar `ProdutoService`, conectar `Pages/Index.cshtml` |
-| 4 | 29/09 | `CarrinhoService` + `Pages/Carrinho.cshtml` |
-| 5 | 06/10 | Cálculo de total + `Pages/Checkout.cshtml` + `PedidoService` |
-| 6 | 20/10 | `Pages/Admin/Cadastrar.cshtml` (Insert) |
-| 7 | 27/10 | `Pages/Admin/Index.cshtml` e `Editar.cshtml` (Update/Delete) |
-| 8 | 03/11 | Testes de integração ponta a ponta |
-| 9 | 10/11 | Refino visual, limpeza de código, build final |
-
-## Como rodar (a partir da Aula 2)
+## 🚀 Como Executar o Projeto
 
 ```bash
 cd src/BorrachariaStore.Web
@@ -91,6 +105,28 @@ dotnet run
 
 Pré-requisito: uma instância local ou remota do MongoDB, com a connection string
 configurada em `appsettings.json` (seção `MongoDbSettings`).
+
+---
+
+## 🔐 Acesso ao Painel Administrativo
+
+Para acessar a área restrita de gestão (produtos, estoque e cupons):
+
+1. No navegador com o projeto rodando, acesse a rota:
+   ```
+   https://localhost:<porta>/Login
+   ```
+   *(ou acesse diretamente pelo endereço `/Admin`)*
+
+2. Utilize as credenciais de demonstração configuradas na aplicação:
+   * **E-mail:** `admin@borracharia.com`
+   * **Senha:** `admin123`
+
+3. **Recursos disponíveis no painel:**
+   * **Gerenciador de Estoque:** `/Admin/Index` (listagem em tempo real e remoção de itens)
+   * **Novo Produto:** `/Admin/Cadastrar` (cadastro com aro, medidas, preço normal e promocional)
+   * **Edição de Produto:** `/Admin/Editar?id=<id>` (alteração de preços, fotos e especificações)
+   * **Cupons de Desconto:** `/Admin/Cupons` (criação e ativação/desativação de cupons promocionais)
 
 ## Fora do escopo
 

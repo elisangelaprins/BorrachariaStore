@@ -4,26 +4,19 @@
     ViewData["Title"] = "Editar Produto";
 }
 
-<style>
-    .form-group { margin-bottom: 16px; }
-    .form-label { display: block; font-weight: 600; margin-bottom: 6px; color: #334155; }
-    .form-input { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box; outline: none; }
-    .form-input:focus { border-color: #2563eb; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+<link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
 
-</style>
-
-<div style="max-width: 650px; margin: 30px auto; background: #fff; padding: 32px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06);">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-        <h2 style="margin: 0; color: #0f172a;">Editar Produto</h2>
-        <a asp-page="/Admin/Index" style="color: #64748b; text-decoration: none; font-weight: 600;">← Voltar</a>
+<div class="admin-card-edit">
+    <div class="admin-card-header">
+        <h2>Editar Produto</h2>
+        <a asp-page="/Admin/Index" class="admin-card-back">← Voltar</a>
     </div>
 
     <form method="post">
-        <div asp-validation-summary="All" style="color: #dc2626; margin-bottom: 16px; font-weight: 600; background: #fee2e2; padding: 12px; border-radius: 8px;"></div>
+        <div asp-validation-summary="All" class="admin-validation-summary"></div>
         <!-- Campo oculto obrigatório para manter o ID do produto no MongoDB -->
         <input type="hidden" asp-for="Produto.Id" />
-         <div class="form-group">
+        <div class="form-group">
             <label asp-for="Produto.Nome" class="form-label">Nome</label>
             <input asp-for="Produto.Nome" class="form-input" required />
         </div>
@@ -32,7 +25,7 @@
             <input asp-for="Produto.Marca" class="form-input" required />
         </div>
 
-                <div class="form-group">
+        <div class="form-group">
             <label asp-for="Produto.Categoria" class="form-label">Categoria</label>
             <input asp-for="Produto.Categoria" class="form-input" placeholder="Ex: Passeio, SUV, Carga" />
         </div>
@@ -48,7 +41,7 @@
                 <input asp-for="Produto.Aro" type="number" class="form-input" required />
             </div>
         </div>
-                <div class="form-grid">
+        <div class="form-grid">
             <div class="form-group">
                 <label asp-for="Produto.Preco" class="form-label">Preço (R$)</label>
                 <input asp-for="Produto.Preco" type="number" step="0.01" class="form-input" required />
@@ -62,19 +55,19 @@
 
         <div class="form-group">
             <label asp-for="Produto.UrlFoto" class="form-label">URL da Foto</label>
-            <input asp-for="Produto.UrlFoto" type="text" class="form-input" placeholder="/img/produtos/... ou https://..." />
+            <input asp-for="Produto.UrlFoto" type="text" class="form-input" placeholder="/images/produtos/... ou https://..." />
         </div>
 
-                <div class="form-group">
+        <div class="form-group">
             <label asp-for="Produto.Descricao" class="form-label">Descrição</label>
-            <textarea asp-for="Produto.Descricao" rows="3" class="form-input" style="resize: vertical;"></textarea>
+            <textarea asp-for="Produto.Descricao" rows="3" class="form-input textarea-resizable"></textarea>
         </div>
 
-        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
-            <a asp-page="/Admin/Index" style="padding: 10px 18px; border: 1px solid #cbd5e1; border-radius: 8px; text-decoration: none; color: #475569; font-weight: 600;">
+        <div class="form-actions">
+            <a asp-page="/Admin/Index" class="btn-cancel">
                 Cancelar
             </a>
-            <button type="submit" class="btn btn-primary" style="padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer;">
+            <button type="submit" class="btn-primary-admin">
                 Salvar Alterações
             </button>
         </div>

@@ -7,7 +7,7 @@
     "medida": "175/70 R14",
     "aro": 14,
     "preco": 389.90,
-    "urlFoto": "/img/produtos/pirelli-cinturato.png",
+    "urlFoto": "/images/produtos/pirelli-cinturato.png",
     "estoque": 20
   },
   {
@@ -18,7 +18,7 @@
     "medida": "185/65 R15",
     "aro": 15,
     "preco": 459.90,
-    "urlFoto": "/img/produtos/michelin-energy-xm2.png",
+    "urlFoto": "/images/produtos/michelin-energy-xm2.png",
     "estoque": 15
   },
   {
@@ -53,5 +53,50 @@
     "preco": 549.90,
     "urlFoto": "",
     "estoque": 10
+  },
+  {
+    "nome": "Pneu Aro 16 Pirelli Cinturato P7",
+    "marca": "Pirelli",
+    "descricao": "Desempenho e segurança com frenagem superior e conforto acústico.",
+    "categoria": "Aro 16",
+    "medida": "205/55 R16",
+    "aro": 16,
+    "preco": 467.41,
+    "precoOriginal": 549.90,
+    "porcentagemDesconto": 15,
+    "emPromocao": true,
+    "avaliacao": 4.8,
+    "urlFoto": "/images/hero/hero-tire.png",
+    "estoque": 20
+  },
+  {
+    "nome": "Pneu Aro 16 Michelin Primacy 4",
+    "marca": "Michelin",
+    "descricao": "Máxima durabilidade e segurança em piso molhado do primeiro ao último quilômetro.",
+    "categoria": "Aro 16",
+    "medida": "205/55 R16",
+    "aro": 16,
+    "preco": 612.00,
+    "precoOriginal": 679.90,
+    "porcentagemDesconto": 10,
+    "emPromocao": true,
+    "avaliacao": 4.9,
+    "urlFoto": "/images/hero/tire-michelin.png",
+    "estoque": 15
+  },
+  {
+    "nome": "Pneu Aro 15 Goodyear EfficientGrip",
+    "marca": "Goodyear",
+    "descricao": "Excelente aderência e economia de combustível com tecnologia de ponta.",
+    "categoria": "Aro 15",
+    "medida": "195/55 R15",
+    "aro": 15,
+    "preco": 389.90,
+    "precoOriginal": 458.90,
+    "porcentagemDesconto": 15,
+    "emPromocao": true,
+    "avaliacao": 4.7,
+    "urlFoto": "/images/hero/tire-goodyear.png",
+    "estoque": 18
   }
 ]

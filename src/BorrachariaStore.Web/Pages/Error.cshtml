@@ -1,0 +1,46 @@
+@page
+@model ErrorModel
+@{
+    ViewData["Title"] = "Ops! Algo deu errado";
+}
+
+<div class="section" style="min-height: 60vh; display: flex; align-items: center; justify-content: center; padding: 48px 16px;">
+    <div style="background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 48px 32px; max-width: 580px; width: 100%; text-align: center; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);">
+        <div style="width: 80px; height: 80px; margin: 0 auto 24px; background: #fee2e2; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #dc2626;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 44px; height: 44px;">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+        </div>
+
+        <h1 style="font-size: 24px; font-weight: 700; color: var(--ink); margin: 0 0 12px;">Ops! Algo não saiu como esperado</h1>
+        <p style="font-size: 15px; color: var(--muted); line-height: 1.6; margin: 0 0 28px;">
+            Ocorreu uma falha temporária ao processar sua solicitação. Fique tranquilo: seus dados estão seguros e nossa equipe já foi notificada para restabelecer o serviço.
+        </p>
+
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 24px;">
+            <a asp-page="/Index" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;">
+                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                Voltar à Página Inicial
+            </a>
+            <a asp-page="/Catalogo" class="btn" style="background: #f1f5f9; color: var(--ink); border: 1px solid var(--border); display: inline-flex; align-items: center; gap: 8px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;">
+                    <circle cx="11" cy="11" r="7"></circle>
+                    <path d="m20 20-3.5-3.5"></path>
+                </svg>
+                Ver Catálogo de Pneus
+            </a>
+        </div>
+
+        @if (Model.ShowRequestId)
+        {
+            <div style="padding-top: 20px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted);">
+                <span>Identificador para o suporte: <code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace;">@Model.RequestId</code></span>
+            </div>
+        }
+    </div>
+</div>

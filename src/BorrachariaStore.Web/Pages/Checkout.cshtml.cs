@@ -33,9 +33,24 @@ public class CheckoutModel : PageModel
 
     [BindProperty]
     [Required(ErrorMessage = "Selecione a forma de pagamento")]
-    public string MetodoPagamento { get; set; } = string.Empty;
+    public MetodoPagamento? MetodoPagamento { get; set; }
+
+    [BindProperty] public string? Cpf { get; set; }
+    [BindProperty] public string? Telefone { get; set; }
+    [BindProperty] public string? Email { get; set; }
+    [BindProperty] public string? Cidade { get; set; }
+    [BindProperty] public string? Estado { get; set; }
+    [BindProperty] public string? Numero { get; set; }
+    [BindProperty] public string? Complemento { get; set; }
+
+    public IReadOnlyList<ItemCarrinho> Itens => _carrinhoService.Itens;
+    public string? NumeroPedido { get; set; }
 
     public string? MensagemErroCep { get; set; }
+
+    public decimal Subtotal => _carrinhoService.CalcularSubtotal();
+
+    public decimal Frete => _carrinhoService.CalcularFrete();
 
     public decimal Total => _carrinhoService.CalcularTotal();
 
@@ -52,10 +67,13 @@ public class CheckoutModel : PageModel
         }
 
         var addressData = await _viaCepService.BuscarEnderecoPorCepAsync(Cep);
+        ModelState.Clear();
 
         if (addressData != null)
         {
-            Endereco = $"{addressData.Logradouro}, {addressData.Bairro}, {addressData.Localidade} - {addressData.Uf}";
+            Endereco = $"{addressData.Logradouro}, {addressData.Bairro}";
+            Cidade = addressData.Localidade;
+            Estado = addressData.Uf;
             MensagemErroCep = null;
 
         }
@@ -72,6 +90,42 @@ public class CheckoutModel : PageModel
         {
             return Page();
         }
+
+        if (_carrinhoService.Itens.Count == 0)
+        {
+            ModelState.AddModelError(string.Empty, "Seu carrinho está vazio.");
+            return Page();
+        }
+
+        var pedido = new Pedido
+        {
+            NomeComprador = NomeComprador,
+            Cpf = Cpf,
+            Telefone = Telefone,
+            Email = Email,
+            Endereco = string.Join(", ", new[] { Endereco, Numero, Complemento, Cidade, Estado }
+                .Where(parte => !string.IsNullOrWhiteSpace(parte))),
+            MetodoPagamento = MetodoPagamento!.Value,
+            Itens = _carrinhoService.Itens.ToList(),
+            ValorTotal = _carrinhoService.CalcularTotal(),
+            Status = StatusPedido.Pendente,
+            DataPedido = DateTime.UtcNow
+        };
+
+        try
+        {
+            await _pedidoService.CriarAsync(pedido);
+        }
+        catch (Exception)
+        {
+            ModelState.AddModelError(string.Empty, "Não foi possível finalizar o pedido. Tente novamente.");
+            return Page();
+        }
+
+        _carrinhoService.Limpar();
+        NumeroPedido = pedido.Id;
+        PedidoConfirmado = true;
+
         return Page();
     }
 }

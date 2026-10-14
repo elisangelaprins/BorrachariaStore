@@ -1,0 +1,250 @@
+@page
+@model BorrachariaStore.Web.Pages.CatalogoModel
+@{
+    ViewData["Title"] = "Catálogo de Pneus";
+}
+
+<link rel="stylesheet" href="~/css/catalogo.css" asp-append-version="true" />
+
+@functions {
+    string ObterBadgePromocao(BorrachariaStore.Web.Models.Produto p)
+    {
+        if (p.EmPromocao && p.PorcentagemDesconto.HasValue && p.PorcentagemDesconto.Value > 0)
+        {
+            return $"-{p.PorcentagemDesconto.Value}% OFF";
+        }
+        if (p.PrecoOriginal.HasValue && p.PrecoOriginal.Value > p.Preco && p.PrecoOriginal.Value > 0)
+        {
+            var pct = Math.Round((1m - (p.Preco / p.PrecoOriginal.Value)) * 100m);
+            return pct > 0 ? $"-{pct}% OFF" : "OFERTA";
+        }
+        return string.Empty;
+    }
+}
+
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div class="toast-success-banner">
+        <div class="toast-message">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+            </svg>
+            <span>@TempData["MensagemSucesso"]</span>
+        </div>
+        <a asp-page="/Carrinho" class="toast-btn">
+            Ver Carrinho
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
+            </svg>
+        </a>
+    </div>
+}
+
+@if (TempData["MensagemErro"] != null)
+{
+    <div class="toast-error-banner">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+        <span>@TempData["MensagemErro"]</span>
+    </div>
+}
+
+<div class="catalogo-wrapper">
+    <form method="get" id="catalogoFiltrosForm">
+        <div class="catalogo-header">
+            <div>
+                @if (!string.IsNullOrWhiteSpace(Model.Termo))
+                {
+                    <h1 class="catalogo-titulo">Resultados para "@Model.Termo"</h1>
+                }
+                else if (Model.ApenasOfertas)
+                {
+                    <h1 class="catalogo-titulo">Pneus em Oferta</h1>
+                }
+                else
+                {
+                    <h1 class="catalogo-titulo">Catálogo de Pneus</h1>
+                }
+                <p class="catalogo-contador">@Model.TotalProdutos produtos encontrados</p>
+            </div>
+            <label class="catalogo-sort-box">
+                <svg class="catalogo-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M7 4v13M7 17l-3-3M7 17l3-3M17 20V7M17 7l-3 3M17 7l3 3" />
+                </svg>
+                <select name="Ordenacao" onchange="document.getElementById('catalogoFiltrosForm').submit();" class="catalogo-sort-select" aria-label="Ordenar produtos">
+                    <option value="relevancia" selected="@(Model.Ordenacao == "relevancia")">Relevância</option>
+                    <option value="menor-preco" selected="@(Model.Ordenacao == "menor-preco")">Menor preço</option>
+                    <option value="maior-preco" selected="@(Model.Ordenacao == "maior-preco")">Maior preço</option>
+                    <option value="avaliacao" selected="@(Model.Ordenacao == "avaliacao")">Melhor avaliados</option>
+                </select>
+            </label>
+        </div>
+
+        <div class="catalogo-search-box">
+            <svg class="catalogo-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-3.5-3.5" />
+            </svg>
+            <input type="text" name="Termo" value="@Model.Termo" placeholder="Buscar por marca, medida ou modelo..." class="catalogo-search-input" />
+        </div>
+
+        <input type="hidden" name="Categoria" id="inputCategoria" value="@Model.Categoria" />
+        @if (Model.ApenasOfertas)
+        {
+            <input type="hidden" name="ApenasOfertas" value="true" />
+        }
+
+        <div class="catalogo-pills">
+            @foreach (var cat in Model.CategoriasRapidas)
+            {
+                var ativo = string.Equals(Model.Categoria, cat, StringComparison.OrdinalIgnoreCase);
+                <button type="button" class="catalogo-pill @(ativo ? "active" : "")" onclick="definirCategoria('@cat')">
+                    @cat
+                </button>
+            }
+        </div>
+    </form>
+
+    <div class="catalogo-content-layout">
+        <aside class="catalogo-sidebar">
+            <h2 class="catalogo-sidebar-title">Filtros</h2>
+
+            <div class="catalogo-filter-group">
+                <h3 class="catalogo-filter-label">MEDIDA (ARO)</h3>
+                <div class="catalogo-checkbox-list">
+                    @foreach (var aro in Model.ArosDisponiveis)
+                    {
+                        var marcado = Model.Aros.Contains(aro);
+                        <label class="catalogo-checkbox-item">
+                            <input type="checkbox" form="catalogoFiltrosForm" name="Aros" value="@aro" checked="@marcado" onchange="document.getElementById('catalogoFiltrosForm').submit();" />
+                            <span>Aro @aro</span>
+                        </label>
+                    }
+                </div>
+            </div>
+
+            <div class="catalogo-filter-group">
+                <h3 class="catalogo-filter-label">MARCA</h3>
+                <div class="catalogo-checkbox-list">
+                    @foreach (var marca in Model.MarcasDisponiveis)
+                    {
+                        var marcado = Model.Marcas.Any(m => string.Equals(m, marca, StringComparison.OrdinalIgnoreCase));
+                        <label class="catalogo-checkbox-item">
+                            <input type="checkbox" form="catalogoFiltrosForm" name="Marcas" value="@marca" checked="@marcado" onchange="document.getElementById('catalogoFiltrosForm').submit();" />
+                            <span>@marca</span>
+                        </label>
+                    }
+                </div>
+            </div>
+
+                @if (!string.IsNullOrWhiteSpace(Model.Termo) || Model.Categoria != "Todos" || Model.Aros.Any() || Model.Marcas.Any())
+                {
+                    <a asp-page="/Catalogo" class="catalogo-limpar-btn">Limpar filtros</a>
+                }
+            </aside>
+
+            <div class="catalogo-cards-area">
+                @if (!string.IsNullOrEmpty(Model.ErroCarregamento))
+                {
+                    <div class="catalogo-error-box">
+                        <p class="error-title">Catálogo temporariamente indisponível</p>
+                        <p class="error-desc">@Model.ErroCarregamento</p>
+                        <a asp-page="/Catalogo" class="btn-error-retry">Tentar novamente</a>
+                    </div>
+                }
+                else if (Model.Produtos != null && Model.Produtos.Any())
+                {
+                    <div class="catalogo-grid">
+                        @foreach (var pneu in Model.Produtos)
+                        {
+                            var badgePromo = ObterBadgePromocao(pneu);
+                            var avaliacao = (pneu.Avaliacao ?? 4.8).ToString("F1", System.Globalization.CultureInfo.InvariantCulture);
+                            var fotosJson = (pneu.Fotos != null && pneu.Fotos.Any())
+                                ? System.Text.Json.JsonSerializer.Serialize(pneu.Fotos)
+                                : (!string.IsNullOrWhiteSpace(pneu.UrlFoto) ? System.Text.Json.JsonSerializer.Serialize(new List<string> { pneu.UrlFoto }) : "[]");
+
+                            <article class="catalogo-card"
+                                     data-id="@pneu.Id"
+                                     data-marca="@pneu.Marca"
+                                     data-nome="@(pneu.Nome.StartsWith("Pneu", StringComparison.OrdinalIgnoreCase) ? pneu.Nome : $"Pneu {pneu.Marca} {pneu.Nome}")"
+                                     data-descricao="@pneu.Descricao"
+                                     data-aro="@pneu.Aro"
+                                     data-medida="@pneu.Medida"
+                                     data-categoria="@pneu.Categoria"
+                                     data-estoque="@pneu.Estoque"
+                                     data-preco="@pneu.Preco.ToString("N2", System.Globalization.CultureInfo.GetCultureInfo("pt-BR"))"
+                                     data-preco-original="@(pneu.PrecoOriginal.HasValue && pneu.PrecoOriginal > pneu.Preco ? pneu.PrecoOriginal.Value.ToString("N2", System.Globalization.CultureInfo.GetCultureInfo("pt-BR")) : "")"
+                                     data-url-foto="@(!string.IsNullOrWhiteSpace(pneu.UrlFoto) ? pneu.UrlFoto : "/images/logo/logo-icon.png")"
+                                     data-fotos='@fotosJson'
+                                     data-badge-promo="@badgePromo">
+                                <div class="catalogo-card-media" onclick="abrirDetalhes(this)">
+                                    @if (!string.IsNullOrEmpty(badgePromo))
+                                    {
+                                        <span class="catalogo-badge-promo">@badgePromo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="catalogo-badge-aro">Aro @pneu.Aro</span>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(pneu.UrlFoto))
+                                    {
+                                        <img src="@pneu.UrlFoto" alt="@pneu.Marca @pneu.Nome" class="catalogo-card-img" onerror="this.onerror=null; this.src='/images/logo/logo-icon.png';" />
+                                    }
+                                    else
+                                    {
+                                        <img src="/images/logo/logo-icon.png" alt="@pneu.Marca @pneu.Nome" class="catalogo-card-img" />
+                                    }
+                                </div>
+                                <div class="catalogo-card-body">
+                                    <p class="catalogo-card-brand">@pneu.Marca</p>
+                                    <h3 class="catalogo-card-title" onclick="abrirDetalhes(this)">@(pneu.Nome.StartsWith("Pneu", StringComparison.OrdinalIgnoreCase) ? pneu.Nome : $"Pneu {pneu.Marca} {pneu.Nome}")</h3>
+                                    <p class="catalogo-card-desc">@pneu.Descricao</p>
+                                    <div class="catalogo-card-footer">
+                                        <div class="catalogo-card-prices">
+                                            @if (pneu.PrecoOriginal.HasValue && pneu.PrecoOriginal.Value > pneu.Preco && pneu.PrecoOriginal.Value > 0)
+                                            {
+                                                <span class="catalogo-old-price">R$ @pneu.PrecoOriginal.Value.ToString("N2")</span>
+                                            }
+                                            <strong class="catalogo-price">R$ @pneu.Preco.ToString("N2")</strong>
+                                        </div>
+                                        <span class="catalogo-rating">★ @avaliacao</span>
+                                    </div>
+                                    <form method="post" asp-page-handler="AdicionarAoCarrinho" asp-route-produtoId="@pneu.Id">
+                                        <button type="submit" class="catalogo-add-btn">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
+                                                <circle cx="9" cy="21" r="1" />
+                                                <circle cx="20" cy="21" r="1" />
+                                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                                            </svg>
+                                            Adicionar
+                                        </button>
+                                    </form>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="catalogo-empty-box">
+                        <p class="catalogo-empty-text">Nenhum produto encontrado com os filtros atuais.</p>
+                        <a asp-page="/Catalogo" class="catalogo-empty-btn">Limpar filtros</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+function definirCategoria(cat) {
+    document.getElementById('inputCategoria').value = cat;
+    document.getElementById('catalogoFiltrosForm').submit();
+}
+</script>
+}

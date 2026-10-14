@@ -1,3 +1,4 @@
+using System.Globalization;
 using BorrachariaStore.Web.Models;
 using BorrachariaStore.Web.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -21,11 +22,18 @@ public class CadastrarModel : PageModel
     
     public Produto Produto { get; set; } = new();
 
+    [BindProperty]
+    public decimal PrecoNormal { get; set; }
+
+    [BindProperty]
+    public decimal? PrecoPromocional { get; set; }
+
     public void OnGet() { }
 
     public async Task<IActionResult> OnPostAsync(List <IFormFile> uploadedImageFiles)
     {
-        if (!ModelState.IsValid) {
+        if (!ModelState.IsValid)
+        {
             return Page();
         }
 
@@ -57,8 +65,42 @@ public class CadastrarModel : PageModel
                 Produto.UrlFoto = Produto.Fotos[0];
             }
         }
+        
+        string rawNormalPrice = Request.Form["PrecoNormal"];
+        if (!string.IsNullOrWhiteSpace(rawNormalPrice)) {
+            string normalizedNormalPrice = rawNormalPrice.Replace(",", ".");
+            if (decimal.TryParse(normalizedNormalPrice, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal validNormalPrice) && validNormalPrice > 0) {
+                PrecoNormal = validNormalPrice;
+            }
+        }
 
-        await _produtoService.CriarAsync(Produto);
+        string rawPromoPrice = Request.Form["PrecoPromocional"];
+        if (!string.IsNullOrWhiteSpace(rawPromoPrice)) {
+            string normalizedPromoPrice = rawPromoPrice.Replace(",", ".");
+            if (decimal.TryParse(normalizedPromoPrice, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal validPromoPrice) && validPromoPrice > 0) {
+                PrecoPromocional = validPromoPrice;
+            }
+        }
+
+        if (PrecoPromocional.HasValue && PrecoPromocional.Value > 0 && PrecoPromocional.Value < PrecoNormal) {
+            Produto.Preco = PrecoPromocional.Value;
+            Produto.PrecoOriginal = PrecoNormal;
+        } else {
+            Produto.Preco = PrecoNormal;
+            Produto.PrecoOriginal = null;
+        }
+
+        try
+        {
+            await _produtoService.CriarAsync(Produto);
+        }
+        catch (Exception)
+        {
+            ModelState.AddModelError(string.Empty, "Não foi possível cadastrar o produto. Tente novamente.");
+            return Page();
+        }
+
+        TempData["MensagemSucesso"] = "Produto cadastrado com sucesso!";
         return RedirectToPage("/Admin/Index");
     }
 }

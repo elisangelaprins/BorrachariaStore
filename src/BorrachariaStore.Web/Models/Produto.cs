@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace BorrachariaStore.Web.Models;
 
-// Entidade principal do catálogo (Aula 3)
+[BsonIgnoreExtraElements]
 public class Produto
 {
     [BsonId]
@@ -22,7 +22,6 @@ public class Produto
     [BsonElement("categoria")]
     public string Categoria { get; set; } = string.Empty;
 
-    // Ex.: "175/70 R14"
     [BsonElement("medida")]
     public string Medida { get; set; } = string.Empty;
 
@@ -31,6 +30,18 @@ public class Produto
 
     [BsonElement("preco")]
     public decimal Preco { get; set; }
+
+    [BsonElement("emPromocao")]
+    public bool EmPromocao { get; set; }
+
+    [BsonElement("precoOriginal")]
+    public decimal? PrecoOriginal { get; set; }
+
+    [BsonElement("porcentagemDesconto")]
+    public int? PorcentagemDesconto { get; set; }
+
+    [BsonElement("avaliacao")]
+    public double? Avaliacao { get; set; }
 
     [BsonElement("urlFoto")]
     public string? UrlFoto { get; set; } = string.Empty;
