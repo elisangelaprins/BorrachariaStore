@@ -1,5 +1,5 @@
+using System.Text.RegularExpressions;
 using BorrachariaStore.Web.Models;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -12,12 +12,12 @@ public class ProdutoService
 
     public ProdutoService(IOptions<MongoDbSettings> settings, ILogger<ProdutoService> logger)
     {
-        _logger = logger;
         var mongoSettings = MongoClientSettings.FromConnectionString(settings.Value.ConnectionString);
         mongoSettings.ServerSelectionTimeout = TimeSpan.FromSeconds(4);
         var client = new MongoClient(mongoSettings);
         var database = client.GetDatabase(settings.Value.DatabaseName);
         _produtos = database.GetCollection<Produto>(settings.Value.ProdutosCollectionName);
+        _logger = logger;
     }
 
     public async Task<List<Produto>> ListarAsync()
@@ -61,14 +61,15 @@ public class ProdutoService
 
             if (!string.IsNullOrWhiteSpace(termo))
             {
-                var searchRegex = new MongoDB.Bson.BsonRegularExpression(termo, "i");
+                var normalizedTerm = termo.Trim();
+                var searchRegex = new MongoDB.Bson.BsonRegularExpression(Regex.Escape(normalizedTerm), "i");
                 var textFilter = Builders<Produto>.Filter.Or(
                     Builders<Produto>.Filter.Regex(p => p.Nome, searchRegex),
                     Builders<Produto>.Filter.Regex(p => p.Marca, searchRegex),
                     Builders<Produto>.Filter.Regex(p => p.Medida, searchRegex)
                 );
 
-                if (int.TryParse(termo, out int aroNumber))
+                if (int.TryParse(normalizedTerm, out int aroNumber))
                 {
                     textFilter = Builders<Produto>.Filter.Or(textFilter, Builders<Produto>.Filter.Eq(p => p.Aro, aroNumber));
                 }
@@ -76,6 +77,15 @@ public class ProdutoService
                 filter &= textFilter;
             }
 
+            if (!string.IsNullOrWhiteSpace(categoria))
+            {
+                var categoryFilter = Builders<Produto>.Filter.Eq(
+                    p => p.Categoria,
+                    categoria.Trim());
+
+                filter &= categoryFilter;
+            }
+            
             return await _produtos.Find(filter).ToListAsync();
         }
         catch (Exception ex)
@@ -87,7 +97,15 @@ public class ProdutoService
 
     public async Task CriarAsync(Produto produto)
     {
-        await _produtos.InsertOneAsync(produto);
+        ArgumentNullException.ThrowIfNull(produto);
+        try {
+            await _produtos.InsertOneAsync(produto);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao inserir o produto {ProdutoId}", produto.Id);
+            throw;
+        }
     }
 
     public async Task AtualizarAsync(string id, Produto produtoAtualizado)

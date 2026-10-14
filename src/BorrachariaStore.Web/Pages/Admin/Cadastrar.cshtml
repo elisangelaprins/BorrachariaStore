@@ -36,6 +36,7 @@
         </div>
 
         <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="alert-danger" role="alert"></div>
             <div class="modal-body">
                 <div class="row-2">
                     <div class="field">
@@ -104,17 +105,15 @@
 
                 <div class="field">
                     <label>Imagem do produto</label>
-                    <input type="text" asp-for="Produto.UrlFoto" placeholder="https://exemplo.com/foto.jpg ou /images/pneu.jpg" style="margin-bottom: 8px;" />
                     <input type="file" name="uploadedImageFiles" accept="image/*" multiple />
                     <small style="color: var(--muted); font-size: 12px; margin-top: 4px; display: block;">
-                        Insira a URL direta da imagem ou selecione arquivos PNG/JPG.
+                        Selecione arquivos PNG/JPG/JPEG/GIF.
                     </small>
                 </div>
             </div>
 
             <div class="modal-footer">
                 <a asp-page="/Admin/Index" class="btn-secondary">Cancelar</a>
-                <!-- TODO: O backend da gravação será implementado no OnPostAsync -->
                 <button type="submit" class="btn-primary-admin">Cadastrar produto</button>
             </div>
         </form>
