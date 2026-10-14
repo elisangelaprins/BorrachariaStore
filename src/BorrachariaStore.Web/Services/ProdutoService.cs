@@ -85,8 +85,7 @@ public class ProdutoService
 
                 filter &= categoryFilter;
             }
-
-            var products = await _produtos.Find(filter).ToListAsync();
+            
             return await _produtos.Find(filter).ToListAsync();
         }
         catch (Exception ex)

@@ -504,6 +504,11 @@ body {
   font-size: 14px;
 }
 
+.alert-danger.validation-summary-valid,
+.alert-danger:empty {
+  display: none;
+}
+
 .btn-admin-navy {
   background: var(--navy) !important;
 }

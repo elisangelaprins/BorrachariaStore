@@ -85,9 +85,13 @@ public class CadastrarModel : PageModel
         if (PrecoPromocional.HasValue && PrecoPromocional.Value > 0 && PrecoPromocional.Value < PrecoNormal) {
             Produto.Preco = PrecoPromocional.Value;
             Produto.PrecoOriginal = PrecoNormal;
+            Produto.EmPromocao = true;
+            Produto.PorcentagemDesconto = (int)Math.Round((1m - (PrecoPromocional.Value / PrecoNormal)) * 100m);
         } else {
             Produto.Preco = PrecoNormal;
             Produto.PrecoOriginal = null;
+            Produto.EmPromocao = false;
+            Produto.PorcentagemDesconto = null;
         }
 
         try
