@@ -44,6 +44,8 @@ public class CheckoutModel : PageModel
     [BindProperty] public string? Complemento { get; set; }
 
     public IReadOnlyList<ItemCarrinho> Itens => _carrinhoService.Itens;
+    public List<ItemCarrinho> ItensConfirmados { get; set; } = new();
+    public decimal TotalConfirmado { get; set; }
     public string? NumeroPedido { get; set; }
 
     public string? MensagemErroCep { get; set; }
@@ -97,6 +99,9 @@ public class CheckoutModel : PageModel
             return Page();
         }
 
+        var itensPedido = _carrinhoService.Itens.ToList();
+        var valorTotalPedido = _carrinhoService.CalcularTotal();
+
         var pedido = new Pedido
         {
             NomeComprador = NomeComprador,
@@ -106,8 +111,8 @@ public class CheckoutModel : PageModel
             Endereco = string.Join(", ", new[] { Endereco, Numero, Complemento, Cidade, Estado }
                 .Where(parte => !string.IsNullOrWhiteSpace(parte))),
             MetodoPagamento = MetodoPagamento!.Value,
-            Itens = _carrinhoService.Itens.ToList(),
-            ValorTotal = _carrinhoService.CalcularTotal(),
+            Itens = itensPedido,
+            ValorTotal = valorTotalPedido,
             Status = StatusPedido.Pendente,
             DataPedido = DateTime.UtcNow
         };
@@ -122,6 +127,8 @@ public class CheckoutModel : PageModel
             return Page();
         }
 
+        ItensConfirmados = itensPedido;
+        TotalConfirmado = valorTotalPedido;
         _carrinhoService.Limpar();
         NumeroPedido = pedido.Id;
         PedidoConfirmado = true;

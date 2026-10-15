@@ -6,7 +6,7 @@
 
 <link rel="stylesheet" href="~/css/checkout.css" asp-append-version="true" />
 
-<div class="checkout-page">
+<div class="checkout-page @(Model.PedidoConfirmado ? "checkout-page-confirm" : "")">
     <!-- BREADCRUMB -->
     <div class="checkout-breadcrumb">
         <a asp-page="/Carrinho">Carrinho</a>
@@ -19,19 +19,111 @@
         }
     </div>
 
-    <h1 class="checkout-title">Finalizar pedido</h1>
+    @if (!Model.PedidoConfirmado)
+    {
+        <h1 class="checkout-title">Finalizar pedido</h1>
+    }
 
     @if (Model.PedidoConfirmado)
     {
-        <div class="checkout-success-container">
-            <div class="toast-success-banner">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                </svg>
-                <div>
-                    <h3 class="success-banner-title">Pedido realizado com sucesso!</h3>
-                    <p class="success-banner-desc">Número do pedido: <strong>@Model.NumeroPedido</strong></p>
+        var enderecoPartes = new[] { Model.Endereco, Model.Numero }.Where(p => !string.IsNullOrWhiteSpace(p));
+        var enderecoFormatado = string.Join(", ", enderecoPartes);
+        if (!string.IsNullOrWhiteSpace(Model.Complemento))
+        {
+            enderecoFormatado += $" — {Model.Complemento}";
+        }
+
+        var cidadeUfPartes = new[] { Model.Cidade, Model.Estado }.Where(p => !string.IsNullOrWhiteSpace(p));
+        var cidadeUfFormatado = cidadeUfPartes.Any() ? string.Join(" / ", cidadeUfPartes) : "-";
+
+        var formaPagamentoTexto = Model.MetodoPagamento switch
+        {
+            BorrachariaStore.Web.Models.MetodoPagamento.Cartao => "Cartão de crédito",
+            BorrachariaStore.Web.Models.MetodoPagamento.Pix => "PIX",
+            BorrachariaStore.Web.Models.MetodoPagamento.Boleto => "Boleto",
+            _ => Model.MetodoPagamento?.ToString() ?? "-"
+        };
+
+        <div class="checkout-confirm-wrapper">
+            <!-- CARD 1: CABEÇALHO DE CONFIRMAÇÃO -->
+            <div class="checkout-card checkout-confirm-hero">
+                <div class="confirm-check-circle">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+                <h1 class="confirm-hero-title">Pedido confirmado!</h1>
+                <p class="confirm-hero-subtitle">Este é um pedido simulado, registrado para fins de demonstração.</p>
+                <div class="confirm-order-pill">
+                    PEDIDO #@Model.NumeroPedido
+                </div>
+            </div>
+
+            <!-- CARD 2: ITENS DO PEDIDO -->
+            <div class="checkout-card">
+                <h2 class="confirm-section-title">Itens do pedido</h2>
+
+                @if (Model.ItensConfirmados != null && Model.ItensConfirmados.Any())
+                {
+                    <div class="confirm-item-list">
+                        @foreach (var item in Model.ItensConfirmados)
+                        {
+                            <div class="summary-item">
+                                <div class="summary-item-left">
+                                    <div class="summary-item-thumb">
+                                        @if (!string.IsNullOrWhiteSpace(item.UrlFoto))
+                                        {
+                                            <img src="@(item.UrlFoto.StartsWith("/") ? item.UrlFoto : "/" + item.UrlFoto)"
+                                                 alt="@item.Nome"
+                                                 onerror="this.onerror=null; this.src='/images/logo/logo-icon.png';" />
+                                        }
+                                        else
+                                        {
+                                            <img src="/images/logo/logo-icon.png" alt="@item.Nome" />
+                                        }
+                                    </div>
+                                    <div>
+                                        <div class="summary-item-name">@item.Nome</div>
+                                        <div class="summary-item-meta">Qtd: @item.Quantidade</div>
+                                    </div>
+                                </div>
+                                <div class="summary-item-price">R$ @item.Subtotal.ToString("N2")</div>
+                            </div>
+                        }
+                    </div>
+                }
+
+                <div class="summary-total-row">
+                    <span class="summary-total-label">Total</span>
+                    <span class="summary-total-value">R$ @Model.TotalConfirmado.ToString("N2")</span>
+                </div>
+            </div>
+
+            <!-- CARD 3: ENTREGA E PAGAMENTO -->
+            <div class="checkout-card">
+                <h2 class="confirm-section-title">Entrega e pagamento</h2>
+
+                <div class="confirm-details-list">
+                    <div class="confirm-detail-row">
+                        <span class="confirm-detail-label">Nome</span>
+                        <strong class="confirm-detail-value">@Model.NomeComprador</strong>
+                    </div>
+                    <div class="confirm-detail-row">
+                        <span class="confirm-detail-label">Endereço</span>
+                        <strong class="confirm-detail-value">@(!string.IsNullOrWhiteSpace(enderecoFormatado) ? enderecoFormatado : "-")</strong>
+                    </div>
+                    <div class="confirm-detail-row">
+                        <span class="confirm-detail-label">CEP</span>
+                        <strong class="confirm-detail-value">@(!string.IsNullOrWhiteSpace(Model.Cep) ? Model.Cep : "-")</strong>
+                    </div>
+                    <div class="confirm-detail-row">
+                        <span class="confirm-detail-label">Cidade/UF</span>
+                        <strong class="confirm-detail-value">@cidadeUfFormatado</strong>
+                    </div>
+                    <div class="confirm-detail-row">
+                        <span class="confirm-detail-label">Forma de pagamento</span>
+                        <strong class="confirm-detail-value">@formaPagamentoTexto</strong>
+                    </div>
                 </div>
             </div>
 
