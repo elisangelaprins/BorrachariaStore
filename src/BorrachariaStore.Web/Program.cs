@@ -30,6 +30,8 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddControllers();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -57,6 +59,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+app.MapControllers();
 
 app.MapPost("/api/carrinho/adicionar", async (string produtoId, ProdutoService produtoService, CarrinhoService carrinhoService, ILogger<Program> logger) =>
 {
