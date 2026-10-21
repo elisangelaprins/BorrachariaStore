@@ -72,12 +72,18 @@
                 <form method="post" asp-page-handler="AtualizarQuantidade">
                   <input type="hidden" name="produtoId" value="@item.ProdutoId" />
                   <input type="hidden" name="quantidade" value="@(item.Quantidade + 1)" />
-                  <button type="submit" class="cart-btn-qty" title="Aumentar">+</button>
+                  <button type="submit" class="cart-btn-qty" title="Aumentar" disabled="@(item.Quantidade >= item.QuantidadeMaxima)">+</button>
                 </form>
               </div>
 
               <span class="cart-item-price">R$ @item.Subtotal.ToString("N2")</span>
             </div>
+            @if (item.Quantidade >= item.QuantidadeMaxima)
+            {
+              <small class="cart-qty-limit-msg">
+                @(item.Estoque < 8 ? $"Limite disponível em estoque ({item.Estoque} un.)" : "Limite máximo de 8 unidades por pedido")
+              </small>
+            }
           </div>
         </div>
       }

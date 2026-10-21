@@ -8,6 +8,9 @@ public class ItemCarrinho
     public decimal PrecoUnitario { get; set; }
     public int Quantidade { get; set; }
 
+    public int Estoque { get; set; }
+    public int QuantidadeMaxima => Estoque > 0 ? Math.Min(8, Estoque) : 8;  
+
     public decimal Subtotal
     {
         get
