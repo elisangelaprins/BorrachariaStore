@@ -13,7 +13,7 @@ public class CarrinhoService
 
     public void Adicionar(Produto produto, int quantidade = 1)
     {
-        if (produto == null || quantidade <= 0)
+        if (produto == null || quantidade <= 0 || produto.Estoque <= 0)
         {
             return;
         }
@@ -21,7 +21,8 @@ public class CarrinhoService
 
         if (ItemCarrinho != null)
         {
-            ItemCarrinho.Quantidade = ItemCarrinho.Quantidade + quantidade;
+            ItemCarrinho.Estoque = produto.Estoque;
+            ItemCarrinho.Quantidade = Math.Min(ItemCarrinho.Quantidade + quantidade, Math.Min(8, produto.Estoque));
         }
         else
         {
@@ -30,7 +31,8 @@ public class CarrinhoService
             novoItem.Nome = produto.Nome;
             novoItem.Foto = produto.Fotos?.FirstOrDefault() ?? string.Empty;
             novoItem.PrecoUnitario = produto.Preco;
-            novoItem.Quantidade = quantidade;
+            novoItem.Estoque = produto.Estoque;
+            novoItem.Quantidade = Math.Min(quantidade, Math.Min(8, produto.Estoque));
 
             _itens.Add(novoItem);
         }
@@ -51,7 +53,7 @@ public class CarrinhoService
         }
         else
         {
-            ItemCarrinho.Quantidade = quantidade;
+            ItemCarrinho.Quantidade = Math.Min(quantidade, ItemCarrinho.QuantidadeMaxima);
         }
     }
 

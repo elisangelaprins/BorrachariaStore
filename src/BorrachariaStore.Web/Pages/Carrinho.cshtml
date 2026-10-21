@@ -72,7 +72,7 @@
                 <form method="post" asp-page-handler="AtualizarQuantidade">
                   <input type="hidden" name="produtoId" value="@item.ProdutoId" />
                   <input type="hidden" name="quantidade" value="@(item.Quantidade + 1)" />
-                  <button type="submit" class="cart-btn-qty" title="Aumentar">+</button>
+                  <button type="submit" class="cart-btn-qty" title="Aumentar" disabled="@(item.Quantidade >= item.QuantidadeMaxima)">+</button>
                 </form>
               </div>
 
