@@ -99,9 +99,9 @@
                             <td>
                                 <div class="prod-cell">
                                     <div class="prod-thumb">
-                                        @if (!string.IsNullOrWhiteSpace(p.UrlFoto))
+                                        @if (p.Fotos != null && p.Fotos.Any())
                                         {
-                                            <img src="@p.UrlFoto" alt="@p.Nome" class="prod-thumb-img" />
+                                            <img src="@p.Fotos[0]" alt="@p.Nome" class="prod-thumb-img" />
                                         }
                                         else
                                         {
@@ -164,7 +164,7 @@
 
                                 <form method="post" asp-page-handler="Editar" enctype="multipart/form-data">
                                     <input type="hidden" name="Produto.Id" value="@p.Id" />
-                                    <input type="hidden" name="Produto.UrlFoto" value="@p.UrlFoto" />
+
 
                                     <div class="modal-body">
                                         <div class="row-2">
@@ -175,21 +175,14 @@
                                             <div class="field">
                                                 <label>Marca</label>
                                                 <select name="Produto.Marca" required>
-                                                    @if (!string.IsNullOrWhiteSpace(p.Marca))
-                                                    {
-                                                        <option value="@p.Marca">@p.Marca (Atual)</option>
-                                                    }
-                                                    else
-                                                    {
-                                                        <option value="">Selecione uma marca...</option>
-                                                    }
-                                                    <option value="Pirelli">Pirelli</option>
-                                                    <option value="Michelin">Michelin</option>
-                                                    <option value="Goodyear">Goodyear</option>
-                                                    <option value="Continental">Continental</option>
-                                                    <option value="Bridgestone">Bridgestone</option>
-                                                    <option value="Firestone">Firestone</option>
-                                                    <option value="Dunlop">Dunlop</option>
+                                                    <option value="">Selecione uma marca...</option>
+                                                    <option value="Pirelli" selected="@(p.Marca == "Pirelli")">Pirelli</option>
+                                                    <option value="Michelin" selected="@(p.Marca == "Michelin")">Michelin</option>
+                                                    <option value="Goodyear" selected="@(p.Marca == "Goodyear")">Goodyear</option>
+                                                    <option value="Continental" selected="@(p.Marca == "Continental")">Continental</option>
+                                                    <option value="Bridgestone" selected="@(p.Marca == "Bridgestone")">Bridgestone</option>
+                                                    <option value="Firestone" selected="@(p.Marca == "Firestone")">Firestone</option>
+                                                    <option value="Dunlop" selected="@(p.Marca == "Dunlop")">Dunlop</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -206,19 +199,12 @@
                                             <div class="field">
                                                 <label>Categoria</label>
                                                 <select name="Produto.Categoria">
-                                                    @if (!string.IsNullOrWhiteSpace(p.Categoria))
-                                                    {
-                                                        <option value="@p.Categoria">@p.Categoria (Atual)</option>
-                                                    }
-                                                    else
-                                                    {
-                                                        <option value="">Selecione uma categoria...</option>
-                                                    }
-                                                    <option value="Passeio">Passeio</option>
-                                                    <option value="SUV">SUV</option>
-                                                    <option value="Carga">Carga</option>
-                                                    <option value="Performance">Performance</option>
-                                                    <option value="Off-Road">Off-Road</option>
+                                                    <option value="">Selecione uma categoria...</option>
+                                                    <option value="Passeio" selected="@(p.Categoria == "Passeio")">Passeio</option>
+                                                    <option value="SUV" selected="@(p.Categoria == "SUV")">SUV</option>
+                                                    <option value="Carga" selected="@(p.Categoria == "Carga")">Carga</option>
+                                                    <option value="Performance" selected="@(p.Categoria == "Performance")">Performance</option>
+                                                    <option value="Off-Road" selected="@(p.Categoria == "Off-Road")">Off-Road</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -252,7 +238,7 @@
                                             @{
                                                 var fotosExibicao = (p.Fotos != null && p.Fotos.Count > 0)
                                                     ? p.Fotos
-                                                    : (!string.IsNullOrWhiteSpace(p.UrlFoto) ? new List<string> { p.UrlFoto } : new List<string>());
+                                                    : new List<string>();
                                             }
                                             @if (fotosExibicao.Count > 0)
                                             {

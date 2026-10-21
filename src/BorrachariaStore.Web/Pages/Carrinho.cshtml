@@ -6,7 +6,7 @@
 
 <link rel="stylesheet" href="~/css/carrinho.css" asp-append-version="true" />
 
-<a href="javascript:history.back()" class="cart-drawer-overlay"></a>
+<a asp-page="/Index" class="cart-drawer-overlay"></a>
 
 <div class="cart-drawer">
   <div class="cart-drawer-header">
@@ -18,7 +18,7 @@
       </svg>
       <h2>Meu Carrinho <span class="cart-count">(@(Model.Itens?.Sum(i => i.Quantidade) ?? 0))</span></h2>
     </div>
-    <a href="javascript:history.back()" class="cart-close-btn" title="Fechar">&times;</a>
+    <a asp-page="/Index" class="cart-close-btn" title="Fechar">&times;</a>
   </div>
 
   @if (Model.Itens != null && Model.Itens.Any())
@@ -28,9 +28,9 @@
       {
         <div class="cart-item-row">
           <div class="cart-item-thumb">
-            @if (!string.IsNullOrWhiteSpace(item.UrlFoto))
+            @if (!string.IsNullOrWhiteSpace(item.Foto))
             {
-              <img src="@(item.UrlFoto.StartsWith("/") ? item.UrlFoto : "/" + item.UrlFoto)" alt="@item.Nome"
+              <img src="@(item.Foto.StartsWith("/") ? item.Foto : "/" + item.Foto)" alt="@item.Nome"
                    onerror="this.onerror=null; this.src='/images/logo/logo-icon.png'; this.classList.add('cart-thumb-fallback');" />
             }
             else
@@ -149,7 +149,7 @@
       </div>
 
       <a asp-page="/Checkout" class="btn btn-primary btn-checkout-full">Finalizar compra</a>
-      <a href="javascript:history.back()" class="btn-continue-link">Continuar comprando</a>
+      <a asp-page="/Catalogo" class="btn-continue-link">Continuar comprando</a>
     </div>
   }
   else

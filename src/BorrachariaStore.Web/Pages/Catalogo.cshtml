@@ -165,7 +165,8 @@
                             var avaliacao = (pneu.Avaliacao ?? 4.8).ToString("F1", System.Globalization.CultureInfo.InvariantCulture);
                             var fotosJson = (pneu.Fotos != null && pneu.Fotos.Any())
                                 ? System.Text.Json.JsonSerializer.Serialize(pneu.Fotos)
-                                : (!string.IsNullOrWhiteSpace(pneu.UrlFoto) ? System.Text.Json.JsonSerializer.Serialize(new List<string> { pneu.UrlFoto }) : "[]");
+                                : "[]";
+                            var fotoPrincipal = pneu.Fotos?.FirstOrDefault();
 
                             <article class="catalogo-card"
                                      data-id="@pneu.Id"
@@ -178,7 +179,7 @@
                                      data-estoque="@pneu.Estoque"
                                      data-preco="@pneu.Preco.ToString("N2", System.Globalization.CultureInfo.GetCultureInfo("pt-BR"))"
                                      data-preco-original="@(pneu.PrecoOriginal.HasValue && pneu.PrecoOriginal > pneu.Preco ? pneu.PrecoOriginal.Value.ToString("N2", System.Globalization.CultureInfo.GetCultureInfo("pt-BR")) : "")"
-                                     data-url-foto="@(!string.IsNullOrWhiteSpace(pneu.UrlFoto) ? pneu.UrlFoto : "/images/logo/logo-icon.png")"
+
                                      data-fotos='@fotosJson'
                                      data-badge-promo="@badgePromo">
                                 <div class="catalogo-card-media" onclick="abrirDetalhes(this)">
@@ -190,9 +191,9 @@
                                     {
                                         <span class="catalogo-badge-aro">Aro @pneu.Aro</span>
                                     }
-                                    @if (!string.IsNullOrWhiteSpace(pneu.UrlFoto))
+                                    @if (!string.IsNullOrWhiteSpace(fotoPrincipal))
                                     {
-                                        <img src="@pneu.UrlFoto" alt="@pneu.Marca @pneu.Nome" class="catalogo-card-img" onerror="this.onerror=null; this.src='/images/logo/logo-icon.png';" />
+                                        <img src="@fotoPrincipal" alt="@pneu.Marca @pneu.Nome" class="catalogo-card-img" onerror="this.onerror=null; this.src='/images/logo/logo-icon.png';" />
                                     }
                                     else
                                     {

@@ -60,10 +60,6 @@ public class CadastrarModel : PageModel
             }
 
             Produto.Fotos = Produto.Fotos.Distinct().ToList();
-
-            if (Produto.Fotos.Count > 0 && string.IsNullOrEmpty(Produto.UrlFoto)) {
-                Produto.UrlFoto = Produto.Fotos[0];
-            }
         }
         
         string rawNormalPrice = Request.Form["PrecoNormal"];
