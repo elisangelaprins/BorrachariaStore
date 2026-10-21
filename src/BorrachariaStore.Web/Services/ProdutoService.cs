@@ -11,7 +11,7 @@ public class ProdutoService
     private readonly IMongoCollection<Produto> _produtos;
     private readonly ILogger<ProdutoService> _logger;
 
-    public ProdutoService(IOptions<MongoDbSettings> settings, ILogger<ProdutoService> logger)
+    public ProdutoService(IOptions<MongoDbSettings> settings, ILogger<ProdutoService> logger, IWebHostEnvironment webHostEnvironment)
     {
         var mongoSettings = MongoClientSettings.FromConnectionString(settings.Value.ConnectionString);
         mongoSettings.ServerSelectionTimeout = TimeSpan.FromSeconds(4);
@@ -20,11 +20,22 @@ public class ProdutoService
         _produtos = database.GetCollection<Produto>(settings.Value.ProdutosCollectionName);
         _logger = logger;
 
-        if (_produtos.CountDocuments(Builders<Produto>.Filter.Empty) == 0)
+        try
         {
-            var json = File.ReadAllText("Data/MockData/produtos.json");
-            var lista = JsonSerializer.Deserialize<List<Produto>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            if (lista != null) _produtos.InsertMany(lista);
+            if (_produtos.CountDocuments(Builders<Produto>.Filter.Empty) == 0)
+            {
+                var jsonPath = Path.Combine(webHostEnvironment.ContentRootPath, "Data", "MockData", "produtos.json");
+                if (File.Exists(jsonPath))
+                {
+                    var json = File.ReadAllText(jsonPath);
+                    var lista = JsonSerializer.Deserialize<List<Produto>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    if (lista != null && lista.Count > 0) _produtos.InsertMany(lista);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Não foi possível realizar o seed inicial de produtos no MongoDB.");
         }
     }
 

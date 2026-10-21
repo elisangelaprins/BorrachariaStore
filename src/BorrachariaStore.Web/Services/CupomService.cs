@@ -19,7 +19,7 @@ public class CupomService
     private readonly IMongoCollection<Cupom> _cupons;
     private readonly ILogger<CupomService> _logger;
 
-    public CupomService(IOptions<MongoDbSettings> settings, ILogger<CupomService> logger)
+    public CupomService(IOptions<MongoDbSettings> settings, ILogger<CupomService> logger, IWebHostEnvironment webHostEnvironment)
     {
         _logger = logger;
         var mongoSettings = MongoClientSettings.FromConnectionString(settings.Value.ConnectionString);
@@ -28,11 +28,22 @@ public class CupomService
         var database = client.GetDatabase(settings.Value.DatabaseName);
         _cupons = database.GetCollection<Cupom>("Cupons");
 
-        if (_cupons.CountDocuments(Builders<Cupom>.Filter.Empty) == 0)
+        try
         {
-            var json = File.ReadAllText("Data/MockData/cupons.json");
-            var lista = JsonSerializer.Deserialize<List<Cupom>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            if (lista != null) _cupons.InsertMany(lista);
+            if (_cupons.CountDocuments(Builders<Cupom>.Filter.Empty) == 0)
+            {
+                var jsonPath = Path.Combine(webHostEnvironment.ContentRootPath, "Data", "MockData", "cupons.json");
+                if (File.Exists(jsonPath))
+                {
+                    var json = File.ReadAllText(jsonPath);
+                    var lista = JsonSerializer.Deserialize<List<Cupom>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    if (lista != null && lista.Count > 0) _cupons.InsertMany(lista);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Não foi possível realizar o seed inicial de cupons no MongoDB.");
         }
     }
 
@@ -53,8 +64,16 @@ public class CupomService
     {
         if (string.IsNullOrWhiteSpace(codigo)) return null;
 
-        var codigoNorm = codigo.Trim().ToUpperInvariant();
-        return await _cupons.Find(c => c.Codigo == codigoNorm).FirstOrDefaultAsync();
+        try
+        {
+            var codigoNorm = codigo.Trim().ToUpperInvariant();
+            return await _cupons.Find(c => c.Codigo == codigoNorm).FirstOrDefaultAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao obter cupom {Codigo} no MongoDB.", codigo);
+            return null;
+        }
     }
 
     public async Task CriarAsync(Cupom cupom)

@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Copia o arquivo de mock data para a pasta de saída na compilação -->
-    <None Update="Data\MockData\produtos.json">
+    <!-- Copia os arquivos de mock data para a pasta de saída na compilação -->
+    <None Update="Data\MockData\*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
