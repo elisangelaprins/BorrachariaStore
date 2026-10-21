@@ -43,7 +43,7 @@ public class CatalogoModel : PageModel
 
     public readonly List<int> ArosDisponiveis = new() { 13, 14, 15, 16, 17, 18 };
     public readonly List<string> MarcasDisponiveis = new() { "Goodyear", "Pirelli", "Michelin", "Bridgestone", "Continental" };
-    public readonly List<string> CategoriasRapidas = new() { "Todos", "Aro 13", "Aro 14", "Aro 15", "Aro 16", "Aro 17", "Aro 18" };
+    public readonly List<string> CategoriasRapidas = new() { "Todos", "Passeio", "SUV", "Carga", "Performance", "Off-Road" };
 
     public async Task OnGetAsync()
     {
@@ -68,14 +68,7 @@ public class CatalogoModel : PageModel
 
             if (!string.IsNullOrWhiteSpace(Categoria) && !Categoria.Equals("Todos", StringComparison.OrdinalIgnoreCase))
             {
-                if (Categoria.StartsWith("Aro ", StringComparison.OrdinalIgnoreCase) && int.TryParse(Categoria.Replace("Aro ", string.Empty), out int aroFiltro))
-                {
-                    query = query.Where(p => p.Aro == aroFiltro);
-                }
-                else
-                {
-                    query = query.Where(p => string.Equals(p.Categoria, Categoria, StringComparison.OrdinalIgnoreCase));
-                }
+                query = query.Where(p => string.Equals(p.Categoria, Categoria, StringComparison.OrdinalIgnoreCase));
             }
 
             if (Aros != null && Aros.Any())

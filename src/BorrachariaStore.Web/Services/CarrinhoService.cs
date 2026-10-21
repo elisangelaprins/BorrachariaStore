@@ -28,7 +28,7 @@ public class CarrinhoService
             ItemCarrinho novoItem = new ItemCarrinho();
             novoItem.ProdutoId = produto.Id!;
             novoItem.Nome = produto.Nome;
-            novoItem.UrlFoto = produto.UrlFoto;
+            novoItem.Foto = produto.Fotos?.FirstOrDefault() ?? string.Empty;
             novoItem.PrecoUnitario = produto.Preco;
             novoItem.Quantidade = quantidade;
 

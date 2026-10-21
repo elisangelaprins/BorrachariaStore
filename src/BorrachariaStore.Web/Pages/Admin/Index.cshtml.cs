@@ -81,18 +81,12 @@ public class IndexModel : PageModel
             if (existingProduct != null)
             {
                 produto.Fotos = existingProduct.Fotos ?? new List<string>();
-                produto.UrlFoto = existingProduct.UrlFoto;
             }
 
             // Remove somente as fotos que o usuário marcou para exclusão
             if (fotosParaRemover != null && fotosParaRemover.Count > 0)
             {
                 produto.Fotos.RemoveAll(f => fotosParaRemover.Contains(f));
-                
-                if (fotosParaRemover.Contains(produto.UrlFoto))
-                {
-                    produto.UrlFoto = produto.Fotos.FirstOrDefault() ?? string.Empty;
-                }
             }
 
             if (uploadedImageFiles != null && uploadedImageFiles.Count > 0)
@@ -120,18 +114,9 @@ public class IndexModel : PageModel
                         produto.Fotos.Add(photoPath);
                     }
                 }
-
-                produto.Fotos = produto.Fotos.Distinct().ToList();
-
-                if (produto.Fotos.Count > 0)
-                {
-                    produto.UrlFoto = produto.Fotos[0];
-                }
             }
-            else
-            {
-                produto.Fotos = produto.Fotos.Distinct().ToList();
-            }
+
+            produto.Fotos = produto.Fotos.Distinct().ToList();
 
             string rawNormal = Request.Form["PrecoNormal"].ToString();
             decimal precoNormal = produto.Preco;

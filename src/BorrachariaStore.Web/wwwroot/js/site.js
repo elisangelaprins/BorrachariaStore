@@ -141,7 +141,7 @@ function abrirDetalhes(el) {
         }
     }
     if (!fotosAtuaisGaveta || fotosAtuaisGaveta.length === 0) {
-        fotosAtuaisGaveta = [d.urlFoto || '/images/logo/logo-icon.png'];
+        fotosAtuaisGaveta = ['/images/logo/logo-icon.png'];
     }
     indiceFotoAtualGaveta = 0;
     renderizarGaleriaGaveta();

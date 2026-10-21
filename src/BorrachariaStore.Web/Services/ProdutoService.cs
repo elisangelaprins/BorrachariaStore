@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using BorrachariaStore.Web.Models;
 using Microsoft.Extensions.Options;
@@ -18,6 +19,13 @@ public class ProdutoService
         var database = client.GetDatabase(settings.Value.DatabaseName);
         _produtos = database.GetCollection<Produto>(settings.Value.ProdutosCollectionName);
         _logger = logger;
+
+        if (_produtos.CountDocuments(Builders<Produto>.Filter.Empty) == 0)
+        {
+            var json = File.ReadAllText("Data/MockData/produtos.json");
+            var lista = JsonSerializer.Deserialize<List<Produto>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            if (lista != null) _produtos.InsertMany(lista);
+        }
     }
 
     public async Task<List<Produto>> ListarAsync()

@@ -110,7 +110,7 @@
     <a asp-page="/Catalogo" class="aro-link">Ver todos os aros →</a>
   </div>
   <div class="aro-grid">
-    <a asp-page="/Catalogo" asp-route-categoria="Aro 13" class="aro-card">
+    <a asp-page="/Catalogo" asp-route-aros="13" class="aro-card">
       <svg class="aro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="9" />
         <circle cx="12" cy="12" r="3" />
@@ -122,7 +122,7 @@
       <span class="aro-label">Aro</span>
       <strong class="aro-num">13</strong>
     </a>
-    <a asp-page="/Catalogo" asp-route-categoria="Aro 14" class="aro-card">
+    <a asp-page="/Catalogo" asp-route-aros="14" class="aro-card">
       <svg class="aro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="9" />
         <circle cx="12" cy="12" r="3" />
@@ -134,7 +134,7 @@
       <span class="aro-label">Aro</span>
       <strong class="aro-num">14</strong>
     </a>
-    <a asp-page="/Catalogo" asp-route-categoria="Aro 15" class="aro-card">
+    <a asp-page="/Catalogo" asp-route-aros="15" class="aro-card">
       <svg class="aro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="9" />
         <circle cx="12" cy="12" r="3" />
@@ -146,7 +146,7 @@
       <span class="aro-label">Aro</span>
       <strong class="aro-num">15</strong>
     </a>
-    <a asp-page="/Catalogo" asp-route-categoria="Aro 16" class="aro-card">
+    <a asp-page="/Catalogo" asp-route-aros="16" class="aro-card">
       <svg class="aro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="9" />
         <circle cx="12" cy="12" r="3" />
@@ -158,7 +158,7 @@
       <span class="aro-label">Aro</span>
       <strong class="aro-num">16</strong>
     </a>
-    <a asp-page="/Catalogo" asp-route-categoria="Aro 17" class="aro-card">
+    <a asp-page="/Catalogo" asp-route-aros="17" class="aro-card">
       <svg class="aro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="9" />
         <circle cx="12" cy="12" r="3" />
@@ -170,7 +170,7 @@
       <span class="aro-label">Aro</span>
       <strong class="aro-num">17</strong>
     </a>
-    <a asp-page="/Catalogo" asp-route-categoria="Aro 18" class="aro-card">
+    <a asp-page="/Catalogo" asp-route-aros="18" class="aro-card">
       <svg class="aro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="9" />
         <circle cx="12" cy="12" r="3" />
@@ -255,7 +255,8 @@
         }
         var fotosJson = (pneu.Fotos != null && pneu.Fotos.Any())
           ? System.Text.Json.JsonSerializer.Serialize(pneu.Fotos)
-          : (!string.IsNullOrWhiteSpace(pneu.UrlFoto) ? System.Text.Json.JsonSerializer.Serialize(new List<string> { pneu.UrlFoto }) : "[]");
+          : "[]";
+        var fotoPrincipal = pneu.Fotos?.FirstOrDefault();
 
         <article class="destaque-card" id="p-@pneu.Id"
                  data-id="@pneu.Id"
@@ -268,7 +269,7 @@
                  data-estoque="@pneu.Estoque"
                  data-preco="@pneu.Preco.ToString("N2", System.Globalization.CultureInfo.GetCultureInfo("pt-BR"))"
                  data-preco-original="@(pneu.PrecoOriginal.HasValue && pneu.PrecoOriginal > pneu.Preco ? pneu.PrecoOriginal.Value.ToString("N2", System.Globalization.CultureInfo.GetCultureInfo("pt-BR")) : "")"
-                 data-url-foto="@(!string.IsNullOrWhiteSpace(pneu.UrlFoto) ? pneu.UrlFoto : "/images/logo/logo-icon.png")"
+
                  data-fotos='@fotosJson'
                  data-badge-promo="@badgePromo">
           <div class="destaque-thumb" onclick="abrirDetalhes(this)" style="cursor: pointer;">
@@ -280,9 +281,9 @@
             {
               <span class="destaque-badge-aro">Aro @pneu.Aro</span>
             }
-            @if (!string.IsNullOrWhiteSpace(pneu.UrlFoto))
+            @if (!string.IsNullOrWhiteSpace(fotoPrincipal))
             {
-              <img src="@pneu.UrlFoto" alt="@pneu.Marca @pneu.Nome" class="destaque-img" onerror="this.onerror=null; this.src='/images/logo/logo-icon.png'; this.classList.add('destaque-img-fallback');" />
+              <img src="@fotoPrincipal" alt="@pneu.Marca @pneu.Nome" class="destaque-img" onerror="this.onerror=null; this.src='/images/logo/logo-icon.png'; this.classList.add('destaque-img-fallback');" />
             }
             else
             {

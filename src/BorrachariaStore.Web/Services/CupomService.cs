@@ -1,3 +1,4 @@
+using System.Text.Json;
 using BorrachariaStore.Web.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -26,6 +27,13 @@ public class CupomService
         var client = new MongoClient(mongoSettings);
         var database = client.GetDatabase(settings.Value.DatabaseName);
         _cupons = database.GetCollection<Cupom>("Cupons");
+
+        if (_cupons.CountDocuments(Builders<Cupom>.Filter.Empty) == 0)
+        {
+            var json = File.ReadAllText("Data/MockData/cupons.json");
+            var lista = JsonSerializer.Deserialize<List<Cupom>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            if (lista != null) _cupons.InsertMany(lista);
+        }
     }
 
     public async Task<List<Cupom>> ListarTodosAsync()
