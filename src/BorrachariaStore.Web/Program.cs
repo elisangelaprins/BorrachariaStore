@@ -101,6 +101,13 @@ app.MapPost("/api/carrinho/adicionar", async (string produtoId, ProdutoService p
             new { success = false, message = "Não foi possível adicionar o produto ao carrinho no momento. Tente novamente." },
             statusCode: 500);
     }
-});
+})
+.WithName("AdicionarAoCarrinho")
+.WithTags("Carrinho")
+.WithSummary("Adiciona um item ao carrinho assincronamente")
+.Produces(StatusCodes.Status200OK)
+.Produces(StatusCodes.Status400BadRequest)
+.Produces(StatusCodes.Status404NotFound)
+.Produces(StatusCodes.Status500InternalServerError);
 
 app.Run();
