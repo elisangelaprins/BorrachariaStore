@@ -24,8 +24,7 @@ builder.Services
     .AddCookie(options =>
     {
         options.LoginPath = "/Login";
-        options.ExpireTimeSpan = TimeSpan.FromHours(2);
-        options.SlidingExpiration = true;
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
     });
 
 builder.Services.AddAuthorization(options =>
