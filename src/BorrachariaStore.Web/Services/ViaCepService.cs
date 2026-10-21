@@ -32,11 +32,10 @@ public class ViaCepService
 
             var result = await httpClient.GetFromJsonAsync<EnderecoCepDto>(url);
 
-            if (result != null && result.Erro == "true")
+            if (result == null || result.Erro.HasValue || string.IsNullOrWhiteSpace(result.Cep))
             {
                 return null;
             }
-
             return result;
         }
         catch (TaskCanceledException ex)

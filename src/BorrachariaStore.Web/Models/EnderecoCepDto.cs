@@ -22,6 +22,6 @@ public class EnderecoCepDto
     public string? Uf { get; set;}
 
     [JsonPropertyName("erro")]
-    public string? Erro { get; set; }
+    public System.Text.Json.JsonElement? Erro { get; set; }
 
 }
