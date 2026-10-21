@@ -43,9 +43,6 @@ public class Produto
     [BsonElement("avaliacao")]
     public double? Avaliacao { get; set; }
 
-    [BsonElement("urlFoto")]
-    public string? UrlFoto { get; set; } = string.Empty;
-
     [BsonElement("fotos")]
     public List<string> Fotos { get; set; } = new();
 
