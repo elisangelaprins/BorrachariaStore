@@ -62,7 +62,7 @@ public class CadastrarModel : PageModel
             Produto.Fotos = Produto.Fotos.Distinct().ToList();
         }
         
-        string rawNormalPrice = Request.Form["PrecoNormal"];
+        string rawNormalPrice = Request.Form["PrecoNormal"].ToString();
         if (!string.IsNullOrWhiteSpace(rawNormalPrice)) {
             string normalizedNormalPrice = rawNormalPrice.Replace(",", ".");
             if (decimal.TryParse(normalizedNormalPrice, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal validNormalPrice) && validNormalPrice > 0) {
@@ -70,7 +70,7 @@ public class CadastrarModel : PageModel
             }
         }
 
-        string rawPromoPrice = Request.Form["PrecoPromocional"];
+        string rawPromoPrice = Request.Form["PrecoPromocional"].ToString();
         if (!string.IsNullOrWhiteSpace(rawPromoPrice)) {
             string normalizedPromoPrice = rawPromoPrice.Replace(",", ".");
             if (decimal.TryParse(normalizedPromoPrice, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal validPromoPrice) && validPromoPrice > 0) {
