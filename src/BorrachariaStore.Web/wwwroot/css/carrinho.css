@@ -390,3 +390,20 @@
   color: #ffffff;
   border-color: #0284c7;
 }
+
+
+.cart-btn-qty:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background: #f1f5f9;
+  color: #94a3b8;
+  border-color: #cbd5e1;
+}
+
+.cart-qty-limit-msg {
+  color: #d97706;
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 4px;
+  display: block;
+}

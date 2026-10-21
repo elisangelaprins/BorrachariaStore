@@ -78,6 +78,12 @@
 
               <span class="cart-item-price">R$ @item.Subtotal.ToString("N2")</span>
             </div>
+            @if (item.Quantidade >= item.QuantidadeMaxima)
+            {
+              <small class="cart-qty-limit-msg">
+                @(item.Estoque < 8 ? $"Limite disponível em estoque ({item.Estoque} un.)" : "Limite máximo de 8 unidades por pedido")
+              </small>
+            }
           </div>
         </div>
       }
