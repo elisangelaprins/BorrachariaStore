@@ -1,5 +1,7 @@
 using BorrachariaStore.Web.Models;
 using BorrachariaStore.Web.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
@@ -22,6 +24,12 @@ public class IndexModel : PageModel
 
     public List<Produto> Produtos { get; set; } = new();
     public string? MensagemErro { get; set; }
+
+    public async Task<IActionResult> OnPostLogoutAsync()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToPage("/Index");
+    }
 
     public async Task OnGetAsync()
     {

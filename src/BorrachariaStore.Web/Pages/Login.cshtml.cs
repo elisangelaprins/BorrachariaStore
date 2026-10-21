@@ -77,7 +77,8 @@ public class LoginModel : PageModel
 
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, Email)
+            new Claim(ClaimTypes.Name, Email),
+            new Claim(ClaimTypes.Role, "Admin")
         };
 
         var identity = new ClaimsIdentity(

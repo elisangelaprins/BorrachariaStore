@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages(options =>
 {
-    options.Conventions.AuthorizeFolder("/Admin");
+    options.Conventions.AuthorizeFolder("/Admin", "AdminOnly");
 });
 
 builder.Services.AddHttpClient();
@@ -24,15 +24,27 @@ builder.Services
     .AddCookie(options =>
     {
         options.LoginPath = "/Login";
-        options.ExpireTimeSpan = TimeSpan.FromHours(2);
-        options.SlidingExpiration = true;
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.OpenApiInfo
+    {
+        Title = "BorrachariaStore API",
+        Version = "v1"
+    });
+});
 
 var app = builder.Build();
 
@@ -101,6 +113,6 @@ app.MapPost("/api/carrinho/adicionar", async (string produtoId, ProdutoService p
             new { success = false, message = "Não foi possível adicionar o produto ao carrinho no momento. Tente novamente." },
             statusCode: 500);
     }
-});
+}).RequireAuthorization("AdminOnly");
 
 app.Run();
