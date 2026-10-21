@@ -37,6 +37,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.OpenApiInfo
+    {
+        Title = "BorrachariaStore API",
+        Version = "v1"
+    });
+});
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -104,6 +114,6 @@ app.MapPost("/api/carrinho/adicionar", async (string produtoId, ProdutoService p
             new { success = false, message = "Não foi possível adicionar o produto ao carrinho no momento. Tente novamente." },
             statusCode: 500);
     }
-});
+}).RequireAuthorization("AdminOnly");
 
 app.Run();

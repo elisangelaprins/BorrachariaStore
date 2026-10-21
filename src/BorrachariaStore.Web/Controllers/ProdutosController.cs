@@ -1,10 +1,12 @@
 using BorrachariaStore.Web.Models;
 using BorrachariaStore.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(Policy = "AdminOnly")]
 public class ProdutosController(ProdutoService _produtoService) : ControllerBase
 {
     [HttpGet]
