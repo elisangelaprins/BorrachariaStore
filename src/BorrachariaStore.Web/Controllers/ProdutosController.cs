@@ -1,5 +1,6 @@
 using BorrachariaStore.Web.Models;
 using BorrachariaStore.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
@@ -32,6 +33,7 @@ public class ProdutosController(ProdutoService _produtoService) : ControllerBase
         return Ok(produto);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Produto>> Criar([FromBody] Produto produto)
     {
@@ -45,6 +47,7 @@ public class ProdutosController(ProdutoService _produtoService) : ControllerBase
             produto);
     }
 
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> Atualizar(string id, [FromBody] Produto produto)
     {
@@ -64,6 +67,7 @@ public class ProdutosController(ProdutoService _produtoService) : ControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Remover(string id)
     {

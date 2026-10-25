@@ -147,6 +147,38 @@ public class ProdutoService
         }
     }
 
+    public async Task<bool> BaixarEstoqueAsync(string id, int quantidade)
+    {
+        try
+        {
+            var filter = Builders<Produto>.Filter.Eq(p => p.Id, id)
+                & Builders<Produto>.Filter.Gte(p => p.Estoque, quantidade);
+            var update = Builders<Produto>.Update.Inc(p => p.Estoque, -quantidade);
+            var resultado = await _produtos.UpdateOneAsync(filter, update);
+            return resultado.ModifiedCount == 1;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao baixar estoque do produto {ProdutoId} no MongoDB.", id);
+            throw;
+        }
+    }
+
+    public async Task DevolverEstoqueAsync(string id, int quantidade)
+    {
+        try
+        {
+            var filter = Builders<Produto>.Filter.Eq(p => p.Id, id);
+            var update = Builders<Produto>.Update.Inc(p => p.Estoque, quantidade);
+            await _produtos.UpdateOneAsync(filter, update);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao devolver estoque do produto {ProdutoId} no MongoDB.", id);
+            throw;
+        }
+    }
+
     public async Task RemoverAsync(string id)
     {
         if (string.IsNullOrWhiteSpace(id))

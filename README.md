@@ -75,9 +75,8 @@ BorrachariaStore/
 │       │   │   ├── _Layout.cshtml     # Layout mestre
 │       │   │   └── _DetalhesProduto.cshtml # Modal lateral de detalhes do produto
 │       │   └── Admin/
-│       │       ├── Index.cshtml(.cs)      # Painel de estoque (listagem e exclusão)
+│       │       ├── Index.cshtml(.cs)      # Painel de estoque (listagem, filtros, edição via modal e exclusão)
 │       │       ├── Cadastrar.cshtml(.cs)  # Cadastro de novo produto
-│       │       ├── Editar.cshtml(.cs)     # Edição de produto existente
 │       │       └── Cupons.cshtml(.cs)     # Gestão e criação de cupons
 │       └── wwwroot/
 │           ├── css/
@@ -106,6 +105,9 @@ dotnet run
 Pré-requisito: uma instância local ou remota do MongoDB, com a connection string
 configurada em `appsettings.json` (seção `MongoDbSettings`).
 
+O perfil em `Properties/launchSettings.json` sobe a aplicação em `http://localhost:5000`
+no ambiente de Development e abre o Swagger em `http://localhost:5000/swagger`.
+
 ---
 
 ## 🔐 Acesso ao Painel Administrativo
@@ -114,7 +116,7 @@ Para acessar a área restrita de gestão (produtos, estoque e cupons):
 
 1. No navegador com o projeto rodando, acesse a rota:
    ```
-   https://localhost:<porta>/Login
+   http://localhost:5000/Login
    ```
    *(ou acesse diretamente pelo endereço `/Admin`)*
 
@@ -123,9 +125,9 @@ Para acessar a área restrita de gestão (produtos, estoque e cupons):
    * **Senha:** `admin123`
 
 3. **Recursos disponíveis no painel:**
-   * **Gerenciador de Estoque:** `/Admin/Index` (listagem em tempo real e remoção de itens)
+   * **Gerenciador de Estoque:** `/Admin/Index` (listagem em tempo real, busca e filtros por aro/status, e remoção de itens)
    * **Novo Produto:** `/Admin/Cadastrar` (cadastro com aro, medidas, preço normal e promocional)
-   * **Edição de Produto:** `/Admin/Editar?id=<id>` (alteração de preços, fotos e especificações)
+   * **Edição de Produto:** pelo botão de editar de cada linha em `/Admin/Index`, que abre um modal (alteração de preços, fotos e especificações)
    * **Cupons de Desconto:** `/Admin/Cupons` (criação e ativação/desativação de cupons promocionais)
 
 ## Fora do escopo

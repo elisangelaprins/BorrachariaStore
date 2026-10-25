@@ -25,6 +25,9 @@ public class Pedido
     [BsonElement("endereco")]
     public string Endereco { get; set; } = string.Empty;
 
+    [BsonElement("cep")]
+    public string? Cep { get; set; }
+
     [BsonElement("metodoPagamento")]
     [BsonRepresentation(BsonType.String)]
     public MetodoPagamento MetodoPagamento { get; set; }
@@ -35,6 +38,18 @@ public class Pedido
 
     [BsonElement("itens")]
     public List<ItemCarrinho> Itens { get; set; } = new();
+
+    [BsonElement("subtotal")]
+    public decimal Subtotal { get; set; }
+
+    [BsonElement("frete")]
+    public decimal Frete { get; set; }
+
+    [BsonElement("desconto")]
+    public decimal Desconto { get; set; }
+
+    [BsonElement("codigoCupom")]
+    public string? CodigoCupom { get; set; }
 
     [BsonElement("valorTotal")]
     public decimal ValorTotal { get; set; }

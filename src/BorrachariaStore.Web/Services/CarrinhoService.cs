@@ -1,10 +1,22 @@
+using System.Text.Json;
 using BorrachariaStore.Web.Models;
 
 namespace BorrachariaStore.Web.Services;
 
 public class CarrinhoService
 {
-    private readonly List<ItemCarrinho> _itens = new();
+    private const string ChaveItens = "Carrinho.Itens";
+    private const string ChaveCupom = "Carrinho.Cupom";
+
+    private readonly ISession _session;
+    private readonly List<ItemCarrinho> _itens;
+
+    public CarrinhoService(IHttpContextAccessor httpContextAccessor)
+    {
+        _session = httpContextAccessor.HttpContext!.Session;
+        _itens = Ler<List<ItemCarrinho>>(ChaveItens) ?? new();
+        CupomAplicado = Ler<Cupom>(ChaveCupom);
+    }
 
     public IReadOnlyList<ItemCarrinho> Itens => _itens;
 
@@ -36,12 +48,14 @@ public class CarrinhoService
 
             _itens.Add(novoItem);
         }
+
+        Salvar();
     }
 
     public void AtualizarQuantidade(string produtoId, int quantidade)
     {
         var ItemCarrinho = _itens.FirstOrDefault(item => item.ProdutoId == produtoId);
-      
+
         if (ItemCarrinho == null)
         {
             return;
@@ -55,6 +69,8 @@ public class CarrinhoService
         {
             ItemCarrinho.Quantidade = Math.Min(quantidade, ItemCarrinho.QuantidadeMaxima);
         }
+
+        Salvar();
     }
 
     public void Remover(string produtoId)
@@ -64,6 +80,7 @@ public class CarrinhoService
         if (ItemCarrinho != null)
         {
             _itens.Remove(ItemCarrinho);
+            Salvar();
         }
     }
 
@@ -72,11 +89,13 @@ public class CarrinhoService
     public void AplicarCupom(Cupom cupom)
     {
         CupomAplicado = cupom;
+        Salvar();
     }
 
     public void RemoverCupom()
     {
         CupomAplicado = null;
+        Salvar();
     }
 
     public decimal CalcularDesconto()
@@ -120,5 +139,26 @@ public class CarrinhoService
     {
         CupomAplicado = null;
         _itens.Clear();
+        Salvar();
+    }
+
+    private void Salvar()
+    {
+        _session.SetString(ChaveItens, JsonSerializer.Serialize(_itens));
+
+        if (CupomAplicado == null)
+        {
+            _session.Remove(ChaveCupom);
+        }
+        else
+        {
+            _session.SetString(ChaveCupom, JsonSerializer.Serialize(CupomAplicado));
+        }
+    }
+
+    private T? Ler<T>(string chave)
+    {
+        var json = _session.GetString(chave);
+        return string.IsNullOrEmpty(json) ? default : JsonSerializer.Deserialize<T>(json);
     }
 }

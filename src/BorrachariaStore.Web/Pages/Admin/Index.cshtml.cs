@@ -1,5 +1,7 @@
 using BorrachariaStore.Web.Models;
 using BorrachariaStore.Web.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
@@ -9,6 +11,8 @@ namespace BorrachariaStore.Web.Pages.Admin;
 
 public class IndexModel : PageModel
 {
+    private const int LimiteBaixoEstoque = 5;
+    private readonly HashSet<string> allowedExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { ".jpg", ".jpeg", ".png", ".gif" };
     private readonly ProdutoService _produtoService;
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly ILogger<IndexModel> _logger;
@@ -23,17 +27,38 @@ public class IndexModel : PageModel
     public List<Produto> Produtos { get; set; } = new();
     public string? MensagemErro { get; set; }
 
+    [BindProperty(SupportsGet = true)]
+    public string? Busca { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public int? Aro { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public string? Status { get; set; }
+
+    public bool FiltroAtivo => !string.IsNullOrWhiteSpace(Busca) || Aro.HasValue || !string.IsNullOrWhiteSpace(Status);
+
     public async Task OnGetAsync()
     {
         try
         {
-            var productList = await _produtoService.ListarAsync();
-            Produtos = productList ?? new List<Produto>();
+            var productList = await _produtoService.BuscarAsync(Busca, null);
+            IEnumerable<Produto> filtrados = productList ?? new List<Produto>();
 
-            if (Produtos.Count == 0)
+            if (Aro.HasValue)
             {
-                ViewData["Aviso"] = "Nenhum produto cadastrado no momento.";
+                filtrados = filtrados.Where(p => p.Aro == Aro.Value);
             }
+
+            filtrados = Status switch
+            {
+                "Ativo" => filtrados.Where(p => p.Estoque > 0),
+                "BaixoEstoque" => filtrados.Where(p => p.Estoque > 0 && p.Estoque <= LimiteBaixoEstoque),
+                "Inativo" => filtrados.Where(p => p.Estoque <= 0),
+                _ => filtrados
+            };
+
+            Produtos = filtrados.ToList();
         }
         catch (Exception ex)
         {
@@ -41,6 +66,12 @@ public class IndexModel : PageModel
             Produtos = new List<Produto>();
             MensagemErro = "Falha ao carregar a lista de produtos. Tente novamente mais tarde.";
         }
+    }
+
+    public async Task<IActionResult> OnPostSairAsync()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToPage("/Login");
     }
 
     public async Task<IActionResult> OnPostRemoverAsync(string id)
@@ -73,6 +104,7 @@ public class IndexModel : PageModel
             if (existingProduct != null)
             {
                 produto.Fotos = existingProduct.Fotos ?? new List<string>();
+                produto.Avaliacao = existingProduct.Avaliacao;
             }
 
             // Remove somente as fotos que o usuário marcou para exclusão
@@ -91,7 +123,8 @@ public class IndexModel : PageModel
 
                 foreach (var file in uploadedImageFiles)
                 {
-                    if (file.Length > 0)
+                    var fileExtension = Path.GetExtension(file.FileName);
+                    if (file.Length > 0 && allowedExtensions.Contains(fileExtension))
                     {
                         string safeFileName = Path.GetFileName(file.FileName).Replace(" ", "_");
                         string uniqueFileName = Guid.NewGuid().ToString("N")[..8] + "_" + safeFileName;
