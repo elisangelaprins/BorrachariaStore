@@ -654,3 +654,23 @@ body {
 .modal-confirm-text strong {
   color: var(--ink);
 }
+
+.btn-admin-sair {
+  background: var(--white);
+  color: var(--gray-600);
+  border: 1px solid var(--gray-200);
+}
+
+.btn-admin-sair:hover {
+  background: var(--gray-200);
+  color: var(--gray-600);
+}
+
+.admin-limpar-filtros {
+  align-self: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blue);
+  white-space: nowrap;
+  text-decoration: none;
+}

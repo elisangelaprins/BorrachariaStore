@@ -26,22 +26,14 @@
 
     @if (Model.PedidoConfirmado)
     {
-        var enderecoPartes = new[] { Model.Endereco, Model.Numero }.Where(p => !string.IsNullOrWhiteSpace(p));
-        var enderecoFormatado = string.Join(", ", enderecoPartes);
-        if (!string.IsNullOrWhiteSpace(Model.Complemento))
-        {
-            enderecoFormatado += $" — {Model.Complemento}";
-        }
+        var pedido = Model.PedidoRealizado!;
 
-        var cidadeUfPartes = new[] { Model.Cidade, Model.Estado }.Where(p => !string.IsNullOrWhiteSpace(p));
-        var cidadeUfFormatado = cidadeUfPartes.Any() ? string.Join(" / ", cidadeUfPartes) : "-";
-
-        var formaPagamentoTexto = Model.MetodoPagamento switch
+        var formaPagamentoTexto = pedido.MetodoPagamento switch
         {
             BorrachariaStore.Web.Models.MetodoPagamento.Cartao => "Cartão de crédito",
             BorrachariaStore.Web.Models.MetodoPagamento.Pix => "PIX",
             BorrachariaStore.Web.Models.MetodoPagamento.Boleto => "Boleto",
-            _ => Model.MetodoPagamento?.ToString() ?? "-"
+            _ => pedido.MetodoPagamento.ToString()
         };
 
         <div class="checkout-confirm-wrapper">
@@ -55,7 +47,7 @@
                 <h1 class="confirm-hero-title">Pedido confirmado!</h1>
                 <p class="confirm-hero-subtitle">Este é um pedido simulado, registrado para fins de demonstração.</p>
                 <div class="confirm-order-pill">
-                    PEDIDO #@Model.NumeroPedido
+                    PEDIDO #@pedido.Id
                 </div>
             </div>
 
@@ -63,24 +55,17 @@
             <div class="checkout-card">
                 <h2 class="confirm-section-title">Itens do pedido</h2>
 
-                @if (Model.ItensConfirmados != null && Model.ItensConfirmados.Any())
+                @if (pedido.Itens.Any())
                 {
                     <div class="confirm-item-list">
-                        @foreach (var item in Model.ItensConfirmados)
+                        @foreach (var item in pedido.Itens)
                         {
                             <div class="summary-item">
                                 <div class="summary-item-left">
                                     <div class="summary-item-thumb">
-                                        @if (!string.IsNullOrWhiteSpace(item.Foto))
-                                        {
-                                            <img src="@(!string.IsNullOrWhiteSpace(item.Foto) ? (item.Foto.StartsWith("/") ? item.Foto : "/" + item.Foto) : "/images/logo/logo-icon.png")"
-                                                 alt="@item.Nome"
-                                                 onerror="this.onerror=null; this.src='/images/logo/logo-icon.png';" />
-                                        }
-                                        else
-                                        {
-                                            <img src="/images/logo/logo-icon.png" alt="@item.Nome" />
-                                        }
+                                        <img src="@(!string.IsNullOrWhiteSpace(item.Foto) ? (item.Foto.StartsWith("/") ? item.Foto : "/" + item.Foto) : "/images/logo/logo-icon.png")"
+                                             alt="@item.Nome"
+                                             onerror="this.onerror=null; this.src='/images/logo/logo-icon.png';" />
                                     </div>
                                     <div>
                                         <div class="summary-item-name">@item.Nome</div>
@@ -93,9 +78,36 @@
                     </div>
                 }
 
+                <div class="summary-divider"></div>
+
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>R$ @pedido.Subtotal.ToString("N2")</span>
+                </div>
+
+                @if (pedido.Desconto > 0)
+                {
+                    <div class="summary-row summary-discount">
+                        <span>Desconto do cupom @(string.IsNullOrWhiteSpace(pedido.CodigoCupom) ? "" : $"({pedido.CodigoCupom})")</span>
+                        <span>- R$ @pedido.Desconto.ToString("N2")</span>
+                    </div>
+                }
+
+                <div class="summary-row">
+                    <span>Frete</span>
+                    @if (pedido.Frete == 0)
+                    {
+                        <span class="summary-free-shipping">Grátis</span>
+                    }
+                    else
+                    {
+                        <span class="summary-shipping-value">R$ @pedido.Frete.ToString("N2")</span>
+                    }
+                </div>
+
                 <div class="summary-total-row">
                     <span class="summary-total-label">Total</span>
-                    <span class="summary-total-value">R$ @Model.TotalConfirmado.ToString("N2")</span>
+                    <span class="summary-total-value">R$ @pedido.ValorTotal.ToString("N2")</span>
                 </div>
             </div>
 
@@ -106,19 +118,15 @@
                 <div class="confirm-details-list">
                     <div class="confirm-detail-row">
                         <span class="confirm-detail-label">Nome</span>
-                        <strong class="confirm-detail-value">@Model.NomeComprador</strong>
+                        <strong class="confirm-detail-value">@pedido.NomeComprador</strong>
                     </div>
                     <div class="confirm-detail-row">
                         <span class="confirm-detail-label">Endereço</span>
-                        <strong class="confirm-detail-value">@(!string.IsNullOrWhiteSpace(enderecoFormatado) ? enderecoFormatado : "-")</strong>
+                        <strong class="confirm-detail-value">@(!string.IsNullOrWhiteSpace(pedido.Endereco) ? pedido.Endereco : "-")</strong>
                     </div>
                     <div class="confirm-detail-row">
                         <span class="confirm-detail-label">CEP</span>
-                        <strong class="confirm-detail-value">@(!string.IsNullOrWhiteSpace(Model.Cep) ? Model.Cep : "-")</strong>
-                    </div>
-                    <div class="confirm-detail-row">
-                        <span class="confirm-detail-label">Cidade/UF</span>
-                        <strong class="confirm-detail-value">@cidadeUfFormatado</strong>
+                        <strong class="confirm-detail-value">@(!string.IsNullOrWhiteSpace(pedido.Cep) ? pedido.Cep : "-")</strong>
                     </div>
                     <div class="confirm-detail-row">
                         <span class="confirm-detail-label">Forma de pagamento</span>
@@ -166,13 +174,14 @@
                 <div class="form-grid-2">
                     <div class="form-group">
                         <label class="form-label">CPF</label>
-                        <input type="text" asp-for="Cpf" class="form-control-input" placeholder="123.456.789-00" maxlength="14" oninput="this.value = this.value.replace(/\D/g, '').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2')" />
+                        <input type="text" asp-for="Cpf" class="form-control-input" placeholder="123.456.789-00" maxlength="14" required oninput="this.value = this.value.replace(/\D/g, '').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2')" />
                         <span asp-validation-for="Cpf" class="checkout-field-error"></span>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Telefone</label>
                         <input type="text" asp-for="Telefone" class="form-control-input"
-                               placeholder="(11) 98765-4321" maxlength="15" oninput="this.value = this.value.replace(/\D/g, '').replace(/^(\d{2})(\d)/, '($1) $2').replace(/(\d{5})(\d)/, '$1-$2')" />
+                               placeholder="(11) 98765-4321" maxlength="15" required oninput="this.value = this.value.replace(/\D/g, '').replace(/^(\d{2})(\d)/, '($1) $2').replace(/(\d{5})(\d)/, '$1-$2')" />
+                        <span asp-validation-for="Telefone" class="checkout-field-error"></span>
                     </div>
                 </div>
 
@@ -185,12 +194,13 @@
                     <div class="form-group">
                         <label class="form-label">CEP</label>
                         <div class="cep-input-group">
-                            <input type="text" asp-for="Cep" class="form-control-input" placeholder="00000-000" maxlength="9" oninput="this.value = this.value.replace(/\D/g, '').replace(/^(\d{5})(\d)/, '$1-$2')" />
+                            <input type="text" asp-for="Cep" class="form-control-input" placeholder="00000-000" maxlength="9" required oninput="this.value = this.value.replace(/\D/g, '').replace(/^(\d{5})(\d)/, '$1-$2')" />
                             <button type="submit" asp-page-handler="BuscarCep" class="btn-buscar-cep" formnovalidate
                                     title="Consultar CEP no ViaCEP">
                                 Buscar
                             </button>
                         </div>
+                        <span asp-validation-for="Cep" class="checkout-field-error"></span>
                     </div>
 
                     <div class="form-group">
@@ -331,6 +341,14 @@
                     <span>Subtotal</span>
                     <span>R$ @Model.Subtotal.ToString("N2")</span>
                 </div>
+
+                @if (Model.Desconto > 0)
+                {
+                    <div class="summary-row summary-discount">
+                        <span>Desconto do cupom (@Model.CupomAplicado?.Codigo)</span>
+                        <span>- R$ @Model.Desconto.ToString("N2")</span>
+                    </div>
+                }
 
                 <div class="summary-row">
                     <span>Frete</span>

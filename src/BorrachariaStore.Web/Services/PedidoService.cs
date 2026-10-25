@@ -1,5 +1,6 @@
 using BorrachariaStore.Web.Models;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace BorrachariaStore.Web.Services;
@@ -30,6 +31,24 @@ public class PedidoService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erro ao gravar pedido no MongoDB.");
+            throw;
+        }
+    }
+
+    public async Task<Pedido?> ObterPorIdAsync(string id)
+    {
+        if (!ObjectId.TryParse(id, out _))
+        {
+            return null;
+        }
+
+        try
+        {
+            return await _pedidos.Find(Builders<Pedido>.Filter.Eq(p => p.Id, id)).FirstOrDefaultAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao obter pedido {PedidoId} no MongoDB.", id);
             throw;
         }
     }
