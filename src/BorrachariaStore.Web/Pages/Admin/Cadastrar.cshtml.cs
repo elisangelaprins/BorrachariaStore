@@ -32,6 +32,11 @@ public class CadastrarModel : PageModel
 
     public async Task<IActionResult> OnPostAsync(List <IFormFile> uploadedImageFiles)
     {
+        if (Produto.Estoque < 0)
+        {
+            ModelState.AddModelError(string.Empty, "A quantidade em estoque não pode ser negativa.");
+        }
+
         if (!ModelState.IsValid)
         {
             return Page();

@@ -37,6 +37,11 @@ public class ProdutosController(ProdutoService _produtoService) : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Produto>> Criar([FromBody] Produto produto)
     {
+        if (produto.Estoque < 0)
+        {
+            return BadRequest("A quantidade em estoque não pode ser negativa.");
+        }
+
         produto.Id = null;
 
         await _produtoService.CriarAsync(produto);
@@ -61,6 +66,11 @@ public class ProdutosController(ProdutoService _produtoService) : ControllerBase
         if (produtoExistente is null)
         {
             return NotFound("Produto não encontrado.");
+        }
+
+        if (produto.Estoque < 0)
+        {
+            return BadRequest("A quantidade em estoque não pode ser negativa.");
         }
 
         await _produtoService.AtualizarAsync(id, produto);

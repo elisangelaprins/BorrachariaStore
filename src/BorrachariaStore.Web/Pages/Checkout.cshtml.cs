@@ -83,6 +83,29 @@ public class CheckoutModel : PageModel
     {
         if (string.IsNullOrWhiteSpace(pedidoId))
         {
+            try
+            {
+                foreach (var item in _carrinhoService.Itens.ToList())
+                {
+                    var produtoNoBanco = await _produtoService.ObterPorIdAsync(item.ProdutoId);
+                    if (produtoNoBanco == null)
+                    {
+                        _carrinhoService.Remover(item.ProdutoId);
+                    }
+                    else
+                    {
+                        _carrinhoService.SincronizarItem(produtoNoBanco);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao sincronizar itens do carrinho no checkout.");
+            }
+        }
+
+        if (string.IsNullOrWhiteSpace(pedidoId))
+        {
             return Page();
         }
 

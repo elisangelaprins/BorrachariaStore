@@ -120,6 +120,26 @@ app.MapPost("/api/carrinho/adicionar", async (string produtoId, ProdutoService p
             return Results.NotFound(new { success = false, message = "Produto não encontrado." });
         }
 
+        if (produto.Estoque <= 0)
+        {
+            return Results.BadRequest(new
+            {
+                success = false,
+                message = $"O pneu \"{produto.Nome}\" não foi adicionado pois está sem estoque."
+            });
+        }
+
+        var itemNoCarrinho = carrinhoService.Itens.FirstOrDefault(i => i.ProdutoId == produto.Id);
+        int limiteMaximo = Math.Min(8, produto.Estoque);
+        if (itemNoCarrinho != null && itemNoCarrinho.Quantidade >= limiteMaximo)
+        {
+            return Results.BadRequest(new
+            {
+                success = false,
+                message = $"Você já atingiu o limite disponível em estoque para \"{produto.Nome}\"."
+            });
+        }
+
         carrinhoService.Adicionar(produto, 1);
 
         return Results.Ok(new

@@ -112,8 +112,15 @@ public class CatalogoModel : PageModel
             var produto = await _produtoService.ObterPorIdAsync(produtoId);
             if (produto != null)
             {
-                _carrinhoService.Adicionar(produto, 1);
-                TempData["MensagemSucesso"] = $"\"{produto.Nome}\" foi adicionado ao seu carrinho!";
+                if (produto.Estoque <= 0)
+                {
+                    TempData["MensagemErro"] = $"O pneu \"{produto.Nome}\" não foi adicionado pois está sem estoque.";
+                }
+                else
+                {
+                    _carrinhoService.Adicionar(produto, 1);
+                    TempData["MensagemSucesso"] = $"\"{produto.Nome}\" foi adicionado ao seu carrinho!";
+                }
             }
             else
             {
