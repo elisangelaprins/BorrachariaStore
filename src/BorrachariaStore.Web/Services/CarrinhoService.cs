@@ -84,6 +84,35 @@ public class CarrinhoService
         }
     }
 
+    public void SincronizarItem(Produto produtoAtualizado)
+    {
+        if (produtoAtualizado == null || string.IsNullOrWhiteSpace(produtoAtualizado.Id))
+        {
+            return;
+        }
+
+        var item = _itens.FirstOrDefault(i => i.ProdutoId == produtoAtualizado.Id);
+        if (item == null)
+        {
+            return;
+        }
+
+        if (produtoAtualizado.Estoque <= 0)
+        {
+            _itens.Remove(item);
+        }
+        else
+        {
+            item.Nome = produtoAtualizado.Nome;
+            item.PrecoUnitario = produtoAtualizado.Preco;
+            item.Foto = produtoAtualizado.Fotos?.FirstOrDefault() ?? string.Empty;
+            item.Estoque = produtoAtualizado.Estoque;
+            item.Quantidade = Math.Min(item.Quantidade, item.QuantidadeMaxima);
+        }
+
+        Salvar();
+    }
+
     public Cupom? CupomAplicado { get; private set; }
 
     public void AplicarCupom(Cupom cupom)

@@ -10,12 +10,14 @@ public class CarrinhoModel : PageModel
 {
     private readonly CarrinhoService _carrinhoService;
     private readonly CupomService _cupomService;
+    private readonly ProdutoService _produtoService;
     private readonly ILogger<CarrinhoModel> _logger;
 
-    public CarrinhoModel(CarrinhoService carrinhoService, CupomService cupomService, ILogger<CarrinhoModel> logger)
+    public CarrinhoModel(CarrinhoService carrinhoService, CupomService cupomService, ProdutoService produtoService, ILogger<CarrinhoModel> logger)
     {
         _carrinhoService = carrinhoService;
         _cupomService = cupomService;
+        _produtoService = produtoService;
         _logger = logger;
     }
 
@@ -31,7 +33,42 @@ public class CarrinhoModel : PageModel
 
     public decimal Total => _carrinhoService.CalcularTotal();
 
-    public void OnGet() { }
+    public async Task OnGetAsync()
+    {
+        try
+        {
+            foreach (var item in _carrinhoService.Itens.ToList())
+            {
+                var produtoNoBanco = await _produtoService.ObterPorIdAsync(item.ProdutoId);
+
+                if (produtoNoBanco == null)
+                {
+                    _carrinhoService.Remover(item.ProdutoId);
+                }
+                else
+                {
+                    _carrinhoService.SincronizarItem(produtoNoBanco);
+                }
+            }
+
+            if (_carrinhoService.CupomAplicado != null)
+            {
+                var resultadoCupom = await _cupomService.ValidarCupomAsync(_carrinhoService.CupomAplicado.Codigo, Subtotal);
+                if (!resultadoCupom.Valido || resultadoCupom.Cupom == null)
+                {
+                    _carrinhoService.RemoverCupom();
+                }
+                else
+                {
+                    _carrinhoService.AplicarCupom(resultadoCupom.Cupom);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao sincronizar itens do carrinho com o banco de dados.");
+        }
+    }
 
     public async Task<IActionResult> OnPostAplicarCupomAsync(string cupom)
     {

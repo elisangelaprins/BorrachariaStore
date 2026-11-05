@@ -14,12 +14,14 @@ public class IndexModel : PageModel
     private const int LimiteBaixoEstoque = 5;
     private readonly HashSet<string> allowedExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { ".jpg", ".jpeg", ".png", ".gif" };
     private readonly ProdutoService _produtoService;
+    private readonly CarrinhoService _carrinhoService;
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly ILogger<IndexModel> _logger;
 
-    public IndexModel(ProdutoService produtoService, IWebHostEnvironment webHostEnvironment, ILogger<IndexModel> logger)
+    public IndexModel(ProdutoService produtoService, CarrinhoService carrinhoService, IWebHostEnvironment webHostEnvironment, ILogger<IndexModel> logger)
     {
         _produtoService = produtoService;
+        _carrinhoService = carrinhoService;
         _webHostEnvironment = webHostEnvironment;
         _logger = logger;
     }
@@ -84,6 +86,7 @@ public class IndexModel : PageModel
         try
         {
             await _produtoService.RemoverAsync(id);
+            _carrinhoService.Remover(id);
             TempData["MensagemSucesso"] = "Produto excluído com sucesso!";
         }
         catch (Exception ex)
@@ -99,6 +102,12 @@ public class IndexModel : PageModel
     {
         if (produto != null && !string.IsNullOrWhiteSpace(produto.Id))
         {
+            if (produto.Estoque < 0)
+            {
+                TempData["MensagemErro"] = "A quantidade em estoque não pode ser negativa.";
+                return RedirectToPage();
+            }
+
             // Busca o produto original para não perder fotos antigas caso não envie novas
             var existingProduct = await _produtoService.ObterPorIdAsync(produto.Id);
             if (existingProduct != null)
@@ -181,6 +190,7 @@ public class IndexModel : PageModel
             }
 
             await _produtoService.AtualizarAsync(produto.Id, produto);
+            _carrinhoService.SincronizarItem(produto);
             TempData["MensagemSucesso"] = "Produto atualizado com sucesso!";
         }
 

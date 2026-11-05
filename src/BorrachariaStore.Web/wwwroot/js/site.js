@@ -35,6 +35,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         exibirToastFlutuante(data.nomeProduto);
                     }
+                } else {
+                    const data = await response.json();
+                    if (data && data.message) {
+                        exibirToastErroFlutuante(data.message);
+                    }
                 }
             } catch (error) {
 
@@ -120,6 +125,20 @@ function exibirToastFlutuante(nomeProduto) {
     }, 4000);
 }
 
+function exibirToastErroFlutuante(mensagem) {
+    const toastExistente = document.querySelector(".toast-error-banner, .toast-success-banner");
+    if (toastExistente) toastExistente.remove();
+
+    const toast = document.createElement("div");
+    toast.className = "toast-error-banner";
+    toast.textContent = mensagem;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        if (toast.parentNode) toast.remove();
+    }, 4000);
+}
+
 //Gaveta detalhes produto
 let fotosAtuaisGaveta = [];
 let indiceFotoAtualGaveta = 0;
@@ -158,7 +177,7 @@ function abrirDetalhes(el) {
     document.getElementById('detalheAro').textContent = d.aro ? 'Aro ' + d.aro : '-';
     document.getElementById('detalheMedida').textContent = d.medida || '-';
     document.getElementById('detalheCategoria').textContent = d.categoria || '-';
-    document.getElementById('detalheEstoque').textContent = (d.estoque && parseInt(d.estoque) > 0) ? d.estoque + ' unidades' : 'Em estoque';
+    document.getElementById('detalheEstoque').textContent = (d.estoque && parseInt(d.estoque) > 0) ? d.estoque + ' unidades' : 'Sem estoque';
     document.getElementById('detalheDescricao').textContent = d.descricao || 'Sem descrição detalhada disponível.';
 
     var oldPriceEl = document.getElementById('detalhePrecoAntigo');
