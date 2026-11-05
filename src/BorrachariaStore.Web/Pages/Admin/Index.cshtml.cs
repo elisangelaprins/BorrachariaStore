@@ -102,6 +102,12 @@ public class IndexModel : PageModel
     {
         if (produto != null && !string.IsNullOrWhiteSpace(produto.Id))
         {
+            if (produto.Aro <= 0)
+            {
+                TempData["MensagemErro"] = "Selecione um aro válido para o produto.";
+                return RedirectToPage();
+            }
+
             if (produto.Estoque < 0)
             {
                 TempData["MensagemErro"] = "A quantidade em estoque não pode ser negativa.";

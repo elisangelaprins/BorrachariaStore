@@ -37,6 +37,11 @@ public class ProdutosController(ProdutoService _produtoService) : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Produto>> Criar([FromBody] Produto produto)
     {
+        if (produto.Aro <= 0)
+        {
+            return BadRequest("O aro do produto deve ser maior que zero.");
+        }
+
         if (produto.Estoque < 0)
         {
             return BadRequest("A quantidade em estoque não pode ser negativa.");
@@ -66,6 +71,11 @@ public class ProdutosController(ProdutoService _produtoService) : ControllerBase
         if (produtoExistente is null)
         {
             return NotFound("Produto não encontrado.");
+        }
+
+        if (produto.Aro <= 0)
+        {
+            return BadRequest("O aro do produto deve ser maior que zero.");
         }
 
         if (produto.Estoque < 0)

@@ -206,7 +206,15 @@
                                             </div>
                                             <div class="field">
                                                 <label>Aro</label>
-                                                <input type="number" name="Produto.Aro" value="@p.Aro" placeholder="14" required />
+                                                <select name="Produto.Aro" required>
+                                                    <option value="">Selecione...</option>
+                                                    <option value="13" selected="@(p.Aro == 13)">Aro 13</option>
+                                                    <option value="14" selected="@(p.Aro == 14)">Aro 14</option>
+                                                    <option value="15" selected="@(p.Aro == 15)">Aro 15</option>
+                                                    <option value="16" selected="@(p.Aro == 16)">Aro 16</option>
+                                                    <option value="17" selected="@(p.Aro == 17)">Aro 17</option>
+                                                    <option value="18" selected="@(p.Aro == 18)">Aro 18</option>
+                                                </select>
                                             </div>
                                             <div class="field">
                                                 <label>Categoria</label>
