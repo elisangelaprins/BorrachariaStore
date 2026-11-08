@@ -8,6 +8,10 @@ obj/
 ## Configurações locais sensíveis
 appsettings.Local.json
 
+## Logs
+[Ll]og/
+[Ll]ogs/
+
 ## Sistema Operacional
 .DS_Store
 Thumbs.db

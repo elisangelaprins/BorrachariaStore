@@ -10,11 +10,19 @@
   <ItemGroup>
     <!-- Driver oficial do MongoDB -->
     <PackageReference Include="MongoDB.Driver" Version="2.28.0" />
+    <!-- Serilog -->
+    <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+    <!-- Serilog Settings -->
+    <PackageReference Include="Serilog.Settings.Configuration" Version="10.0.1" />
+    <!-- Serilog Sinks -->
+    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+    <!-- Swagger -->
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Copia o arquivo de mock data para a pasta de saída na compilação -->
-    <None Update="Data\MockData\produtos.json">
+    <!-- Copia os arquivos de mock data para a pasta de saída na compilação -->
+    <None Update="Data\MockData\*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

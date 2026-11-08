@@ -1,19 +1,78 @@
 using BorrachariaStore.Web.Models;
 using BorrachariaStore.Web.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Razor Pages (Aula 2)
-builder.Services.AddRazorPages();
+builder.Host.UseSerilog((context, configuration) =>
+{
+    configuration.ReadFrom.Configuration(context.Configuration);
+});
 
-// Configuração do MongoDB (Aula 3)
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AuthorizeFolder("/Admin");
+});
+
+builder.Services.AddHttpClient();
+
 builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("MongoDbSettings"));
 
-// Serviços de domínio
 builder.Services.AddSingleton<ProdutoService>();
-builder.Services.AddSingleton<CarrinhoService>();
+builder.Services.AddScoped<CarrinhoService>();
 builder.Services.AddSingleton<PedidoService>();
+builder.Services.AddSingleton<ViaCepService>();
+builder.Services.AddSingleton<CupomService>();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(2);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+builder.Services
+    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Login";
+        options.ExpireTimeSpan = TimeSpan.FromHours(2);
+        options.SlidingExpiration = true;
+
+
+        options.Events.OnRedirectToLogin = context =>
+        {
+            if (context.Request.Path.StartsWithSegments("/api"))
+            {
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Task.CompletedTask;
+            }
+
+            context.Response.Redirect(context.RedirectUri);
+            return Task.CompletedTask;
+        };
+        options.Events.OnRedirectToAccessDenied = context =>
+        {
+            if (context.Request.Path.StartsWithSegments("/api"))
+            {
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                return Task.CompletedTask;
+            }
+
+            context.Response.Redirect(context.RedirectUri);
+            return Task.CompletedTask;
+        };
+    });
+
+builder.Services.AddAuthorization();
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -21,6 +80,12 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
+}
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 var defaultCulture = new System.Globalization.CultureInfo("pt-BR");
@@ -37,9 +102,75 @@ app.UseRequestLocalization(localizationOptions);
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+app.UseSerilogRequestLogging();
+
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
+app.UseSession();
 
 app.MapRazorPages();
+
+app.MapControllers();
+
+app.MapPost("/api/carrinho/adicionar", async (string produtoId, ProdutoService produtoService, CarrinhoService carrinhoService, ILogger<Program> logger) =>
+{
+    if (string.IsNullOrWhiteSpace(produtoId))
+    {
+        return Results.BadRequest(new { success = false, message = "ID do produto inválido." });
+    }
+
+    try
+    {
+        var produto = await produtoService.ObterPorIdAsync(produtoId);
+        if (produto == null)
+        {
+            return Results.NotFound(new { success = false, message = "Produto não encontrado." });
+        }
+
+        if (produto.Estoque <= 0)
+        {
+            return Results.BadRequest(new
+            {
+                success = false,
+                message = $"O pneu \"{produto.Nome}\" não foi adicionado pois está sem estoque."
+            });
+        }
+
+        var itemNoCarrinho = carrinhoService.Itens.FirstOrDefault(i => i.ProdutoId == produto.Id);
+        int limiteMaximo = Math.Min(8, produto.Estoque);
+        if (itemNoCarrinho != null && itemNoCarrinho.Quantidade >= limiteMaximo)
+        {
+            return Results.BadRequest(new
+            {
+                success = false,
+                message = $"Você já atingiu o limite disponível em estoque para \"{produto.Nome}\"."
+            });
+        }
+
+        carrinhoService.Adicionar(produto, 1);
+
+        return Results.Ok(new
+        {
+            success = true,
+            totalItens = carrinhoService.Itens.Sum(i => i.Quantidade),
+            nomeProduto = produto.Nome
+        });
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Erro ao adicionar produto {ProdutoId} ao carrinho via API.", produtoId);
+        return Results.Json(
+            new { success = false, message = "Não foi possível adicionar o produto ao carrinho no momento. Tente novamente." },
+            statusCode: 500);
+    }
+})
+.WithName("AdicionarAoCarrinho")
+.WithTags("Carrinho")
+.WithSummary("Adiciona um item ao carrinho assincronamente")
+.Produces(StatusCodes.Status200OK)
+.Produces(StatusCodes.Status400BadRequest)
+.Produces(StatusCodes.Status404NotFound)
+.Produces(StatusCodes.Status500InternalServerError);
 
 app.Run();

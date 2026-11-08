@@ -1,0 +1,16 @@
+[
+  {
+    "codigo": "NOVO5",
+    "porcentagemDesconto": 5,
+    "valorMinimoPedido": 500,
+    "ativo": false,
+    "validade": null
+  },
+  {
+    "codigo": "PNEU10",
+    "porcentagemDesconto": 10,
+    "valorMinimoPedido": 200,
+    "ativo": true,
+    "validade": null
+  }
+]
