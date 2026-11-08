@@ -9,7 +9,8 @@ obj/
 appsettings.Local.json
 
 ## Logs
-log/
+[Ll]og/
+[Ll]ogs/
 
 ## Sistema Operacional
 .DS_Store
